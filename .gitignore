@@ -14,6 +14,9 @@ env/
 .DS_Store
 Thumbs.db
 
+# User Settings
+settings.toml
+
 # Logs and Trace
 logs/
 *.log
