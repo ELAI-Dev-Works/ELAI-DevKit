@@ -1,0 +1,21 @@
+number = #
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-command_list`: Generates a registry of all available standard and custom commands.
+</args_desc>
+<md>
+#### List Commands (`-command_list`)
+Generates a registry of all available standard and custom commands.
+
+**Sub-arguments:**
+- `-all`: Lists all commands without filtering.
+- `-command <cmd1|cmd2>`: Lists only specified commands.
+- `-doc`: Includes documentation snippets (if available).
+
+```
+<@|TEST -command_list -all
+---end---
+```
+</md>

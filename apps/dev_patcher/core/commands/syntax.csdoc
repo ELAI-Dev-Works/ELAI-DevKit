@@ -1,0 +1,123 @@
+number = 1
+category = commands_and_syntax
+
+<lang[en]>
+<md>
+# DevPatcher Documentation
+
+This document describes all available commands, their arguments, and syntax.
+
+## Variables
+
+- `@ROOT`: This variable represents the path to the **selected project folder**. It is used for all operations related to the target project.
+
+**Note(Important):** @ROOT var, mandatory for ALL file managing and editing commands.
+
+- `@APP-ROOT`: This variable represents the path to the **ELAI-DevKit/DevPatcher application folder itself**. It is used only for self-update operations.
+
+- `---end---` : Mandatory string for completing a command. Used in all commands.
+
+{command_var}
+
+## Comments
+
+DevPatcher supports comments that are completely ignored by the parser during execution.
+
+- `<-@ Text @->` : **Single-line comment**. Must be placed on a separate line. Used for brief notes.
+- `#@#` : **Multi-line comment marker**. Acts as a toggle. Place `#@#` on a line by itself to start a comment block, and another `#@#` on a separate line to end it.
+
+### Examples
+
+```
+<-@ This is a comment describing the next step @->
+<@|TEST -print
+This line is visible.
+#@#
+This block is commented out.
+It will be ignored.
+#@#
+This line is visible again.
+---end---
+```
+
+---
+
+## Command Syntax
+
+All commands have strict syntax; failure to observe it will lead to patcher errors.
+
+Each command must be written according to its syntax. You can learn more about the syntax of each command by reading the individual help for each command listed at the bottom of this documentation.
+
+## Command Execution Order
+
+Commands are executed in a specific order/priority:
+
+{command_order}
+
+This is necessary to prevent conflicts between commands.
+
+## "Raw Execution" Mode `{!RUN}`
+
+Sometimes it is necessary for the command content to be **completely ignored** by the parser. This is especially important when creating documentation files (.md) or simple text files (.txt), where constructions similar to commands may occur but should not be executed.
+
+For this, a special wrapper `{!RUN}` at the beginning and `{!END}` at the end is used.
+
+### Syntax
+
+```
+{!RUN}<@|MANAGE -create my_doc.txt
+This content will be completely ignored by the parser.
+Even if there is <@|TEST -print here, it will not be executed.
+---end---{!END}
+```
+
+### Usage Rules
+
+- The `{!RUN}` tag must be placed immediately before `<@|`.
+- The `{!END}` tag must be placed immediately after `---end---`.
+- All text between `{!RUN}<@|...` and `---end---{!END}` is passed to the command as is, without any analysis.
+
+---
+
+`---scope---`: **(Advanced)** The beginning of a block within which the search for `---old---` will be performed. Increases search accuracy if there are several identical `---old---` blocks in the file.
+
+### Advanced and Experimental Features
+
+In the PatcherApp graphical interface, the "Experimental Features" block is available. It activates more advanced algorithms for the `EDIT` command.
+
+- **Fuzzy Matching (Advanced Function)**: If this option is enabled, the patcher will not look for an exact match for the `---old---` block, but the **most similar** one (with a similarity threshold >85%). This allows the patch to be successfully applied even if minor changes were made in the source code (e.g., a variable was renamed). This function is considered stable.
+
+- **Scope Matching (Advanced Function)**: This option activates the use of the new `---scope---` block. The patcher first finds this "scope" block (e.g., a function or class definition), and then searches for `---old---` **only inside it**. This radically solves the ambiguity problem. Requires active *Fuzzy Matching*.
+
+- **Precise Patching (with line numbers, Experimental)**: This option allows including line numbers in the command body, right-aligned and separated by the `|` symbol. Ideal for one-off (one edit for one file per patch) large edits, as they require precise context and line numbers in the code. When applying the patch, these line numbers are automatically stripped.
+
+#### Example of using `---scope---`
+```
+<@|EDIT -v1 -replace @ROOT/main.py
+---scope---
+def my_target_function(param1, param2):
+    # Function code...
+---old---
+    # Fragment to be replaced
+    # It will be searched only inside my_target_function
+    version = "1.0"
+---new---
+    version = "2.0" # Updated version
+---end---
+```
+
+#### Example of using line numbers for the Precise Patching function
+```
+<@|EDIT -v2 -replace @ROOT/config.py
+---old---
+ 95| class ProductionConfig(BaseConfig):
+ 96|     DEBUG = False
+ 97|     SECRET_KEY = os.getenv("PROD_SECRET")
+---new---
+ 95| class ProductionConfig(BaseConfig):
+ 96|     DEBUG = False
+ 97|     SECRET_KEY = os.getenv("PROD_SECRET_KEY_UPDATED")
+---end---
+```
+With the "Precise Patching" option enabled, this patch will be processed as if it were written without the `95|`, `96|`, and `97|` prefixes.
+</md>

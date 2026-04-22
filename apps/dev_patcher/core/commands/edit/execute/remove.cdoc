@@ -1,0 +1,25 @@
+number = 3
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-remove`: Finds and removes a code block (`---old---`).
+</args_desc>
+<variables>
+- `---old---`: The beginning of the block to be found/removed.
+</variables>
+<md>
+#### Removal (`-remove`)
+Finds and removes the code block specified in `---old---`.
+
+```
+<-@ Find and remove the outdated function @->
+<@|EDIT -remove @ROOT/utils.py
+---old---
+def old_function():
+    # some legacy code
+    pass
+---end---
+```
+
+</md>

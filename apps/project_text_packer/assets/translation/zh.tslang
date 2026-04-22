@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_text_packer" lang="zh">
+    <section name="Interface">
+        <key name="project_text_packer_tab">Project Text Packer</key>
+        <key name="project_text_packer_quick_settings_title">项目打包器选项</key>
+        <key name="packer_output_dir_label">输出目录：</key>
+        <key name="packer_select_output_dir_btn">选择...</key>
+        <key name="packer_start_btn">打包项目</key>
+        <key name="packer_extensions_label">支持的文件扩展名:</key>
+        <key name="packer_options_group_title">打包选项</key>
+        <key name="packer_one_file_checkbox">合并为一个文件</key>
+        <key name="packer_timestamp_checkbox">添加日期和时间</key>
+        <key name="packer_split_checkbox">拆分为多个部分（限制1MB）</key>
+        <key name="patch_load_error_title">错误</key>
+        <key name="project_folder_missing_error">错误：未选择项目文件夹 (@ROOT)！</key>
+        <key name="quick_settings_saved_log">[设置] 快速设置已保存。</key>
+        <key name="quick_settings_reset_log">[设置] 快速设置已重置为默认值（未保存）。</key>
+        <key name="reset_quick_settings_btn">恢复默认</key>
+        <key name="save_quick_settings_btn">保存设置</key>
+    </section>
+    <section name="Logs">
+        <key name="packer_log_placeholder">Project Text Packer 日志将显示在此处...</key>
+        <key name="packer_status_ready">就绪</key>
+        <key name="packer_status_packing">正在打包项目...</key>
+        <key name="packer_status_done">完成</key>
+        <key name="packer_status_error">打包过程中出错。</key>
+        <key name="packer_status_cancelled">操作已被用户取消。</key>
+        <key name="packer_log_collecting_files">正在收集文件...</key>
+        <key name="packer_log_writing_pack">正在写入项目包...</key>
+        <key name="packer_log_building_tree">正在构建文件树...</key>
+        <key name="packer_log_files_saved">文件已保存</key>
+        <key name="packer_removing_old_files_log">正在删除现有的 _project_pack.txt 和 _tree.txt...</key>
+        <key name="packer_empty_file_comment">&lt;!-- 文件为空 --&gt;</key>
+    </section>
+    <section name="Dialogs">
+        <key name="packer_overwrite_title">确认覆盖</key>
+        <key name="packer_overwrite_message">输出文件已存在。是否覆盖？</key>
+        <key name="packer_output_dir_not_selected_error">错误：未选择输出目录。</key>
+    </section>
+    <section name="Tooltips">
+        <key name="packer_extensions_tooltip">要包含在包中的文件扩展名，用空格或逗号分隔。例如 .py .txt .md</key>
+        <key name="packer_one_file_tooltip">将目录树和文件内容合并到单个 .txt 文件中。</key>
+        <key name="packer_timestamp_tooltip">在文件开头添加时间戳。</key>
+        <key name="packer_split_tooltip">如果大小超过999KB，自动将输出拆分为多个文件。</key>
+        <key name="packer_select_output_dir_tooltip">选择保存打包文本文件的目录。</key>
+        <key name="packer_start_tooltip">开始扫描、构建和打包项目文件的过程。</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_text_packer_standalone_title">Project Text Packer (独立)</key>
+    </section>
+</tslang>

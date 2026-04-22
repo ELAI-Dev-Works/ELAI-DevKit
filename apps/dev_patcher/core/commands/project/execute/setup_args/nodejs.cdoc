@@ -1,0 +1,11 @@
+number = 6
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-nodejs`: Activates Web/Server mode. Creates `package.json` and `run(nodejs)` scripts.
+</args_desc>
+<md>
+#### NodeJS Mode (`-nodejs`)
+Activates Web/Server mode. Creates `package.json` and `run(nodejs)` scripts.
+</md>

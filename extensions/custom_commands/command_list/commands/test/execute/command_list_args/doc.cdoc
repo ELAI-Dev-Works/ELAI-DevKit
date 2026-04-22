@@ -1,0 +1,11 @@
+number = 3
+type = modifier
+
+<lang[en]>
+<args_desc>
+- `-doc`: Modifier for `-command_list`. Attempts to load and display documentation for the listed commands.
+</args_desc>
+<md>
+#### Show Documentation (`-doc`)
+Modifier for `-command_list`. Attempts to load and display documentation for the listed commands.
+</md>

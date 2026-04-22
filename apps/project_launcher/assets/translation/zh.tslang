@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_launcher" lang="zh">
+    <section name="Interface">
+        <key name="project_launcher_tab">Project Launcher</key>
+        <key name="pl_launch_file_label">启动文件：</key>
+        <key name="pl_args_label">参数：</key>
+        <key name="pl_status_label">状态：</key>
+        <key name="pl_start_btn">启动项目</key>
+        <key name="pl_start_external_btn">运行外部</key>
+        <key name="pl_stop_btn">停止项目</key>
+        <key name="pl_open_folder_btn">打开项目文件夹</key>
+        <key name="pl_open_vscode_btn">在 VS Code 中打开项目</key>
+        <key name="pl_status_ready">就绪</key>
+        <key name="pl_status_running">运行中</key>
+        <key name="pl_status_running_external">运行中（外部）</key>
+        <key name="pl_status_scanning">扫描中...</key>
+        <key name="pl_no_project_selected">选择项目文件夹以开始。</key>
+        <key name="pl_no_launch_file">在项目根目录中未找到可启动的文件。</key>
+        <key name="pl_no_settings_label">此扩展暂无可用设置。</key>
+        <key name="pl_console_label">交互式控制台 (PowerShell/终端)：</key>
+        <key name="select_project_folder_btn">选择项目文件夹...</key>
+        <key name="packer_status_error">错误</key>
+        <key name="patch_load_error_title">错误</key>
+        <key name="project_label">项目：</key>
+    </section>
+    <section name="Logs">
+        <key name="pl_status_done">完成</key>
+        <key name="pl_run_bat_created_msg">已在 {} 中创建 run.bat</key>
+    </section>
+    <section name="Dialogs">
+        <key name="pl_create_bat_title">创建启动文件</key>
+        <key name="pl_create_bat_q">未找到run.bat，但存在'requirements'文件。是否创建默认的run.bat？</key>
+        <key name="test_run_invalid_file_error">请选择有效的文件来启动（.py、.bat、.html）。</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_launcher_standalone_title">Project Launcher (独立)</key>
+    </section>
+    <section name="Tooltips">
+        <key name="pl_open_folder_tooltip">在系统文件资源管理器中打开所选项目文件夹。</key>
+        <key name="pl_open_vscode_tooltip">在 Visual Studio Code 中打开所选项目文件夹（如果 'code' 在您的 PATH 中）。</key>
+        <key name="pl_start_external_tooltip">在新的外部终端窗口中启动所选文件。</key>
+        <key name="pl_start_tooltip">在下方的集成控制台中运行所选文件。</key>
+        <key name="pl_stop_tooltip">停止当前正在运行的项目(内部和外部)。</key>
+    </section>
+</tslang>

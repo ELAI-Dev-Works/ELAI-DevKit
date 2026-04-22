@@ -1,0 +1,14 @@
+number = 3
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-name <Project Name>`: (Optional) Sets the project name in console headers and file templates.
+</args_desc>
+<md>
+#### Project Name (`-name`)
+(Optional) Sets the project name in console headers and file templates.
+
+*   **Without spaces:** `<MyProject>`
+*   **With spaces:** `<(My Project Name)>` (Must be wrapped in parentheses inside the brackets).
+</md>

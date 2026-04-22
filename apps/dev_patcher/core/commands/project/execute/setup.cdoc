@@ -1,0 +1,98 @@
+number = 1
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-setup`: The main command for project initialization.
+</args_desc>
+<variables>
+- `---structure---`: (Optional) Describes the directory tree structure (`/`) and empty files.
+- `---project---`: (Optional) Defines the content of files created. **Note**: Required for -tree and ---structure--- if files in the specified structure are to be populated, as using the MANAGE -create command on existing files will fail, so use ---project--- or the MANAGE -write command to overwrite files created by -tree and ---structure---.
+- `---file_end---`: Marker ending the content block for a single file.
+</variables>
+<md>
+<md>
+#### Setup (`-setup`)
+The main command for project initialization.
+
+**Syntax:**
+```
+<@|PROJECT -setup [-all_os|-win_os|-linux_os] -<mode> -run <file> -requi <dependencies> [-npm <{command}>] [-tree] [-name <(Project Name)>]
+---structure---
+[...tree structure...]
+---project---
+---end---
+```
+
+**Command Body:**
+1.  `---structure---`: (Optional) Describes the directory tree structure (`/`) and empty files.
+2.  `---project---`: (Optional) Defines the content of files created. Separated by `<###| path/to/file>`.
+
+### Usage Examples
+
+#### 1. Basic Python Project (Windows)
+Creates a simple Python project with a virtual environment and a run script for Windows.
+
+```
+<@|PROJECT -setup -win_os -python -run <main.py> -requi <requests|colorama> -name <MyTool>
+---project---
+<###| @ROOT/main.py
+import requests
+print("Hello World")
+---file_end---
+---end---
+```
+
+#### 2. Cross-Platform Python Project with Structure
+Creates a project structure for Linux, Mac, and Windows, generating appropriate `.sh` and `.bat` scripts.
+
+```
+<@|PROJECT -setup -all_os -python -tree -run <app.py> -requi <numpy> -name <(Data App)>
+---structure---
+@ROOT/
+├── core/
+│   └── processing.py
+├── data/
+└── app.py
+---project---
+<###| @ROOT/app.py
+import core.processing
+print("App Started")
+---file_end---
+---end---
+```
+
+#### 3. NodeJS Project (Simple)
+Creates a `package.json` with Express and a startup script.
+
+```
+<@|PROJECT -setup -all_os -nodejs -run <server.js> -requi <express> -name <WebServer>
+---project---
+<###| @ROOT/server.js
+console.log("Server running...");
+---file_end---
+---end---
+```
+
+#### 4. NodeJS Advanced (Electron)
+Configures specific NPM scripts and a custom run command for the generated `.bat/.sh` file.
+
+```
+<@|PROJECT -setup -win_os -nodejs -run <main.js> -requi <electron> -name <(My Electron App)>
+-npm <run:{npm start}|scripts/start:{electron .}|scripts/build:{electron-builder}>
+---project---
+<###| @ROOT/main.js
+const { app, BrowserWindow } = require('electron')
+// ... app code ...
+---file_end---
+---end---
+```
+
+#### 5. HTML5 Web project
+Setting up an HTML5 project using a local Python server and phaser engine lib.
+
+```
+<@|PROJECT -setup -win_os -web -server <Python> -run <index.html> -requi <src:https://cdn.jsdelivr.net/npm/phaser/dist/phaser.min.js> -name <(My Phaser Game)>
+```
+
+</md>

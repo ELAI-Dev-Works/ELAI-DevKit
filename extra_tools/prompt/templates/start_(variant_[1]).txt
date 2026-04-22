@@ -1,0 +1,1 @@
+Learn DevPatcher documentation about patcher commands and syntax for using patcher commands to create patches. Become thoroughly familiar with all the rules for writing patches, the importance of syntax, and understanding the patcher's logic. Write all code in English.

@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_launcher" lang="ru">
+    <section name="Interface">
+        <key name="project_launcher_tab">Project Launcher</key>
+        <key name="pl_launch_file_label">Файл Запуска:</key>
+        <key name="pl_args_label">Аргументы:</key>
+        <key name="pl_status_label">Статус:</key>
+        <key name="pl_start_btn">Запустить проект</key>
+        <key name="pl_start_external_btn">Запуск (внешне)</key>
+        <key name="pl_stop_btn">Остановить проект</key>
+        <key name="pl_open_folder_btn">Открыть папку проекта</key>
+        <key name="pl_open_vscode_btn">Открыть проект в VS Code</key>
+        <key name="pl_status_ready">Готов</key>
+        <key name="pl_status_running">Выполняется</key>
+        <key name="pl_status_running_external">Выполняется (Внешний)</key>
+        <key name="pl_status_scanning">Сканирование...</key>
+        <key name="pl_no_project_selected">Выберите папку проекта, чтобы начать.</key>
+        <key name="pl_no_launch_file">В корне проекта не найден запускаемый файл.</key>
+        <key name="pl_no_settings_label">Для этого расширения пока нет доступных настроек.</key>
+        <key name="pl_console_label">Интерактивная Консоль (PowerShell/Терминал):</key>
+        <key name="select_project_folder_btn">Выбрать Папку Проекта...</key>
+        <key name="packer_status_error">Ошибка</key>
+        <key name="patch_load_error_title">Ошибка</key>
+        <key name="project_label">Проект:</key>
+    </section>
+    <section name="Logs">
+        <key name="pl_status_done">Готово</key>
+        <key name="pl_run_bat_created_msg">run.bat создан в {}</key>
+    </section>
+    <section name="Dialogs">
+        <key name="pl_create_bat_title">Создать файл запуска</key>
+        <key name="pl_create_bat_q">Файл run.bat не найден, но существует файл 'requirements'. Создать стандартный run.bat?</key>
+        <key name="test_run_invalid_file_error">Пожалуйста, выберите допустимый файл для запуска (.py, .bat, .html).</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_launcher_standalone_title">Project Launcher (Автономный)</key>
+    </section>
+    <section name="Tooltips">
+        <key name="pl_open_folder_tooltip">Открыть папку выбранного проекта в проводнике файлов вашей системы.</key>
+        <key name="pl_open_vscode_tooltip">Открыть выбранную папку проекта в Visual Studio Code (если 'code' находится в вашем PATH).</key>
+        <key name="pl_start_external_tooltip">Запустить выбранный файл в новом внешнем окне терминала.</key>
+        <key name="pl_start_tooltip">Запустить выбранный файл во встроенной консоли ниже.</key>
+        <key name="pl_stop_tooltip">Остановить текущий запущенный проект (как внутренний, так и внешний).</key>
+    </section>
+</tslang>

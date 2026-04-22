@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# IDE & System
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and Trace
+logs/
+*.log
+*.log*
+worker_trace.txt
+
+# Application Specific / Temporary
+_restore_temp/
+temp_project/
+build/
+dist/
+downloads/
+node_modules/
+translate/
+dataset/
+
+# Generated translation files (auto-generated from .tslang sources)
+lang/*.json
+
+# Project Text Packer Outputs (optional, but recommended to keep repo clean)
+*_project_pack.txt
+*_tree.txt
+
+# Configs (Sensitive)
+.env

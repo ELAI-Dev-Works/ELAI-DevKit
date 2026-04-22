@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_builder" lang="de">
+    <section name="Interface">
+        <key name="project_builder_tab">Projekt-Builder</key>
+        <key name="pb_detected_type_label">Erkannte Architektur:</key>
+        <key name="pb_main_file_label">Haupteingabedatei:</key>
+        <key name="pb_output_dir_label">Ausgabeverzeichnis:</key>
+        <key name="pb_select_output_btn">Auswählen...</key>
+        <key name="pb_build_btn">Projekt erstellen</key>
+        <key name="pb_status_ready">Bereit</key>
+        <key name="pb_status_building">Wird erstellt...</key>
+        <key name="pb_status_done">Build abgeschlossen</key>
+        <key name="pb_status_error">Build fehlgeschlagen</key>
+        <key name="pb_log_placeholder">Build-Protokolle werden hier angezeigt...</key>
+        <key name="project_builder_quick_settings_title">Builder-Optionen</key>
+        <key name="pb_qs_onefile">In eine einzelne Datei packen (Onefile)</key>
+        <key name="pb_qs_noconsole">Fenstermodus (Konsole ausblenden)</key>
+        <key name="pb_qs_target_os">Ziel-Betriebssystem:</key>
+        <key name="pb_app_name_label">App-Name:</key>
+        <key name="pb_app_version_label">App-Version:</key>
+        <key name="pb_app_icon_label">App-Symbol:</key>
+        <key name="pb_select_icon_btn">Symbol auswählen...</key>
+    </section>
+    <section name="Logs">
+        <key name="pb_log_scanning">Projektverzeichnis wird gescannt...</key>
+        <key name="pb_log_detect">Erkannte Architektur: {}</key>
+    </section>
+</tslang>

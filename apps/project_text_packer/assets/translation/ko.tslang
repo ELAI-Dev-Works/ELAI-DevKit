@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_text_packer" lang="ko">
+    <section name="Interface">
+        <key name="project_text_packer_tab">Project Text Packer</key>
+        <key name="project_text_packer_quick_settings_title">프로젝트 패커 옵션</key>
+        <key name="packer_output_dir_label">출력 디렉터리:</key>
+        <key name="packer_select_output_dir_btn">선택...</key>
+        <key name="packer_start_btn">프로젝트 패킹</key>
+        <key name="packer_extensions_label">지원되는 파일 확장자:</key>
+        <key name="packer_options_group_title">패킹 옵션</key>
+        <key name="packer_one_file_checkbox">하나의 파일로 결합</key>
+        <key name="packer_timestamp_checkbox">날짜 및 시간 추가</key>
+        <key name="packer_split_checkbox">분할하기 (제한 1MB)</key>
+        <key name="patch_load_error_title">오류</key>
+        <key name="project_folder_missing_error">오류: 프로젝트 폴더 (@ROOT)가 선택되지 않았습니다!</key>
+        <key name="quick_settings_saved_log">[설정] 빠른 설정이 저장되었습니다.</key>
+        <key name="quick_settings_reset_log">[설정] 빠른 설정이 기본값으로 재설정되었습니다(저장되지 않음).</key>
+        <key name="reset_quick_settings_btn">기본값으로 재설정</key>
+        <key name="save_quick_settings_btn">설정 저장</key>
+    </section>
+    <section name="Logs">
+        <key name="packer_log_placeholder">Project Text Packer 로그가 여기에 표시됩니다...</key>
+        <key name="packer_status_ready">준비됨</key>
+        <key name="packer_status_packing">프로젝트 패킹 중...</key>
+        <key name="packer_status_done">완료</key>
+        <key name="packer_status_error">패킹 중 오류가 발생했습니다.</key>
+        <key name="packer_status_cancelled">사용자가 작업을 취소했습니다.</key>
+        <key name="packer_log_collecting_files">파일 수집 중...</key>
+        <key name="packer_log_writing_pack">프로젝트 팩 작성 중...</key>
+        <key name="packer_log_building_tree">파일 트리 구축 중...</key>
+        <key name="packer_log_files_saved">파일 저장됨</key>
+        <key name="packer_removing_old_files_log">기존 _project_pack.txt 및 _tree.txt 제거 중...</key>
+        <key name="packer_empty_file_comment">&lt;!-- 파일이 비어 있습니다 --&gt;</key>
+    </section>
+    <section name="Dialogs">
+        <key name="packer_overwrite_title">덮어쓰기 확인</key>
+        <key name="packer_overwrite_message">출력 파일이 이미 존재합니다. 덮어쓰시겠습니까?</key>
+        <key name="packer_output_dir_not_selected_error">오류: 출력 디렉토리가 선택되지 않았습니다.</key>
+    </section>
+    <section name="Tooltips">
+        <key name="packer_extensions_tooltip">팩에 포함할 파일 확장자를 공백 또는 쉼표로 구분하여 입력하세요. 예: .py .txt .md</key>
+        <key name="packer_one_file_tooltip">디렉토리 트리와 파일 내용을 하나의 .txt 파일로 병합합니다.</key>
+        <key name="packer_timestamp_tooltip">파일 시작 부분에 타임스탬프를 추가합니다.</key>
+        <key name="packer_split_tooltip">크기가 999KB를 초과하면 출력을 여러 파일로 자동 분할합니다.</key>
+        <key name="packer_select_output_dir_tooltip">압축된 텍스트 파일이 저장될 디렉토리를 선택하세요.</key>
+        <key name="packer_start_tooltip">프로젝트 파일을 스캔, 빌드 및 패킹하는 프로세스를 시작합니다.</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_text_packer_standalone_title">Project Text Packer (독립)</key>
+    </section>
+</tslang>

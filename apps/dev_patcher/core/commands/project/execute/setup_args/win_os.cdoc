@@ -1,0 +1,11 @@
+number = 9
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-win_os`: Generates only Windows (`.bat`) scripts.
+</args_desc>
+<md>
+#### Platform: Windows (`-win_os`)
+Generates only Windows (`.bat`) scripts.
+</md>

@@ -1,0 +1,47 @@
+number = 3
+type = command(base)
+
+<lang[en]>
+<order>
+3 - GIT
+</order>
+<md>
+## `GIT` Command
+
+Executes Git version control system commands. Requires `git` to be installed on the system and available in the `PATH`.
+
+### Arguments
+The `GIT` command accepts standard Git command-line arguments.
+
+- `init`: Initializes a new repository in the `@ROOT` folder.
+- `clone <URL> .`: Clones a repository into the `@ROOT` folder. **The dot at the end is required to clone into the existing project folder.**
+- `pull`: Pulls changes from a remote repository.
+- `add`, `commit`, `push`: Other standard commands.
+
+### Examples
+
+#### Cloning a repository into the current project folder
+
+```
+<@|GIT clone "https://github.com/some/repository.git" .
+---end---
+```
+
+#### Initializing a repository
+
+```
+<@|GIT init
+---end---
+```
+
+#### Adding all files and creating a commit
+
+```
+<@|GIT add .
+---end---
+
+<@|GIT commit -m "Initial commit"
+---end---
+```
+
+</md>

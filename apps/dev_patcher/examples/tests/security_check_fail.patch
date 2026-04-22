@@ -1,0 +1,12 @@
+<@|TEST -print
+[TEST] Testing Security Violations.
+This patch SHOULD FAIL during simulation or execution.
+---end---
+
+<@|MANAGE -create ../../security_breach.txt
+Attempting directory traversal...
+---end---
+
+<@|MANAGE -create C:/Windows/Temp/absolute_path.txt
+Attempting absolute path...
+---end---

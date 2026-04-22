@@ -1,0 +1,16 @@
+number = 2
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-requi <dependencies>`: **(Mandatory)** Specifies dependencies to install, separated by `|`. If dependencies are not needed, use `<None>`.
+</args_desc>
+<md>
+#### Dependencies (`-requi`)
+**Mandatory.** Specifies dependencies to install, separated by `|`.
+If dependencies are not needed, use `<None>`.
+
+*   Example: `<pygame|requests>` (for Python)
+*   Example: `<react|typescript>` (for NodeJS)
+*   Example: `<src:https://cdn.jsdelivr.net/npm/phaser/dist/phaser.min.js>` (for HTML5 web project)
+</md>

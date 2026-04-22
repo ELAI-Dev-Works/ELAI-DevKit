@@ -1,0 +1,18 @@
+number = 1
+type = command(init)
+
+<lang[en]>
+<order>
+1 - TEST
+</order>
+<md>
+## `TEST` Command
+
+The simplest command, designed for debugging and outputting information to the log.
+
+### Arguments
+{args_list}
+
+### Variables
+{args_var}
+</md>

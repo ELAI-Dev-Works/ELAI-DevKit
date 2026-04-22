@@ -1,0 +1,594 @@
+<-@ Prompt @->
+#@#
+Fixes:
+1. Health doesn't restore on the next level.
+2. The second level is impossible to complete; the player can't jump to the last platform.
+Updates:
+1. Add procedural sounds, utilize native HTML5 capabilities.
+2. Continue to improve the gameplay and platforming mechanics, adding variety to the gameplay.
+#@#
+
+<-@ Info @->
+#@#
+Model: Qwen 3.6 Plus (mode: Thinking)
+Free Chat on https://chat.qwen.ai/
+Patch Size: 577 lines
+Stage: 3. Fixes, sounds and inproving gameplay
+Attempts spent: 1
+DevPatcher Syntax Error/Bug: 1 ([Continued the behavior] An extra ---end--- mark at the end of the patch. Doesn't break the patcher or the project code.)
+Code Error: 0
+Commands: MANAGE -create, MANAGE -write, EDIT -insert
+#@#
+
+<-@ Create procedural sound module for native audio synthesis @->
+<@|MANAGE -create @ROOT/sound.js
+// Procedural Audio System
+const Sound = {
+    ctx: null,
+    init: () => {
+        if (!Sound.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+                Sound.ctx = new AudioCtx();
+            }
+        }
+    },
+    play: (type) => {
+        if (!Sound.ctx) return;
+        const now = Sound.ctx.currentTime;
+        const osc = Sound.ctx.createOscillator();
+        const gain = Sound.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(Sound.ctx.destination);
+
+        switch (type) {
+            case 'jump':
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+                break;
+            case 'coin':
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+                break;
+            case 'hurt':
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+                break;
+            case 'win':
+                // Simple arpeggio
+                [440, 554, 659, 880].forEach((freq, i) => {
+                    const t = now + i * 0.1;
+                    const o = Sound.ctx.createOscillator();
+                    const g = Sound.ctx.createGain();
+                    o.connect(g);
+                    g.connect(Sound.ctx.destination);
+                    o.type = 'triangle';
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0.2, t);
+                    g.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+                    o.start(t);
+                    o.stop(t + 0.3);
+                });
+                break;
+            case 'start':
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+                break;
+        }
+    }
+};
+---end---
+
+<-@ Rewrite Game Engine to include Health Fix, Double Jump, and Moving Platform support @->
+<@|MANAGE -write @ROOT/game.js
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// Setup Canvas
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 600;
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
+
+// Physics & Game Constants
+const GRAVITY = 0.6;
+const JUMP_FORCE = -13; // Slightly stronger for better feel
+const MOVE_SPEED = 5;
+
+// Game State
+let gameState = 'MENU'; // MENU, PLAYING, WIN, GAME_OVER
+let currentLevel = 0;
+let player = { x: 0, y: 0, w: 32, h: 32, vx: 0, vy: 0, grounded: false, health: 3, invincible: 0, jumps: 0 };
+let camera = { x: 0, y: 0 };
+let levelData = { platforms: [], coins: [], enemies: [], spikes: [], portal: {} };
+let keys = { left: false, right: false, up: false };
+
+// Initialization
+window.onload = () => {
+    initAssets();
+    requestAnimationFrame(loop);
+};
+
+// Helper to ensure AudioContext is created on user interaction
+function ensureAudio() {
+    if (!Sound || !Sound.ctx) {
+        if (typeof Sound !== 'undefined') Sound.init();
+    }
+}
+
+// Input Listeners
+window.addEventListener('keydown', e => {
+    ensureAudio(); // Init sound on first interaction
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+    
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') {
+        if (!keys.up) {
+            // Handle Double Jump Input
+            if (gameState === 'PLAYING' && player.jumps < 2) {
+                player.vy = JUMP_FORCE;
+                player.grounded = false;
+                player.jumps++;
+                Sound.play('jump');
+            }
+        }
+        keys.up = true;
+    }
+
+    if (gameState !== 'PLAYING' && (e.code === 'Enter' || e.code === 'Space')) {
+        if (gameState === 'MENU') {
+            Sound.play('start');
+            startLevel(0);
+        } else if (gameState === 'WIN') {
+            gameState = 'MENU';
+        } else if (gameState === 'GAME_OVER') {
+            gameState = 'MENU';
+        }
+    }
+});
+window.addEventListener('keyup', e => {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.up = false;
+});
+canvas.addEventListener('click', () => {
+    ensureAudio();
+    if (gameState !== 'PLAYING') {
+        if (gameState === 'MENU') {
+            Sound.play('start');
+            startLevel(0);
+        } else if (gameState === 'WIN') gameState = 'MENU';
+        else if (gameState === 'GAME_OVER') gameState = 'MENU';
+    }
+});
+
+function startLevel(index) {
+    currentLevel = index;
+    const lvl = LEVELS[currentLevel];
+    
+    // Reset player with full health for new level
+    player = { 
+        ...lvl.spawn, 
+        w: 32, h: 32, 
+        vx: 0, vy: 0, 
+        grounded: false, 
+        health: 3, // FIX: Restore health on every level start
+        invincible: 0,
+        jumps: 0 
+    };
+    
+    camera = { x: 0, y: 0 };
+    
+    // Clone level data
+    levelData = {
+        platforms: JSON.parse(JSON.stringify(lvl.platforms)), // Deep copy to handle moving platform state
+        coins: lvl.coins.map(c => ({...c, collected: false})),
+        enemies: lvl.enemies.map(e => ({...e})),
+        spikes: lvl.spikes,
+        portal: lvl.portal
+    };
+    
+    // Reset moving platform states to initial if they have velocity defined but no current x in levelData?
+    // The deep copy handles x, but we should ensure we use the velocity from definition if needed.
+    // Actually, the levels.js defines static or moving props.
+    // We just rely on the object having vx.
+    
+    gameState = 'PLAYING';
+}
+
+function update() {
+    if (gameState !== 'PLAYING') return;
+
+    // 1. Update Moving Platforms
+    let currentGroundPlatform = null;
+
+    for (let p of levelData.platforms) {
+        if (p.vx) {
+            p.x += p.vx;
+            if (p.x <= p.minX || (p.maxX && p.x + p.w >= p.maxX)) p.vx *= -1;
+        }
+    }
+
+    // 2. Player Movement
+    if (keys.left) player.vx = -MOVE_SPEED;
+    else if (keys.right) player.vx = MOVE_SPEED;
+    else player.vx = 0;
+
+    // 3. Apply Gravity & Velocity
+    player.vy += GRAVITY;
+    player.x += player.vx;
+    player.y += player.vy;
+    player.grounded = false;
+
+    // 4. Platform Collisions & Carrying Logic
+    // Note: We assume player is NOT grounded initially, collision loop proves otherwise.
+    // However, we need to know if we are standing ON a moving platform to carry the player.
+    
+    // Reset ground platform assumption for this frame
+    player.groundPlatform = null;
+
+    for (let p of levelData.platforms) {
+        // Check AABB
+        if (player.x < p.x + p.w && player.x + player.w > p.x &&
+            player.y < p.y + p.h && player.y + player.h > p.y) {
+            
+            // Resolve overlap
+            let overlapX = (player.x + player.w / 2) < (p.x + p.w / 2) 
+                ? (player.x + player.w) - p.x : p.x + p.w - player.x;
+            let overlapY = (player.y + player.h / 2) < (p.y + p.h / 2) 
+                ? (player.y + player.h) - p.y : p.y + p.h - player.y;
+
+            if (overlapX < overlapY) {
+                // Side collision
+                player.vx = 0;
+                player.x += overlapX > 0 ? -overlapX : overlapX;
+            } else {
+                // Vertical collision
+                player.vy = 0;
+                if (overlapY > 0) {
+                    // Landed on top
+                    player.y = p.y - player.h;
+                    player.grounded = true;
+                    player.jumps = 0; // Reset jump count
+                    
+                    // Check if platform is moving to carry player
+                    if (p.vx) {
+                        player.groundPlatform = p;
+                    }
+                } else {
+                    // Hit head on bottom
+                    player.y = p.y + p.h;
+                }
+            }
+        }
+    }
+
+    // Apply Moving Platform Velocity to Player (Riding)
+    if (player.groundPlatform) {
+        player.x += player.groundPlatform.vx;
+    }
+
+    // 5. Enemy Logic & Collision
+    for (let e of levelData.enemies) {
+        if (e.vx) {
+            e.x += e.vx;
+            if (e.x <= e.minX || e.x + e.w >= e.maxX) e.vx *= -1;
+        }
+
+        // Collision
+        if (player.x < e.x + e.w && player.x + player.w > e.x &&
+            player.y < e.y + e.h && player.y + player.h > e.y) {
+            // Jump on head
+            if (player.vy > 0 && player.y + player.h - player.vy <= e.y + 10) {
+                e.y = -1000; // Defeated
+                player.vy = JUMP_FORCE * 0.6;
+                // Sound.play('enemyKill'); // Optional sound
+            } else {
+                takeDamage();
+            }
+        }
+    }
+
+    // 6. Spike Collision
+    for (let s of levelData.spikes) {
+        let box = { x: s.x + 8, y: s.y + 12, w: s.w - 16, h: s.h - 12 };
+        if (player.x < box.x + box.w && player.x + player.w > box.x &&
+            player.y < box.y + box.h && player.y + player.h > box.y) {
+            takeDamage();
+        }
+    }
+
+    // 7. Coin Collection
+    for (let c of levelData.coins) {
+        if (!c.collected) {
+            let dist = Math.hypot(player.x + player.w/2 - c.x, player.y + player.h/2 - c.y);
+            if (dist < player.w/2 + c.r) {
+                c.collected = true;
+                Sound.play('coin');
+            }
+        }
+    }
+
+    // 8. Portal Win Condition
+    let p = levelData.portal;
+    const coinsLeft = levelData.coins.some(c => !c.collected);
+    if (!coinsLeft && player.x < p.x + p.w && player.x + player.w > p.x &&
+        player.y < p.y + p.h && player.y + player.h > p.y) {
+        Sound.play('win');
+        if (currentLevel < LEVELS.length - 1) {
+            startLevel(currentLevel + 1);
+        } else {
+            gameState = 'WIN';
+        }
+    }
+
+    // 9. Invincibility
+    if (player.invincible > 0) player.invincible--;
+
+    // 10. Fall off screen
+    if (player.y > CANVAS_HEIGHT + 200) takeDamage();
+
+    // 11. Camera Follow
+    const targetX = player.x - CANVAS_WIDTH / 2;
+    const targetY = player.y - CANVAS_HEIGHT / 2 + 100;
+    
+    camera.x += (targetX - camera.x) * 0.08;
+    camera.y += (targetY - camera.y) * 0.08;
+    
+    if (camera.x < 0) camera.x = 0; 
+    if (camera.y < 0) camera.y = 0;
+}
+
+function takeDamage() {
+    if (player.invincible > 0 || gameState !== 'PLAYING') return;
+    
+    Sound.play('hurt');
+    player.health--;
+    player.invincible = 60;
+    
+    if (player.health <= 0) {
+        gameState = 'GAME_OVER';
+        // Note: Health will be reset to 3 when startLevel is called from Menu
+    }
+}
+
+function draw() {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    if (gameState === 'MENU') {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('2D Platformer', CANVAS_WIDTH/2, 250);
+        ctx.font = '24px Arial';
+        ctx.fillText('Collect coins and reach the portal!', CANVAS_WIDTH/2, 320);
+        ctx.font = '18px Arial';
+        ctx.fillText('Features: Double Jump, Moving Platforms', CANVAS_WIDTH/2, 350);
+        ctx.font = '18px Arial';
+        ctx.fillText('Press ENTER or CLICK to Start', CANVAS_WIDTH/2, 390);
+    } 
+    else if (gameState === 'PLAYING' || gameState === 'GAME_OVER') {
+        // Draw Parallax Background
+        ctx.save();
+        if (typeof BG_LAYERS !== 'undefined') {
+            for (let layer of BG_LAYERS) {
+                layer.draw(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, camera.x);
+            }
+        }
+        ctx.restore();
+
+        // Camera Transform
+        ctx.save();
+        ctx.translate(-Math.round(camera.x), -Math.round(camera.y));
+
+        // Draw World
+        // Platforms
+        for (let p of levelData.platforms) {
+            if (typeof Sprites !== 'undefined' && Sprites.platform) {
+                for(let tx = 0; tx < p.w; tx += Sprites.platform.width) {
+                    ctx.drawImage(Sprites.platform, p.x + tx, p.y, Sprites.platform.width, Sprites.platform.height);
+                }
+            } else {
+                // Fallback if assets fail
+                ctx.fillStyle = '#6a6';
+                ctx.fillRect(p.x, p.y, p.w, p.h);
+            }
+        }
+
+        // Coins
+        for (let c of levelData.coins) {
+            if (!c.collected) {
+                if (Sprites && Sprites.coin) ctx.drawImage(Sprites.coin, c.x - c.r, c.y - c.r, c.r*2, c.r*2);
+                else { ctx.fillStyle = '#fc0'; ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, Math.PI*2); ctx.fill(); }
+            }
+        }
+
+        // Spikes
+        for (let s of levelData.spikes) {
+            if (Sprites && Sprites.spike) ctx.drawImage(Sprites.spike, s.x, s.y, s.w, s.h);
+            else { ctx.fillStyle = '#d33'; ctx.fillRect(s.x, s.y, s.w, s.h); }
+        }
+
+        // Portal
+        if (Sprites && Sprites.portal) ctx.drawImage(Sprites.portal, levelData.portal.x, levelData.portal.y, levelData.portal.w, levelData.portal.h);
+        else { ctx.fillStyle = '#39f'; ctx.fillRect(levelData.portal.x, levelData.portal.y, levelData.portal.w, levelData.portal.h); }
+
+        // Enemies
+        for (let e of levelData.enemies) {
+            if (e.y > -100) {
+                if (Sprites && Sprites.enemy) ctx.drawImage(Sprites.enemy, e.x, e.y, e.w, e.h);
+                else { ctx.fillStyle = '#f44'; ctx.fillRect(e.x, e.y, e.w, e.h); }
+            }
+        }
+
+        // Player
+        if (player.invincible === 0 || Math.floor(Date.now() / 50) % 2 === 0) {
+            if (Sprites && Sprites.player) ctx.drawImage(Sprites.player, player.x, player.y, player.w, player.h);
+            else { ctx.fillStyle = '#4af'; ctx.fillRect(player.x, player.y, player.w, player.h); }
+        }
+
+        ctx.restore();
+
+        // Draw HUD (Health)
+        if (Sprites && Sprites.heart) {
+            for (let i = 0; i < 3; i++) {
+                if (i < player.health) {
+                    ctx.drawImage(Sprites.heart, 20 + i * 40, 20, 32, 32);
+                } else {
+                    // Draw empty/dark heart outline
+                    ctx.fillStyle = '#222';
+                    ctx.fillRect(20 + i * 40, 20, 32, 32);
+                    ctx.strokeStyle = '#555';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(20 + i * 40, 20, 32, 32);
+                }
+            }
+        }
+    }
+
+    if (gameState === 'GAME_OVER') {
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game Over', CANVAS_WIDTH/2, 280);
+        ctx.font = '24px Arial';
+        ctx.fillText('Press ENTER or CLICK to Menu', CANVAS_WIDTH/2, 340);
+    }
+    else if (gameState === 'WIN') {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('You Won!', CANVAS_WIDTH/2, 250);
+        ctx.font = '24px Arial';
+        ctx.fillText('All levels complete!', CANVAS_WIDTH/2, 320);
+        ctx.font = '18px Arial';
+        ctx.fillText('Press ENTER or CLICK for Menu', CANVAS_WIDTH/2, 370);
+    }
+}
+
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+---end---
+
+<-@ Update Levels: Fix Level 2 impossible jump and add Moving Platforms to Level 3 @->
+<@|MANAGE -write @ROOT/levels.js
+const LEVELS = [
+    // Level 1: Intro
+    {
+        spawn: { x: 50, y: 400 },
+        platforms: [
+            { x: 0, y: 550, w: 600, h: 50 }, { x: 700, y: 550, w: 800, h: 50 },
+            { x: 200, y: 450, w: 120, h: 20 }, { x: 450, y: 350, w: 150, h: 20 },
+            { x: 800, y: 400, w: 100, h: 20 }, { x: 1000, y: 300, w: 150, h: 20 },
+            { x: 1200, y: 250, w: 200, h: 20 }
+        ],
+        coins: [
+            { x: 260, y: 420, r: 10 }, { x: 525, y: 320, r: 10 },
+            { x: 850, y: 370, r: 10 }, { x: 1075, y: 270, r: 10 },
+            { x: 1300, y: 220, r: 10 }
+        ],
+        enemies: [
+            { x: 220, y: 420, w: 30, h: 30, vx: 1.5, minX: 200, maxX: 300 },
+            { x: 820, y: 370, w: 30, h: 30, vx: -1.5, minX: 800, maxX: 900 }
+        ],
+        spikes: [
+            { x: 620, y: 530, w: 40, h: 20 }, { x: 1100, y: 280, w: 40, h: 20 }
+        ],
+        portal: { x: 1300, y: 190, w: 40, h: 60 }
+    },
+    // Level 2: Verticality (Fixed with intermediate platforms)
+    {
+        spawn: { x: 50, y: 500 },
+        platforms: [
+            { x: 0, y: 550, w: 300, h: 50 },
+            { x: 100, y: 450, w: 100, h: 20 }, { x: 250, y: 350, w: 100, h: 20 },
+            { x: 450, y: 350, w: 150, h: 20 }, { x: 450, y: 250, w: 100, h: 20 },
+            { x: 650, y: 200, w: 100, h: 20 }, { x: 800, y: 300, w: 200, h: 20 },
+            { x: 1100, y: 400, w: 150, h: 20 }, 
+            // Added intermediate platform to bridge the gap
+            { x: 1200, y: 300, w: 100, h: 20 }, 
+            { x: 1300, y: 200, w: 200, h: 20 }
+        ],
+        coins: [
+            { x: 150, y: 420, r: 10 }, { x: 300, y: 320, r: 10 },
+            { x: 500, y: 320, r: 10 }, { x: 500, y: 220, r: 10 },
+            { x: 700, y: 170, r: 10 }, { x: 900, y: 270, r: 10 },
+            { x: 1175, y: 370, r: 10 }, { x: 1250, y: 270, r: 10 }
+        ],
+        enemies: [
+            { x: 500, y: 320, w: 30, h: 30, vx: 1, minX: 450, maxX: 580 },
+            { x: 850, y: 270, w: 30, h: 30, vx: -1.5, minX: 800, maxX: 980 }
+        ],
+        spikes: [
+            { x: 350, y: 530, w: 100, h: 20 }, { x: 1200, y: 380, w: 40, h: 20 } // Moved spike to new platform gap
+        ],
+        portal: { x: 1400, y: 140, w: 40, h: 60 }
+    },
+    // Level 3: Hard Gauntlet (Added Moving Platform variety)
+    {
+        spawn: { x: 50, y: 400 },
+        platforms: [
+            { x: 0, y: 450, w: 150, h: 20 },
+            { x: 250, y: 400, w: 50, h: 20 }, { x: 400, y: 350, w: 50, h: 20 },
+            { x: 550, y: 300, w: 50, h: 20 }, 
+            // Made this platform moving
+            { x: 700, y: 300, w: 200, h: 20, vx: 1.5, minX: 600, maxX: 900 },
+            { x: 1000, y: 400, w: 100, h: 20 }, 
+            // Added a moving platform here for difficulty
+            { x: 1100, y: 350, w: 100, h: 20, vx: -2, minX: 1050, maxX: 1250 },
+            { x: 1400, y: 200, w: 200, h: 20 }
+        ],
+        coins: [
+            { x: 275, y: 370, r: 10 }, { x: 425, y: 320, r: 10 },
+            { x: 575, y: 270, r: 10 }, { x: 800, y: 270, r: 10 }, // Moved to match moving plat center
+            { x: 1050, y: 370, r: 10 }, { x: 1150, y: 320, r: 10 },
+            { x: 1250, y: 270, r: 10 }
+        ],
+        enemies: [
+            { x: 720, y: 270, w: 30, h: 30, vx: 2, minX: 650, maxX: 850 }, // Adjusted bounds
+            { x: 1450, y: 170, w: 30, h: 30, vx: -2, minX: 1400, maxX: 1580 }
+        ],
+        spikes: [
+            { x: 150, y: 430, w: 80, h: 20 }, { x: 900, y: 380, w: 100, h: 20 },
+            { x: 1300, y: 280, w: 40, h: 20 }
+        ],
+        portal: { x: 1500, y: 140, w: 40, h: 60 }
+    }
+];
+---end---
+
+<-@ Add sound script to index.html @->
+<@|EDIT -v1 -insert @ROOT/index.html
+---old---
+    <script src="assets.js"></script>
+{code_start|content|code_end}
+    <script src="levels.js"></script>
+---new---
+    <script src="sound.js"></script>
+---end---
+---end---

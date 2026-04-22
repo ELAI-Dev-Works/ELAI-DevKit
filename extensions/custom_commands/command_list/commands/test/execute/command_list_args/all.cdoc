@@ -1,0 +1,11 @@
+number = 1
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-all`: Modifier for `-command_list`. Forces the display of all discovered commands, including those without explicit arguments.
+</args_desc>
+<md>
+#### Show All (`-all`)
+Modifier for `-command_list`. Forces the display of all discovered commands, including those without explicit arguments.
+</md>

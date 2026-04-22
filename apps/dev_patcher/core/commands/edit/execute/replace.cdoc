@@ -1,0 +1,303 @@
+number = 1
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-replace`: Finds a code block (`---old---`) and replaces it with a new one (`---new---`).
+</args_desc>
+<variables>
+- `---old---`: The beginning of the block to be found/modified.
+- `---new---`: The beginning of the block with the new content.
+</variables>
+<md>
+
+### Replacement (`-replace`)
+
+Finds a specific block of code defined in `---old---` and replaces it with the content of `---new---`.
+
+#### 1. Replacement with Normalization (`-v1 -replace`)
+
+### Visual Guide: How Indentation Works with Normalization algorithm?
+
+The most important aspect of `EDIT` is that **it preserves the relative indentation** of the new code block based on where the old block was found.
+
+**Scenario:** We want to replace logic inside a function.
+
+**1. The "Golden Rule" of Anchoring**
+To ensure the patcher calculates the correct indentation, your `---old---` block should start with a line that has the *indentation level you want to use as a base*.
+
+**Target File (`script.py`):**
+
+```python
+def calculate():
+    # ... some code ...
+    x = 10          <-- Target Block (Indented 4 spaces)
+    y = 20
+```
+
+**The Patch:**
+
+```
+<@|EDIT -v1 -replace script.py
+---old---
+    x = 10
+    y = 20
+---new---
+    x = 100
+    y = 200
+    z = 300
+---end---
+```
+
+**Result:**
+
+    The patcher sees that `x = 10` is indented by **4 spaces** in the real file. It then applies those 4 spaces to *every line* in `---new---`.
+
+```python
+def calculate():
+    # ... some code ...
+    x = 100         <-- Automatically indented
+    y = 200         <-- Automatically indented
+    z = 300         <-- Automatically indented
+```
+
+**2. Fixing Broken Indentation**
+
+If the code in the file is *wrongly* indented, and you want to fix it, **do not** start `---old---` with the broken line. Start with a parent line (like `def` or `class`) that is correct.
+
+**Bad File:**
+
+```python
+def test():
+  print("Wrong indent")  <-- 2 spaces, should be 4
+```
+
+**Correct Patch:**
+
+```
+<@|EDIT -v1 -replace script.py
+---old---
+def test():
+  print("Wrong indent")
+---new---
+def test():
+    print("Fixed indent")
+---end---
+```
+*Why?* Because `def test():` has 0 indentation. The patcher uses 0 as the base, so the 4 spaces you explicitly wrote in `---new---` are preserved exactly as is.
+
+### Common Mistakes (Anti-Patterns)
+
+It is crucial to choose the correct "Anchor" (the first line of `---old---`) to avoid indentation disasters.
+
+#### The Anchor Trap (`-v1 -replace`)
+**Mistake:** Starting the `---old---` block with a line that is *deeper* than the rest of the block you are replacing.
+
+**Target File:**
+```python
+class App:
+    def run(self):
+        print("Running")  <-- Indented 8 spaces
+    def stop(self):       <-- Indented 4 spaces
+        pass
+```
+
+**Bad Patch:**
+You want to replace `print` and `def stop`. You start `---old---` with the print statement.
+
+```
+<@|EDIT -v1 -replace app.py
+---old---
+        print("Running")
+    def stop(self):
+        pass
+---new---
+        print("Running v2")
+    def shutdown(self):
+        pass
+---end---
+```
+
+**What Happens:**
+1. DevPatcher sees `print("Running")` has **8 spaces** in the file.
+2. It sets Base Indentation = 8.
+3. It adds 8 spaces to *every line* in `---new---`.
+
+**Result (Broken Code):**
+```python
+class App:
+    def run(self):
+        print("Running v2")
+        def shutdown(self):  <-- ERROR! Indented 8 spaces, nested inside run()!
+            pass
+```
+
+**Fix:** Start `---old---` with `def run(self):` (4 spaces) or include context above it.
+
+### Examples
+
+#### Example 1: Simple Variable Replacement
+```
+<-@ Find the string `version = "1.0"` and replace it @->
+<@|EDIT -v1 -replace @ROOT/setup.py
+---old---
+version = "1.0"
+---new---
+version = "1.1"
+---end---
+```
+
+#### Example 2: Replacing Code Logic
+```
+<-@ Fix a logic error in a function @->
+<@|EDIT -v1 -replace @ROOT/core/math_utils.py
+---old---
+def add(a, b):
+    # Old incorrect logic
+    return a - b
+---new---
+def add(a, b):
+    # Fixed logic
+    return a + b
+---end---
+```
+
+#### Example 3: Modifying Configuration
+```
+<-@ Update settings in an INI file @->
+<@|EDIT -v1 -replace @ROOT/config.ini
+---old---
+debug = true
+log_level = info
+---new---
+debug = false
+log_level = error
+---end---
+```
+
+#### 2. Replacement with Delta Strategy (`-v2 -replace`)
+
+Unlike the default V1 algorithm which flattens indentation to compare structure, **V2 (Delta)** calculates the *relative indentation difference* between your patch and the actual file.
+
+**When to use:**
+*   When you don't know the absolute indentation of the target code (e.g., user might have wrapped code in a `try/except` block or a class you didn't anticipate).
+*   When you want to preserve specific relative indentation in the new block.
+
+**How it works:**
+1.  DevPatcher finds the `---old---` block match.
+2.  It calculates `Delta = File_Indent - Patch_Indent` based on the first non-empty line.
+3.  It adds this `Delta` to every line in `---new---`.
+
+### Visual Guide: V2 Delta Strategy
+
+**Scenario:** Replacing a variable inside a nested structure where absolute depth is unknown or variable.
+
+**Target File:**
+
+```python
+class Config:
+    def load(self):
+        if True:
+            # File uses 12 spaces here
+            timeout = 10
+            retries = 3
+```
+
+**The Patch:**
+Notice that the patch uses 0 indentation.
+
+```
+<@|EDIT -v2 -replace config.py
+---old---
+timeout = 10
+retries = 3
+---new---
+timeout = 30
+retries = 5
+---end---
+```
+
+**Calculation:**
+*   File Indent (`timeout = ...`): 12 spaces.
+*   Patch Indent (`timeout = ...`): 0 spaces.
+*   **Delta:** 12 - 0 = +12 spaces.
+
+**Result:**
+The patcher applies the +12 delta to the new lines.
+
+```python
+class Config:
+    def load(self):
+        if True:
+            timeout = 30            <-- Automatically indented to 12 spaces
+            retries = 5             <-- Automatically indented to 12 spaces
+```
+
+### Common Mistakes (Anti-Patterns)
+
+#### The Delta Trap (`-v2 -replace`)
+**Mistake:** Providing a patch where the relative indentation in `---old---` doesn't match the relative indentation in the file, causing a wrong Delta calculation.
+
+**Target File:**
+```python
+if valid:
+    x = 1  # File has 4 spaces relative to 'if'
+```
+
+**Bad Patch:**
+You write the patch flat, without representing the relative structure.
+
+```
+<@|EDIT -v2 -replace script.py
+---old---
+if valid:
+x = 1      <-- Patch has 0 spaces relative to 'if'
+---new---
+if valid:
+y = 2
+---end---
+```
+
+**Calculation:**
+*   File Difference: 4 spaces.
+*   Patch Difference: 0 spaces.
+*   **Delta:** +4 spaces.
+
+**Result (Unexpected Shift):**
+The patcher adds +4 spaces to the *entire* new block relative to where it found the match. The `if valid:` line itself might get shifted if the anchor logic isn't perfectly aligned.
+
+### Examples
+
+#### Example 1: Modifying a Nested Dictionary
+The V2 strategy is perfect for data structures where indentation is strictly required but hard to count manually.
+
+**Target File:**
+```python
+config = {
+    "app": {
+        "window": {
+            "width": 800,
+            "height": 600,
+        }
+    }
+}
+```
+
+**The Patch:**
+Note that the patch uses 0 indentation. The Delta will be calculated from `"width"`.
+
+```
+<@|EDIT -v2 -replace settings.py
+---old---
+"width": 800,
+"height": 600,
+---new---
+"width": 1920,
+"height": 1080,
+"fullscreen": True,
+---end---
+```
+
+**Result:**
+The new lines will automatically match the indentation of the `window` dictionary (e.g., 12 spaces), keeping the file valid.
+</md>

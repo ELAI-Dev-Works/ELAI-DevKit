@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_builder" lang="ua">
+    <section name="Interface">
+        <key name="project_builder_tab">Конструктор Проектів</key>
+        <key name="pb_detected_type_label">Виявлена Архітектура:</key>
+        <key name="pb_main_file_label">Основний вхідний файл:</key>
+        <key name="pb_output_dir_label">Вихідний каталог:</key>
+        <key name="pb_select_output_btn">Вибрати...</key>
+        <key name="pb_build_btn">Зібрати проект</key>
+        <key name="pb_status_ready">Готово</key>
+        <key name="pb_status_building">Збірка...</key>
+        <key name="pb_status_done">Збірка завершена</key>
+        <key name="pb_status_error">Помилка збірки</key>
+        <key name="pb_log_placeholder">Логи збірки з'являться тут...</key>
+        <key name="project_builder_quick_settings_title">Параметри збірника</key>
+        <key name="pb_qs_onefile">Запакувати в один файл (Onefile)</key>
+        <key name="pb_qs_noconsole">Віконний режим (Приховати консоль)</key>
+        <key name="pb_qs_target_os">Цільова ОС:</key>
+        <key name="pb_app_name_label">Назва додатка:</key>
+        <key name="pb_app_version_label">Версія додатка:</key>
+        <key name="pb_app_icon_label">Значок додатка:</key>
+        <key name="pb_select_icon_btn">Вибрати значок...</key>
+    </section>
+    <section name="Logs">
+        <key name="pb_log_scanning">Сканування директорії проєкту...</key>
+        <key name="pb_log_detect">Виявлено архітектуру: {}</key>
+    </section>
+</tslang>

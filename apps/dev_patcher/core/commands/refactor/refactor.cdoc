@@ -1,0 +1,18 @@
+number = 7
+type = command(init)
+
+<lang[en]>
+<order>
+7 - REFACTOR
+</order>
+<md>
+## The `REFACTOR` Command
+
+A high-level command for smart code modification using AST (Abstract Syntax Tree) analysis. Unlike `EDIT`, it understands code structure (classes, functions, identifiers) rather than just text.
+
+### Arguments
+{args_list}
+
+### Variables
+{args_var}
+</md>

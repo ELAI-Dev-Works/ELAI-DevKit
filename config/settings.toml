@@ -1,0 +1,43 @@
+
+[core]
+  language = "en"
+
+[core.extensions]
+  dev_patcher_enabled = true
+  project_text_packer_enabled = true
+  project_launcher_enabled = true
+  project_builder_enabled = true
+
+[core.theme]
+  theme = "sleek"
+  color_scheme = "dark"
+
+[core.ui]
+  always_show_tooltips = false
+
+[apps.dev_patcher.quick.Backup]
+  method = "zip"
+  commit_message = ""
+
+[apps.dev_patcher.quick.Features]
+  fuzzy_matching = true
+  scope_matching = true
+  precise_patching = false
+  corrector = false
+  simulation = false
+  code_check = false
+  test_run = false
+  similarity_threshold = 85
+
+[apps.project_builder.quick.Options]
+  onefile = true
+  noconsole = true
+  target_os = "windows"
+
+[apps.project_text_packer.quick.Options]
+  one_file = true
+  add_timestamp = true
+  split_on_limit = false
+
+[apps.project_text_packer.settings]
+  supported_extensions = ".py .in .js .ts .jsx .tsx .html .css .scss .sass .json .yaml .yml .toml .ini .cfg .conf .md .txt .svg .sql .sh .bat .ps1 .dockerfile .gitignore .csv .log .xml .c .cpp .h .hpp .java .kt .swift .go .rs .rb .php .pl .r .scala .dart .lua .m .mm .vue .svelte .as .gd .tscn .tres .res .godot .import .scn .gde .gdc .gdshader .gdns .gdext .mod .cl .rpy .asm .inc .extension_doc .command_doc .category_section_doc .devpatch .ptx .lm .usidoc .tslang .gradle .mf .gitattributes .editorconfig .gdignore .translation .comp"

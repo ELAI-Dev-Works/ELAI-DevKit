@@ -1,0 +1,11 @@
+number = 11
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-mac_os`: Generates only macOS (`.sh`) scripts.
+</args_desc>
+<md>
+#### Platform: macOS (`-mac_os`)
+Generates only macOS (`.sh`) scripts.
+</md>

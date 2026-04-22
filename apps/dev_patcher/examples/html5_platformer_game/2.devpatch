@@ -1,0 +1,554 @@
+<-@ Prompt @->
+#@#
+Continue improving the game:
+1. Create procedural pixel assets, level tiles, and entity sprites (player and enemies). Add a parallax background.
+2. Add a player camera that follows the player, with an Easy-In and Easy-Out effect.
+3. Add health (3 hearts). When player take damage, a heart is consumed, and health is restored at the next level.
+4. Add two more levels.
+#@#
+
+<-@ Info @->
+#@#
+Model: Qwen 3.6 Plus (mode: Thinking)
+Free Chat on https://chat.qwen.ai/
+Patch Size: 533 lines
+Stage: 2. Adding Image Assets and Levels
+Attempts spent: 1
+DevPatcher Syntax Error/Bug: 1 (An extra ---end--- mark at the end of the patch. Doesn't break the patcher or the project code.)
+Code Error: 0
+Commands: MANAGE -create, MANAGE -write, EDIT -insert
+#@#
+
+<-@ Create the procedural assets module for pixel sprites and parallax background @->
+<@|MANAGE -create @ROOT/assets.js
+// Procedural Asset Generator
+const Sprites = {};
+const BG_LAYERS = [];
+
+function initAssets() {
+    const s = 2; // Pixel scale factor (16x16 -> 32x32)
+
+    const drawPixelSprite = (w, h, pixels) => {
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        for (const p of pixels) {
+            ctx.fillStyle = p.c;
+            ctx.fillRect(p.x, p.y, 1, 1);
+        }
+        const out = document.createElement('canvas');
+        out.width = w * s; out.height = h * s;
+        const outCtx = out.getContext('2d');
+        outCtx.imageSmoothingEnabled = false;
+        outCtx.drawImage(c, 0, 0, w * s, h * s);
+        return out;
+    };
+
+    // 16x16 Player Sprite
+    Sprites.player = drawPixelSprite(16, 16, [
+        // Blue body
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:2, c:'#4af'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:3, c:'#28a'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:4, c:'#28a'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:5, c:'#4af'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:6, c:'#4af'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:7, c:'#4af'})),
+        // Eyes
+        {x:5, y:5, c:'#fff'}, {x:10, y:5, c:'#fff'},
+        {x:6, y:5, c:'#111'}, {x:11, y:5, c:'#111'},
+        // Feet
+        ...[3,4,5,10,11,12].map(x => ({x:x, y:8, c:'#222'})),
+    ]);
+
+    // 16x16 Enemy Sprite
+    Sprites.enemy = drawPixelSprite(16, 16, [
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:4, c:'#f44'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:5, c:'#c22'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:6, c:'#c22'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:7, c:'#f44'})),
+        // Spikes
+        ...[0,2,4,6,8,10,12,14].map(x => ({x:x, y:3, c:'#f44'})),
+        ...[1,3,5,7,9,11,13,15].map(x => ({x:x, y:3, c:'#c22'})),
+        // Eyes
+        {x:5, y:5, c:'#fff'}, {x:10, y:5, c:'#fff'},
+        {x:6, y:5, c:'#000'}, {x:11, y:5, c:'#000'},
+    ]);
+
+    // 16x16 Coin Sprite
+    Sprites.coin = drawPixelSprite(16, 16, [
+        ...[4,5,6,7,8,9,10,11].map(x => ({x:x, y:4, c:'#fc0'})),
+        ...[4,5,6,7,8,9,10,11].map(x => ({x:x, y:7, c:'#fc0'})),
+        ...[4,5,6,7,8,9,10,11].map(x => ({x:x, y:10, c:'#fc0'})),
+        {x:4, y:5, c:'#da0'}, {x:11, y:5, c:'#da0'},
+        {x:4, y:6, c:'#da0'}, {x:11, y:6, c:'#da0'},
+        {x:4, y:8, c:'#da0'}, {x:11, y:8, c:'#da0'},
+        {x:4, y:9, c:'#da0'}, {x:11, y:9, c:'#da0'},
+        {x:4, y:10, c:'#da0'}, {x:11, y:10, c:'#da0'},
+    ]);
+
+    // 16x16 Spike Sprite
+    Sprites.spike = drawPixelSprite(16, 16, [
+        {x:7, y:4, c:'#d33'}, {x:8, y:4, c:'#d33'},
+        {x:6, y:5, c:'#d33'}, {x:7, y:5, c:'#b22'}, {x:8, y:5, c:'#b22'}, {x:9, y:5, c:'#d33'},
+        {x:5, y:6, c:'#d33'}, {x:6, y:6, c:'#d33'}, {x:7, y:6, c:'#d33'}, {x:8, y:6, c:'#d33'}, {x:9, y:6, c:'#d33'}, {x:10, y:6, c:'#d33'},
+        {x:4, y:7, c:'#d33'}, {x:5, y:7, c:'#d33'}, {x:6, y:7, c:'#d33'}, {x:7, y:7, c:'#b22'}, {x:8, y:7, c:'#b22'}, {x:9, y:7, c:'#d33'}, {x:10, y:7, c:'#d33'}, {x:11, y:7, c:'#d33'},
+        ...[3,4,5,6,7,8,9,10,11,12].map(x => ({x:x, y:8, c:'#d33'})),
+        ...[2,3,4,5,6,7,8,9,10,11,12,13].map(x => ({x:x, y:12, c:'#555'})),
+    ]);
+
+    // 16x16 Portal Sprite
+    Sprites.portal = drawPixelSprite(16, 16, [
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:2, c:'#39f'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:3, c:'#6cf'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:6, c:'#6cf'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:7, c:'#39f'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:10, c:'#39f'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:11, c:'#6cf'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:14, c:'#39f'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:15, c:'#6cf'})),
+    ]);
+
+    // 16x16 Heart Sprite
+    Sprites.heart = drawPixelSprite(16, 16, [
+        {x:4, y:2, c:'#f44'}, {x:5, y:2, c:'#f44'}, {x:6, y:2, c:'#f44'},
+        {x:9, y:2, c:'#f44'}, {x:10, y:2, c:'#f44'}, {x:11, y:2, c:'#f44'},
+        {x:3, y:3, c:'#f44'}, {x:4, y:3, c:'#f44'}, {x:5, y:3, c:'#f44'}, {x:6, y:3, c:'#f44'},
+        {x:9, y:3, c:'#f44'}, {x:10, y:3, c:'#f44'}, {x:11, y:3, c:'#f44'}, {x:12, y:3, c:'#f44'},
+        ...[3,4,5,6,7,8,9,10,11,12].map(x => ({x:x, y:4, c:'#f44'})),
+        ...[3,4,5,6,7,8,9,10,11,12].map(x => ({x:x, y:5, c:'#f44'})),
+        {x:4, y:6, c:'#f44'}, {x:5, y:6, c:'#f44'}, {x:6, y:6, c:'#f44'}, {x:9, y:6, c:'#f44'}, {x:10, y:6, c:'#f44'}, {x:11, y:6, c:'#f44'},
+        {x:5, y:7, c:'#f44'}, {x:6, y:7, c:'#f44'}, {x:10, y:7, c:'#f44'},
+        {x:6, y:8, c:'#f44'}, {x:9, y:8, c:'#f44'},
+        {x:7, y:9, c:'#f44'}, {x:8, y:9, c:'#f44'},
+    ]);
+
+    // 16x16 Tile Sprite
+    Sprites.platform = drawPixelSprite(16, 16, [
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:15, c:'#432'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:14, c:'#543'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:0, c:'#6a6'})),
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(x => ({x:x, y:1, c:'#5a5'})),
+        // Dirt details
+        {x:2, y:2, c:'#4a4'}, {x:5, y:2, c:'#4a4'}, {x:10, y:2, c:'#4a4'}, {x:13, y:2, c:'#4a4'},
+        {x:4, y:4, c:'#4a4'}, {x:8, y:4, c:'#4a4'}, {x:14, y:4, c:'#4a4'},
+    ]);
+
+    // Parallax Layers
+    BG_LAYERS.push({
+        draw: (ctx, width, height, camX) => {
+            const offset = -(camX * 0.1) % 100;
+            ctx.fillStyle = '#224';
+            for(let i=-1; i < Math.ceil(width/100) + 2; i++) {
+                const x = offset + i * 100;
+                ctx.beginPath(); ctx.arc(x, height - 150, 40, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(x + 50, height - 200, 60, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(x + 90, height - 120, 50, 0, Math.PI*2); ctx.fill();
+            }
+        },
+        factor: 0.1
+    });
+
+    BG_LAYERS.push({
+        draw: (ctx, width, height, camX) => {
+            const offset = -(camX * 0.3) % 50;
+            ctx.fillStyle = '#336';
+            for(let i=0; i < 20; i++) {
+                ctx.fillRect(offset + i * 50, Math.sin(i) * 100 + height/2, 2, 2);
+            }
+        },
+        factor: 0.3
+    });
+}
+---end---
+
+<-@ Create the level data module containing 3 levels @->
+<@|MANAGE -create @ROOT/levels.js
+const LEVELS = [
+    // Level 1: Intro
+    {
+        spawn: { x: 50, y: 400 },
+        platforms: [
+            { x: 0, y: 550, w: 600, h: 50 }, { x: 700, y: 550, w: 800, h: 50 },
+            { x: 200, y: 450, w: 120, h: 20 }, { x: 450, y: 350, w: 150, h: 20 },
+            { x: 800, y: 400, w: 100, h: 20 }, { x: 1000, y: 300, w: 150, h: 20 },
+            { x: 1200, y: 250, w: 200, h: 20 }
+        ],
+        coins: [
+            { x: 260, y: 420, r: 10 }, { x: 525, y: 320, r: 10 },
+            { x: 850, y: 370, r: 10 }, { x: 1075, y: 270, r: 10 },
+            { x: 1300, y: 220, r: 10 }
+        ],
+        enemies: [
+            { x: 220, y: 420, w: 30, h: 30, vx: 1.5, minX: 200, maxX: 300 },
+            { x: 820, y: 370, w: 30, h: 30, vx: -1.5, minX: 800, maxX: 900 }
+        ],
+        spikes: [
+            { x: 620, y: 530, w: 40, h: 20 }, { x: 1100, y: 280, w: 40, h: 20 }
+        ],
+        portal: { x: 1300, y: 190, w: 40, h: 60 }
+    },
+    // Level 2: Verticality
+    {
+        spawn: { x: 50, y: 500 },
+        platforms: [
+            { x: 0, y: 550, w: 300, h: 50 },
+            { x: 100, y: 450, w: 100, h: 20 }, { x: 250, y: 350, w: 100, h: 20 },
+            { x: 450, y: 350, w: 150, h: 20 }, { x: 450, y: 250, w: 100, h: 20 },
+            { x: 650, y: 200, w: 100, h: 20 }, { x: 800, y: 300, w: 200, h: 20 },
+            { x: 1100, y: 400, w: 150, h: 20 }, { x: 1300, y: 200, w: 200, h: 20 }
+        ],
+        coins: [
+            { x: 150, y: 420, r: 10 }, { x: 300, y: 320, r: 10 },
+            { x: 500, y: 320, r: 10 }, { x: 500, y: 220, r: 10 },
+            { x: 700, y: 170, r: 10 }, { x: 900, y: 270, r: 10 },
+            { x: 1175, y: 370, r: 10 }
+        ],
+        enemies: [
+            { x: 500, y: 320, w: 30, h: 30, vx: 1, minX: 450, maxX: 580 },
+            { x: 850, y: 270, w: 30, h: 30, vx: -1.5, minX: 800, maxX: 980 }
+        ],
+        spikes: [
+            { x: 350, y: 530, w: 100, h: 20 }, { x: 1200, y: 380, w: 40, h: 20 }
+        ],
+        portal: { x: 1400, y: 140, w: 40, h: 60 }
+    },
+    // Level 3: Hard Gauntlet
+    {
+        spawn: { x: 50, y: 400 },
+        platforms: [
+            { x: 0, y: 450, w: 150, h: 20 },
+            { x: 250, y: 400, w: 50, h: 20 }, { x: 400, y: 350, w: 50, h: 20 },
+            { x: 550, y: 300, w: 50, h: 20 }, { x: 700, y: 300, w: 200, h: 20 },
+            { x: 1000, y: 400, w: 100, h: 20 }, { x: 1200, y: 300, w: 100, h: 20 },
+            { x: 1400, y: 200, w: 200, h: 20 }
+        ],
+        coins: [
+            { x: 275, y: 370, r: 10 }, { x: 425, y: 320, r: 10 },
+            { x: 575, y: 270, r: 10 }, { x: 750, y: 270, r: 10 },
+            { x: 850, y: 270, r: 10 }, { x: 1050, y: 370, r: 10 },
+            { x: 1250, y: 270, r: 10 }
+        ],
+        enemies: [
+            { x: 720, y: 270, w: 30, h: 30, vx: 2, minX: 700, maxX: 880 },
+            { x: 1450, y: 170, w: 30, h: 30, vx: -2, minX: 1400, maxX: 1580 }
+        ],
+        spikes: [
+            { x: 150, y: 430, w: 80, h: 20 }, { x: 900, y: 380, w: 100, h: 20 },
+            { x: 1300, y: 280, w: 40, h: 20 }
+        ],
+        portal: { x: 1500, y: 140, w: 40, h: 60 }
+    }
+];
+---end---
+
+<-@ Overwrite game.js with camera, health, and modular logic @->
+<@|MANAGE -write @ROOT/game.js
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// Setup Canvas
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 600;
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
+
+// Physics & Game Constants
+const GRAVITY = 0.6;
+const JUMP_FORCE = -12;
+const MOVE_SPEED = 5;
+
+// Game State
+let gameState = 'MENU'; // MENU, PLAYING, WIN, GAME_OVER
+let currentLevel = 0;
+let player = { x: 0, y: 0, w: 32, h: 32, vx: 0, vy: 0, grounded: false, health: 3, invincible: 0 };
+let camera = { x: 0, y: 0 };
+let levelData = { platforms: [], coins: [], enemies: [], spikes: [], portal: {} };
+let keys = { left: false, right: false, up: false };
+
+// Initialization
+window.onload = () => {
+    initAssets();
+    requestAnimationFrame(loop);
+};
+
+// Input Listeners
+window.addEventListener('keydown', e => {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.up = true;
+
+    if (gameState !== 'PLAYING' && (e.code === 'Enter' || e.code === 'Space')) {
+        if (gameState === 'MENU') startLevel(0);
+        else if (gameState === 'WIN') gameState = 'MENU';
+        else if (gameState === 'GAME_OVER') gameState = 'MENU';
+    }
+});
+window.addEventListener('keyup', e => {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.up = false;
+});
+canvas.addEventListener('click', () => {
+    if (gameState !== 'PLAYING') {
+        if (gameState === 'MENU') startLevel(0);
+        else if (gameState === 'WIN') gameState = 'MENU';
+        else if (gameState === 'GAME_OVER') gameState = 'MENU';
+    }
+});
+
+function startLevel(index) {
+    currentLevel = index;
+    const lvl = LEVELS[currentLevel];
+    player = { ...lvl.spawn, w: 32, h: 32, vx: 0, vy: 0, grounded: false, health: player.health, invincible: 0 };
+    if (index === 0) player.health = 3; // Reset health only at start
+    camera = { x: 0, y: 0 };
+    // Clone level data to avoid modifying original array during runtime (e.g. coins collected)
+    levelData = {
+        platforms: lvl.platforms,
+        coins: lvl.coins.map(c => ({...c, collected: false})),
+        enemies: lvl.enemies.map(e => ({...e, originalX: e.x})),
+        spikes: lvl.spikes,
+        portal: lvl.portal
+    };
+    gameState = 'PLAYING';
+}
+
+function update() {
+    if (gameState !== 'PLAYING') return;
+
+    // Horizontal Movement
+    if (keys.left) player.vx = -MOVE_SPEED;
+    else if (keys.right) player.vx = MOVE_SPEED;
+    else player.vx = 0;
+
+    // Jumping
+    if (keys.up && player.grounded) {
+        player.vy = JUMP_FORCE;
+        player.grounded = false;
+    }
+
+    // Apply Gravity & Velocity
+    player.vy += GRAVITY;
+    player.x += player.vx;
+    player.y += player.vy;
+    player.grounded = false;
+
+    // Platform Collisions (AABB)
+    for (let p of levelData.platforms) {
+        if (player.x < p.x + p.w && player.x + player.w > p.x &&
+            player.y < p.y + p.h && player.y + player.h > p.y) {
+            
+            let overlapX = (player.x + player.w / 2) < (p.x + p.w / 2) 
+                ? (player.x + player.w) - p.x : p.x + p.w - player.x;
+            let overlapY = (player.y + player.h / 2) < (p.y + p.h / 2) 
+                ? (player.y + player.h) - p.y : p.y + p.h - player.y;
+
+            if (overlapX < overlapY) {
+                player.vx = 0;
+                player.x += overlapX > 0 ? -overlapX : overlapX;
+            } else {
+                player.vy = 0;
+                if (overlapY > 0) {
+                    player.y = p.y - player.h;
+                    player.grounded = true;
+                } else {
+                    player.y = p.y + p.h;
+                }
+            }
+        }
+    }
+
+    // Enemy Logic & Collision
+    for (let e of levelData.enemies) {
+        e.x += e.vx;
+        if (e.x <= e.minX || e.x + e.w >= e.maxX) e.vx *= -1;
+
+        // Player vs Enemy
+        if (player.x < e.x + e.w && player.x + player.w > e.x &&
+            player.y < e.y + e.h && player.y + player.h > e.y) {
+            if (player.vy > 0 && player.y + player.h - player.vy <= e.y + 10) {
+                e.y = -1000; // Defeated
+                player.vy = JUMP_FORCE * 0.6;
+            } else {
+                takeDamage();
+            }
+        }
+    }
+
+    // Spike Collision
+    for (let s of levelData.spikes) {
+        let box = { x: s.x + 8, y: s.y + 12, w: s.w - 16, h: s.h - 12 };
+        if (player.x < box.x + box.w && player.x + player.w > box.x &&
+            player.y < box.y + box.h && player.y + player.h > box.y) {
+            takeDamage();
+        }
+    }
+
+    // Coin Collection
+    for (let c of levelData.coins) {
+        if (!c.collected) {
+            let dist = Math.hypot(player.x + player.w/2 - c.x, player.y + player.h/2 - c.y);
+            if (dist < player.w/2 + c.r) c.collected = true;
+        }
+    }
+
+    // Portal Win Condition
+    let p = levelData.portal;
+    const coinsLeft = levelData.coins.some(c => !c.collected);
+    if (!coinsLeft && player.x < p.x + p.w && player.x + player.w > p.x &&
+        player.y < p.y + p.h && player.y + player.h > p.y) {
+        if (currentLevel < LEVELS.length - 1) {
+            startLevel(currentLevel + 1);
+        } else {
+            gameState = 'WIN';
+        }
+    }
+
+    // Invincibility Timer
+    if (player.invincible > 0) player.invincible--;
+
+    // Fall off screen
+    if (player.y > CANVAS_HEIGHT + 200) takeDamage();
+
+    // Camera Follow (Easy-In / Easy-Out using Lerp)
+    const targetX = player.x - CANVAS_WIDTH / 2;
+    const targetY = player.y - CANVAS_HEIGHT / 2 + 100;
+    
+    // Smoothly interpolate camera position
+    camera.x += (targetX - camera.x) * 0.08;
+    camera.y += (targetY - camera.y) * 0.08;
+    
+    // Lock camera bounds (optional, keeps camera from going too far left/up)
+    if (camera.x < 0) camera.x = 0; 
+    if (camera.y < 0) camera.y = 0;
+}
+
+function takeDamage() {
+    if (player.invincible > 0 || gameState !== 'PLAYING') return;
+    player.health--;
+    player.invincible = 60; // 1 second invincibility
+    if (player.health <= 0) {
+        gameState = 'GAME_OVER';
+        player.health = 3; // Reset for next try
+    }
+}
+
+function draw() {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    if (gameState === 'MENU') {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('2D Platformer', CANVAS_WIDTH/2, 250);
+        ctx.font = '24px Arial';
+        ctx.fillText('Collect coins and reach the portal!', CANVAS_WIDTH/2, 320);
+        ctx.font = '18px Arial';
+        ctx.fillText('Press ENTER or CLICK to Start', CANVAS_WIDTH/2, 370);
+    } 
+    else if (gameState === 'PLAYING' || gameState === 'GAME_OVER') {
+        // Draw Parallax Background (Moves with camera)
+        ctx.save();
+        for (let layer of BG_LAYERS) {
+            layer.draw(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, camera.x);
+        }
+        ctx.restore();
+
+        // Apply Camera Transform
+        ctx.save();
+        ctx.translate(-Math.round(camera.x), -Math.round(camera.y));
+
+        // Draw World
+        // Platforms
+        for (let p of levelData.platforms) {
+            // Repeat sprite for width
+            for(let tx = 0; tx < p.w; tx += Sprites.platform.width) {
+                ctx.drawImage(Sprites.platform, p.x + tx, p.y, Sprites.platform.width, Sprites.platform.height);
+            }
+        }
+
+        // Coins
+        for (let c of levelData.coins) {
+            if (!c.collected) {
+                ctx.drawImage(Sprites.coin, c.x - c.r, c.y - c.r, c.r*2, c.r*2);
+            }
+        }
+
+        // Spikes
+        for (let s of levelData.spikes) {
+            ctx.drawImage(Sprites.spike, s.x, s.y, s.w, s.h);
+        }
+
+        // Portal
+        ctx.drawImage(Sprites.portal, levelData.portal.x, levelData.portal.y, levelData.portal.w, levelData.portal.h);
+
+        // Enemies
+        for (let e of levelData.enemies) {
+            if (e.y > -100) ctx.drawImage(Sprites.enemy, e.x, e.y, e.w, e.h);
+        }
+
+        // Player (Blink if invincible)
+        if (player.invincible === 0 || Math.floor(Date.now() / 50) % 2 === 0) {
+            ctx.drawImage(Sprites.player, player.x, player.y, player.w, player.h);
+        }
+
+        ctx.restore();
+
+        // Draw HUD (Health)
+        for (let i = 0; i < 3; i++) {
+            ctx.drawImage(Sprites.heart, 20 + i * 40, 20, 32, 32);
+        }
+        ctx.fillStyle = '#111'; // Mask empty hearts logic is simplified here by overlaying background or just drawing full
+        // Better: Draw 3 hearts, if health < 3 draw empty or dark
+        // For pixel art simplicity, I'll just draw 3 hearts, and if damaged, cover with dark
+        if (player.health < 3) {
+            for (let i = player.health; i < 3; i++) {
+                ctx.fillStyle = '#222';
+                ctx.fillRect(20 + i * 40, 20, 32, 32); // Cover
+                // Or draw a gray heart? Let's just leave it blank for contrast or draw a 'missing' heart
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.strokeRect(20 + i * 40, 20, 32, 32);
+            }
+        }
+    }
+
+    if (gameState === 'GAME_OVER') {
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game Over', CANVAS_WIDTH/2, 280);
+        ctx.font = '24px Arial';
+        ctx.fillText('Press ENTER or CLICK to Menu', CANVAS_WIDTH/2, 340);
+    }
+    else if (gameState === 'WIN') {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('You Won!', CANVAS_WIDTH/2, 250);
+        ctx.font = '24px Arial';
+        ctx.fillText('All levels complete!', CANVAS_WIDTH/2, 320);
+        ctx.font = '18px Arial';
+        ctx.fillText('Press ENTER or CLICK for Menu', CANVAS_WIDTH/2, 370);
+    }
+}
+
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+---end---
+
+<-@ Update index.html to load new asset and level scripts @->
+<@|EDIT -v1 -insert @ROOT/index.html
+---old---
+    <canvas id="gameCanvas"></canvas>
+{code_start|content|code_end}
+    <script src="game.js"></script>
+---new---
+    <script src="assets.js"></script>
+    <script src="levels.js"></script>
+---end---
+---end---

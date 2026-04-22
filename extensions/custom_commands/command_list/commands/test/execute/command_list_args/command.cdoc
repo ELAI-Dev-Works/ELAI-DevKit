@@ -1,0 +1,18 @@
+number = 2
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-command <cmd1|cmd2>`: Modifier for `-command_list`. Filters the output to show only the specified commands.
+</args_desc>
+<md>
+#### Filter Commands (`-command`)
+Modifier for `-command_list`. Filters the output to show only the specified commands.
+
+**Syntax:** `-command <cmd1|cmd2|...>`
+
+```
+<@|TEST -command_list -command <edit|manage>
+---end---
+```
+</md>

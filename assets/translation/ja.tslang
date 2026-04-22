@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="core" lang="ja">
+    <section name="Interface">
+        <key name="settings_general_group_title">一般設定</key>
+        <key name="settings_main_tab">メイン</key>
+        <key name="settings_ui_tab">UI</key>
+        <key name="settings_ui_group_title">UI設定</key>
+        <key name="ui_always_show_tooltips">ツールチップアイコンを常に表示</key>
+        <key name="ui_always_show_tooltips_tooltip">無効にすると、ツールチップアイコンは要素にカーソルを合わせたときのみ表示されます。</key>
+        <key name="settings_extensions_settings_tab">拡張機能設定</key>
+        <key name="settings_extensions_manager_tab">拡張機能マネージャー</key>
+        <key name="theme_label">テーマ:</key>
+        <key name="color_scheme_label">カラースキーム:</key>
+        <key name="language_label">言語:</key>
+        <key name="reset_btn">リセット</key>
+        <key name="apply_btn">適用</key>
+        <key name="save_btn">保存</key>
+        <key name="close_btn">閉じる</key>
+        <key name="window_title">ELAI-DevKit</key>
+        <key name="select_project_folder_btn">プロジェクトフォルダを選択...</key>
+        <key name="project_path_label_unselected">プロジェクトフォルダが選択されていません (@ROOT)</key>
+        <key name="project_path_label_selected">&lt;b&gt;@ROOT:&lt;/b&gt; {}</key>
+        <key name="edit_ignore_list_btn">除外リスト</key>
+        <key name="ignore_tab_global">グローバルリスト</key>
+        <key name="ignore_tab_temp">一時リスト（セッション）</key>
+        <key name="ignore_use_gitignore">バックアップとパッカーに.gitignoreを使用</key>
+        <key name="settings_btn">設定</key>
+        <key name="restart_btn">再起動</key>
+        <key name="settings_extensions_manager_accordion">拡張機能マネージャー</key>
+        <key name="settings_accordion_suffix">設定</key>
+        <key name="core_modules_group">コアモジュール</key>
+        <key name="custom_modules_group">カスタムモジュール</key>
+        <key name="author_label">作成者:</key>
+        <key name="version_label">バージョン:</key>
+        <key name="dependencies_label">依存関係:</key>
+        <key name="select_all_action">すべて選択</key>
+        <key name="launcher_btn_run">ELAI-DevKitを実行</key>
+        <key name="launcher_btn_run_desc">メイン開発環境を起動</key>
+        <key name="launcher_btn_docs">ドキュメント</key>
+        <key name="launcher_btn_docs_desc">ガイドとリファレンスを表示</key>
+        <key name="launcher_btn_settings">設定</key>
+        <key name="launcher_btn_settings_desc">グローバル設定を構成</key>
+        <key name="launcher_btn_ext">拡張機能</key>
+        <key name="launcher_btn_ext_desc">拡張機能の管理と構成</key>
+        <key name="btn_back_to_launcher">スタートに戻る</key>
+        <key name="docs_nav_title">トピック</key>
+        <key name="console_start_btn">シェルを起動</key>
+        <key name="console_clear_btn">クリア</key>
+        <key name="console_shell_btn">シェル</key>
+        <key name="console_menu_restart">シェルを再起動</key>
+        <key name="console_menu_kill">シェルを終了</key>
+        <key name="console_input_placeholder">コマンドを入力...</key>
+        <key name="console_input_disabled_placeholder">入力無効（読み取り専用）...</key>
+        <key name="pl_console_label">対話型コンソール（PowerShell/ターミナル）：</key>
+        <key name="doc_copy_code_link">コードをコピー</key>
+        <key name="ignore_dirs_label">無視するディレクトリ:</key>
+        <key name="ignore_files_label">無視するファイル:</key>
+        <key name="patcher_log_placeholder">パッチャーの実行結果がここに表示されます...</key>
+        <key name="detach_tab_tooltip">タブを切り離す</key>
+        <key name="tab_detached_msg">このタブは別ウィンドウで開かれています。</key>
+        <key name="restore_tab_btn">復元</key>
+        <key name="project_label">プロジェクト:</key>
+        <key name="example_patch_loaded">サンプルパッチが読み込まれました。</key>
+    </section>
+    <section name="Logs">
+        <key name="settings_loaded_log">[設定] 構成が読み込まれました。</key>
+        <key name="restart_signal_sent_log">再起動シグナルを送信しました...</key>
+        <key name="project_folder_selected_log">プロジェクトフォルダを設定: {}</key>
+        <key name="log_cleared">========================================</key>
+        <key name="project_folder_missing_error">エラー: プロジェクトフォルダ (@ROOT) が選択されていません!</key>
+        <key name="settings_saved_log">[OK] 設定を正常に保存しました。</key>
+        <key name="console_started_log">[コンソール] シェルを起動: {}</key>
+        <key name="console_error_pty_log">[エラー] PTYセッションの起動に失敗しました: {}</key>
+        <key name="console_terminated_log">[コンソール] シェルを終了しました。</key>
+        <key name="console_restarting_log">[コンソール] シェルを再起動しています...</key>
+    </section>
+    <section name="Dialogs">
+        <key name="restart_dialog_title">再起動の確認</key>
+        <key name="restart_dialog_msg">アプリケーションを再起動してもよろしいですか？</key>
+        <key name="ignore_settings_title">除外リストエディター</key>
+        <key name="ignore_settings_dirs_info">除外するディレクトリ（1行に1つ）。バックアップとパッカーに影響します。</key>
+        <key name="ignore_settings_files_info">除外するファイル名（1行に1つ）。バックアップとパッカーに影響します。</key>
+
+        <key name="ignore_settings_tags_label">指示:</key>
+
+        <key name="ignore_settings_tags_info">[!backup]、[!packer]、[!git]などのタグを使用して、特定のモジュールに対してファイルを選択的に除外できます。タグがない場合、ファイルはすべてのモジュールで除外されます。タグは組み合わせることができます - 複数のタグが指定されている場合、ファイルは指定されたすべてのコンテキストで除外されます。例：「node_modules」- すべての場所で除外；「dist [!packer]」- パッカーのみで除外；「build [!git] [!packer]」- gitとパッカーで除外しますが、バックアップには含まれます。</key>
+    </section>
+    <section name="Tooltips">
+        <key name="select_project_folder_tooltip">メインプロジェクトフォルダーを選択するダイアログを開きます。</key>
+        <key name="edit_ignore_list_tooltip">バックアップとパッカーの除外ファイルとフォルダーのリストを編集します。</key>
+        <key name="edit_ignore_list_disabled_tooltip">このボタンを有効にするには、まずプロジェクトフォルダーを選択してください。</key>
+        <key name="settings_tooltip">メインアプリケーション設定パネルを開きます。</key>
+        <key name="restart_tooltip">重要な変更を適用するためにアプリケーションを再起動します。</key>
+        <key name="home_tooltip">メインランチャー画面に戻ります。</key>
+        <key name="ignore_use_gitignore_tooltip">チェックを入れると、プロジェクトの.gitignoreファイルのパターンが自動的に除外リストに追加されます。</key>
+        <key name="console_clear_tooltip">コンソール出力をクリア</key>
+        <key name="console_shell_tooltip">プロセスの再起動や終了などのシェルオプションを表示します。</key>
+        <key name="launcher_run_tooltip">ELAI-DevKit開発環境を起動します。</key>
+        <key name="launcher_docs_tooltip">アプリケーションのドキュメントとガイドを開きます。</key>
+        <key name="launcher_settings_tooltip">テーマや言語などのアプリケーション設定を構成します。</key>
+        <key name="launcher_ext_tooltip">利用可能な拡張機能を管理、有効化、または無効化します。</key>
+        <key name="detach_tab_tooltip">このタブを独立した別ウィンドウで開きます。</key>
+        <key name="docs_find_next_tooltip">検索テキストの次の出現箇所を検索します。</key>
+        <key name="docs_find_prev_tooltip">検索テキストの前の出現箇所を検索します。</key>
+        <key name="settings_reset_tooltip">このページのすべての設定をデフォルト値にリセットします(保存されません)。</key>
+        <key name="settings_apply_tooltip">このセッションの現在の設定を適用します。保存しない限り、再起動時に変更は失われます。</key>
+        <key name="settings_save_tooltip">適用されたすべての変更をsettings.tomlファイルに保存します。</key>
+        <key name="settings_close_tooltip">設定パネルを閉じて、未適用の変更を元に戻します。</key>
+        <key name="doc_copied_tooltip">コピーしました!</key>
+    </section>
+    <section name="Standalone">
+        <key name="dev_patcher_standalone_title">Dev Patcher (スタンドアロン)</key>
+        <key name="project_launcher_standalone_title">Project Launcher (スタンドアロン)</key>
+        <key name="project_text_packer_standalone_title">Project Text Packer (スタンドアロン)</key>
+    </section>
+    <section name="Errors">
+        <key name="error_report_title">エラーレポート</key>
+    </section>
+</tslang>

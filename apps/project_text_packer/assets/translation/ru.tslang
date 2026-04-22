@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_text_packer" lang="ru">
+    <section name="Interface">
+        <key name="project_text_packer_tab">Project Text Packer</key>
+        <key name="project_text_packer_quick_settings_title">Параметры упаковщика проекта</key>
+        <key name="packer_output_dir_label">Выходной каталог:</key>
+        <key name="packer_select_output_dir_btn">Выбрать...</key>
+        <key name="packer_start_btn">Упаковать проект</key>
+        <key name="packer_extensions_label">Поддерживаемые расширения файлов:</key>
+        <key name="packer_options_group_title">Параметры упаковки</key>
+        <key name="packer_one_file_checkbox">Объединить в один файл</key>
+        <key name="packer_timestamp_checkbox">Добавить Дату и Время</key>
+        <key name="packer_split_checkbox">Разделить на части (лимит 1МБ)</key>
+        <key name="patch_load_error_title">Ошибка</key>
+        <key name="project_folder_missing_error">ОШИБКА: Папка проекта (@ROOT) не выбрана!</key>
+        <key name="quick_settings_saved_log">[Настройки] Быстрые настройки сохранены.</key>
+        <key name="quick_settings_reset_log">[Настройки] Быстрые настройки сброшены на значения по умолчанию (не сохранены).</key>
+        <key name="reset_quick_settings_btn">Сбросить по умолчанию</key>
+        <key name="save_quick_settings_btn">Сохранить настройки</key>
+    </section>
+    <section name="Logs">
+        <key name="packer_log_placeholder">Журналы Project Text Packer будут отображаться здесь...</key>
+        <key name="packer_status_ready">Готов</key>
+        <key name="packer_status_packing">Упаковка проекта...</key>
+        <key name="packer_status_done">Завершено</key>
+        <key name="packer_status_error">Ошибка при упаковке.</key>
+        <key name="packer_status_cancelled">Операция отменена пользователем.</key>
+        <key name="packer_log_collecting_files">Сбор файлов...</key>
+        <key name="packer_log_writing_pack">Запись пакета проекта...</key>
+        <key name="packer_log_building_tree">Построение дерева файлов...</key>
+        <key name="packer_log_files_saved">Файлы сохранены</key>
+        <key name="packer_removing_old_files_log">Удаление существующих _project_pack.txt и _tree.txt...</key>
+        <key name="packer_empty_file_comment">&lt;!-- Файл пуст --&gt;</key>
+    </section>
+    <section name="Dialogs">
+        <key name="packer_overwrite_title">Подтвердить перезапись</key>
+        <key name="packer_overwrite_message">Выходные файлы уже существуют. Перезаписать?</key>
+        <key name="packer_output_dir_not_selected_error">Ошибка: Выходная директория не выбрана.</key>
+    </section>
+    <section name="Tooltips">
+        <key name="packer_extensions_tooltip">Расширения файлов для включения в пакет, разделенные пробелами или запятыми. напр. .py .txt .md</key>
+        <key name="packer_one_file_tooltip">Объединяет дерево каталогов и содержимое файлов в один .txt файл.</key>
+        <key name="packer_timestamp_tooltip">Добавляет временную метку в начало файла.</key>
+        <key name="packer_split_tooltip">Автоматически разделяет вывод на несколько файлов, если размер превышает 999 КБ.</key>
+        <key name="packer_select_output_dir_tooltip">Выберите каталог, в котором будут сохранены упакованные текстовые файлы.</key>
+        <key name="packer_start_tooltip">Начать процесс сканирования, сборки и упаковки файлов проекта.</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_text_packer_standalone_title">Project Text Packer (Автономный)</key>
+    </section>
+</tslang>

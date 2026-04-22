@@ -1,0 +1,41 @@
+number = 6
+type = command(init)
+
+<lang[en]>
+<order>
+6 - EDIT
+</order>
+<variables>
+- `---old---` : Mandatory string for replacing, inserting, and deleting content from a file. Used only in the EDIT command.
+
+- `---new---` : Mandatory string for replacing (-replace) and inserting (-insert) content in a file. Used only in the EDIT command.
+
+- `{content}` : A placeholder for inserting code at a specific location in a file, indicated in the `---old---` string. It must be present inside the `---old---` string to correctly apply content insertion without errors. It is accompanied by two other markers `{code_start}` and `{code_end}`. More details are available in the EDIT command help.
+</variables>
+<md>
+## The `EDIT` Command
+
+Command for intelligent editing of text file contents. It supports advanced pattern matching and indentation preservation.
+
+### Matching Strategies (Modifiers)
+
+DevPatcher offers two distinct algorithms for finding and applying code changes. You can specify these flags after the command (e.g., `EDIT -v2 -replace ...`). Selecting an algorithm is **mandatory**.
+
+*   **`-v1` - Normalization Strategy**:
+    *   Ignores absolute indentation. It "flattens" both the search pattern and the target file content to find a match based on code structure.
+    *   **Best for:** Standard edits where you know the code structure but want to be flexible about nesting levels.
+    *   **Algorithm problems**: You need to know the indentation rules thoroughly in order to avoid making mistakes when replacing and inserting.
+
+*   **`-v2` - Delta Strategy**:
+    *   Calculates the **relative indentation difference** (delta) between your patch's `---old---` block and the actual code in the file.
+    *   Applies this delta to the `---new---` block.
+    *   **Best for:** Inserting or replacing code when you are unsure of the absolute indentation (e.g., code might be wrapped in a `class` or `if` block you didn't account for), but the *relative* structure is correct.
+    *   **Algorithm problems**: Remember to use relative indents and follow the replace and insert rules.
+
+### Arguments
+{args_list}
+
+### Variables
+{args_var}
+
+</md>

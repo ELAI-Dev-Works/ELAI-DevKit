@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="core" lang="ko">
+    <section name="Interface">
+        <key name="settings_general_group_title">일반 설정</key>
+        <key name="settings_main_tab">메인</key>
+        <key name="settings_ui_tab">UI</key>
+        <key name="settings_ui_group_title">UI 설정</key>
+        <key name="ui_always_show_tooltips">툴팁 아이콘 항상 표시</key>
+        <key name="ui_always_show_tooltips_tooltip">비활성화하면 요소 위에 마우스를 올렸을 때만 툴팁 아이콘이 표시됩니다.</key>
+        <key name="settings_extensions_settings_tab">확장 설정</key>
+        <key name="settings_extensions_manager_tab">확장 관리자</key>
+        <key name="theme_label">테마:</key>
+        <key name="color_scheme_label">색상 구성표:</key>
+        <key name="language_label">언어:</key>
+        <key name="reset_btn">초기화</key>
+        <key name="apply_btn">적용</key>
+        <key name="save_btn">저장</key>
+        <key name="close_btn">닫기</key>
+        <key name="window_title">ELAI-DevKit</key>
+        <key name="select_project_folder_btn">프로젝트 폴더 선택...</key>
+        <key name="project_path_label_unselected">프로젝트 폴더가 선택되지 않음 (@ROOT)</key>
+        <key name="project_path_label_selected">&lt;b&gt;@ROOT:&lt;/b&gt; {}</key>
+        <key name="edit_ignore_list_btn">무시 목록</key>
+        <key name="ignore_tab_global">전역 목록</key>
+        <key name="ignore_tab_temp">임시 목록 (세션)</key>
+        <key name="ignore_use_gitignore">백업 및 패커에 프로젝트 .gitignore 사용</key>
+        <key name="settings_btn">설정</key>
+        <key name="restart_btn">재시작</key>
+        <key name="settings_extensions_manager_accordion">확장 관리자</key>
+        <key name="settings_accordion_suffix">설정</key>
+        <key name="core_modules_group">핵심 모듈</key>
+        <key name="custom_modules_group">사용자 정의 모듈</key>
+        <key name="author_label">작성자:</key>
+        <key name="version_label">버전:</key>
+        <key name="dependencies_label">종속성:</key>
+        <key name="select_all_action">모두 선택</key>
+        <key name="launcher_btn_run">ELAI-DevKit 실행</key>
+        <key name="launcher_btn_run_desc">메인 개발 환경 시작</key>
+        <key name="launcher_btn_docs">문서</key>
+        <key name="launcher_btn_docs_desc">가이드 및 참조 보기</key>
+        <key name="launcher_btn_settings">설정</key>
+        <key name="launcher_btn_settings_desc">전역 환경설정 구성</key>
+        <key name="launcher_btn_ext">확장</key>
+        <key name="launcher_btn_ext_desc">확장 관리 및 구성</key>
+        <key name="btn_back_to_launcher">시작으로 돌아가기</key>
+        <key name="docs_nav_title">주제</key>
+        <key name="console_start_btn">셸 시작</key>
+        <key name="console_clear_btn">지우기</key>
+        <key name="console_shell_btn">셸</key>
+        <key name="console_menu_restart">셸 재시작</key>
+        <key name="console_menu_kill">셸 종료</key>
+        <key name="console_input_placeholder">명령어 입력...</key>
+        <key name="console_input_disabled_placeholder">입력 비활성화됨 (읽기 전용)...</key>
+        <key name="pl_console_label">대화형 콘솔 (PowerShell/터미널):</key>
+        <key name="doc_copy_code_link">코드 복사</key>
+        <key name="ignore_dirs_label">무시할 디렉토리:</key>
+        <key name="ignore_files_label">무시할 파일:</key>
+        <key name="patcher_log_placeholder">패처 실행 결과가 여기에 표시됩니다...</key>
+        <key name="detach_tab_tooltip">탭 분리</key>
+        <key name="tab_detached_msg">이 탭은 별도 창에서 열렸습니다.</key>
+        <key name="restore_tab_btn">복원</key>
+        <key name="project_label">프로젝트:</key>
+        <key name="example_patch_loaded">예제 패치가 로드되었습니다.</key>
+    </section>
+    <section name="Logs">
+        <key name="settings_loaded_log">[설정] 구성이 로드되었습니다.</key>
+        <key name="restart_signal_sent_log">재시작 신호 전송됨...</key>
+        <key name="project_folder_selected_log">프로젝트 폴더 설정됨: {}</key>
+        <key name="log_cleared">========================================</key>
+        <key name="project_folder_missing_error">오류: 프로젝트 폴더(@ROOT)가 선택되지 않았습니다!</key>
+        <key name="settings_saved_log">[확인] 설정이 성공적으로 저장되었습니다.</key>
+        <key name="console_started_log">[콘솔] 셸 시작됨: {}</key>
+        <key name="console_error_pty_log">[오류] PTY 세션 시작 실패: {}</key>
+        <key name="console_terminated_log">[콘솔] 셸이 종료되었습니다.</key>
+        <key name="console_restarting_log">[콘솔] 셸 재시작 중...</key>
+    </section>
+    <section name="Dialogs">
+        <key name="restart_dialog_title">재시작 확인</key>
+        <key name="restart_dialog_msg">애플리케이션을 재시작하시겠습니까?</key>
+        <key name="ignore_settings_title">무시 목록 편집기</key>
+        <key name="ignore_settings_dirs_info">무시할 디렉토리 (한 줄에 하나씩). 백업 및 패커에 영향을 줍니다.</key>
+        <key name="ignore_settings_files_info">무시할 파일명 (한 줄에 하나씩). 백업 및 패커에 영향을 줍니다.</key>
+
+        <key name="ignore_settings_tags_label">설명:</key>
+
+        <key name="ignore_settings_tags_info">[!backup], [!packer], [!git]과 같은 태그를 사용하여 특정 모듈에 대해 선택적으로 파일을 무시할 수 있습니다. 태그가 없으면 파일은 모든 모듈에서 무시됩니다. 태그는 결합할 수 있습니다 - 여러 태그가 지정되면 파일은 지정된 모든 컨텍스트에서 무시됩니다. 예: 'node_modules' - 모든 곳에서 무시; 'dist [!packer]' - 패커에서만 무시; 'build [!git] [!packer]' - git과 패커에서 무시하지만 백업에는 포함.</key>
+    </section>
+    <section name="Tooltips">
+        <key name="select_project_folder_tooltip">메인 프로젝트 폴더를 선택하는 대화상자를 엽니다.</key>
+        <key name="edit_ignore_list_tooltip">백업 및 패커에서 무시할 파일 및 폴더 목록을 편집합니다.</key>
+        <key name="edit_ignore_list_disabled_tooltip">이 버튼을 활성화하려면 먼저 프로젝트 폴더를 선택하세요.</key>
+        <key name="settings_tooltip">메인 애플리케이션 설정 패널을 엽니다.</key>
+        <key name="restart_tooltip">중요한 변경사항을 적용하기 위해 애플리케이션을 재시작합니다.</key>
+        <key name="home_tooltip">메인 런처 화면으로 돌아갑니다.</key>
+        <key name="ignore_use_gitignore_tooltip">체크하면 프로젝트의 .gitignore 파일 패턴이 자동으로 무시 목록에 추가됩니다.</key>
+        <key name="console_clear_tooltip">콘솔 출력 지우기</key>
+        <key name="console_shell_tooltip">프로세스 재시작 또는 종료와 같은 셸 옵션을 표시합니다.</key>
+        <key name="launcher_run_tooltip">ELAI-DevKit 개발 환경을 실행합니다.</key>
+        <key name="launcher_docs_tooltip">애플리케이션 문서 및 가이드를 엽니다.</key>
+        <key name="launcher_settings_tooltip">테마 및 언어와 같은 핵심 애플리케이션 설정을 구성합니다.</key>
+        <key name="launcher_ext_tooltip">사용 가능한 확장 프로그램을 관리, 활성화 또는 비활성화합니다.</key>
+        <key name="detach_tab_tooltip">이 탭을 별도의 독립 창으로 엽니다.</key>
+        <key name="docs_find_next_tooltip">검색 텍스트의 다음 항목을 찾습니다.</key>
+        <key name="docs_find_prev_tooltip">검색 텍스트의 이전 항목을 찾습니다.</key>
+        <key name="settings_reset_tooltip">이 페이지의 모든 설정을 기본값으로 재설정합니다 (저장되지 않음).</key>
+        <key name="settings_apply_tooltip">현재 세션에 대한 설정을 적용합니다. 저장하지 않으면 재시작 시 변경 사항이 손실됩니다.</key>
+        <key name="settings_save_tooltip">적용된 모든 변경 사항을 settings.toml 파일에 저장합니다.</key>
+        <key name="settings_close_tooltip">설정 패널을 닫고 적용되지 않은 변경 사항을 되돌립니다.</key>
+        <key name="doc_copied_tooltip">복사됨!</key>
+    </section>
+    <section name="Standalone">
+        <key name="dev_patcher_standalone_title">Dev Patcher (독립)</key>
+        <key name="project_launcher_standalone_title">Project Launcher (독립)</key>
+        <key name="project_text_packer_standalone_title">Project Text Packer (독립)</key>
+    </section>
+    <section name="Errors">
+        <key name="error_report_title">오류 보고서</key>
+    </section>
+</tslang>

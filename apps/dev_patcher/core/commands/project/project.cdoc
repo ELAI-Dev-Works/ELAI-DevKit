@@ -1,0 +1,18 @@
+number = 2
+type = command(init)
+
+<lang[en]>
+<order>
+2 - PROJECT
+</order>
+<md>
+## PROJECT Command
+
+Creates the basic structure and files for configuring a new project. This command helps to quickly deploy an environment with dependency management and a full project structure in a single step.
+
+### Arguments
+{args_list}
+
+### Variables
+{args_var}
+</md>

@@ -1,0 +1,7 @@
+{
+    "name": "Project Launcher",
+    "author": "ELAI",
+    "version": "v10",
+    "dependencies": [],
+    "description": "A utility that allows to run projects through launch files (.bat, .html, .py)."
+}

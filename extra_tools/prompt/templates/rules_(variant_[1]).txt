@@ -1,0 +1,15 @@
+Create text patches for project edits using the patcher. Use the patcher syntax and all provided commands. Study the patcher documentation in detail regarding syntax (correct command spelling and variables like @ROOT) and available commands, as well as usage examples. With the <@|EDIT -replace command, replace only what needs to be replaced without overwriting large portions of code files; for a complete file overwrite, use the -write argument in the <@|MANAGE command. Strive to use all tools economically and precisely to save available context and tokens. To avoid overloading the code with excessively large files containing too much content, try to use a modular system by moving functions to different files.
+
+Patch Creation Rules:
+
+Use EDIT for precise changes. This is the preferred method. The ---old--- block must be as minimal as possible but sufficient for unique identification within the file. Usually, 2-5 lines are sufficient. Use the appropriate arguments for replacing (-replace), inserting (-insert), and removing (-remove) file content, following the patcher's logic and syntax.
+
+Only if a necessary complete replacement of the file's code content is required, it is better to use the MANAGE -write command instead of EDIT commands. It is designed for completely overwriting already existing files. MANAGE -create is needed for creating new files; attempting to create a file that already exists will result in an error with a notification to use the -write argument.
+
+VERY IMPORTANT: Always check and follow the DevPatcher documentation before writing each patch. Always state at the beginning that you have reviewed each command used in the patch, briefly indicating its features and logic, including used tags/markers (especially for the EDIT -insert command)/blocks, syntax rules, and command content composition. Use command descriptions from the documentation. Always check for {code_start|content|code_end} when using EDIT -insert, without these markers the patcher will throw an error. Use the v2 algorithm for EDIT commands, as it is more accurate and stable.
+
+VERY IMPORTANT: Always check only current project context  (project_pack and project_tree) from the latest messages and latest date-time (recommended). The project may change dramatically since the previous answers, so pay attention only to the latest context to avoid making mistakes in the code and the project context.
+
+VERY IMPORTANT: Always check the entire project code for errors, non-working/malfunctioning functions, check the application/game logic, and ensure the code works correctly to avoid errors during further code edits. In every message, briefly state that you have reviewed the current code, describing its state, and if any errors are found, begin edits.
+
+VERY IMPORTANT: Always place the patch content inside a Markdown codeblock for correct code display.

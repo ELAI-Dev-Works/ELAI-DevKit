@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_text_packer" lang="fr">
+    <section name="Interface">
+        <key name="project_text_packer_tab">Project Text Packer</key>
+        <key name="project_text_packer_quick_settings_title">Options de l'Empaqueteur de Projet</key>
+        <key name="packer_output_dir_label">Répertoire de sortie :</key>
+        <key name="packer_select_output_dir_btn">Sélectionner...</key>
+        <key name="packer_start_btn">Empaqueter le projet</key>
+        <key name="packer_extensions_label">Extensions de fichier prises en charge :</key>
+        <key name="packer_options_group_title">Options d'empaquetage</key>
+        <key name="packer_one_file_checkbox">Combiner en un seul fichier</key>
+        <key name="packer_timestamp_checkbox">Ajouter Date et Heure</key>
+        <key name="packer_split_checkbox">Diviser en parties (limite 1Mo)</key>
+        <key name="patch_load_error_title">Erreur</key>
+        <key name="project_folder_missing_error">ERREUR : Le dossier du projet (@ROOT) n'est pas sélectionné !</key>
+        <key name="quick_settings_saved_log">[Paramètres] Paramètres rapides enregistrés.</key>
+        <key name="quick_settings_reset_log">[Paramètres] Les paramètres rapides ont été réinitialisés par défaut (non enregistrés).</key>
+        <key name="reset_quick_settings_btn">Réinitialiser par défaut</key>
+        <key name="save_quick_settings_btn">Enregistrer les paramètres</key>
+    </section>
+    <section name="Logs">
+        <key name="packer_log_placeholder">Les journaux de Project Text Packer apparaîtront ici...</key>
+        <key name="packer_status_ready">Prêt</key>
+        <key name="packer_status_packing">Empaquetage du projet...</key>
+        <key name="packer_status_done">Terminé</key>
+        <key name="packer_status_error">Erreur lors de l'empaquetage.</key>
+        <key name="packer_status_cancelled">Opération annulée par l'utilisateur.</key>
+        <key name="packer_log_collecting_files">Collecte des fichiers...</key>
+        <key name="packer_log_writing_pack">Écriture du pack de projet...</key>
+        <key name="packer_log_building_tree">Construction de l'arborescence...</key>
+        <key name="packer_log_files_saved">Fichiers enregistrés</key>
+        <key name="packer_removing_old_files_log">Suppression des fichiers _project_pack.txt et _tree.txt existants...</key>
+        <key name="packer_empty_file_comment">&lt;!-- Le fichier est vide --&gt;</key>
+    </section>
+    <section name="Dialogs">
+        <key name="packer_overwrite_title">Confirmer l'écrasement</key>
+        <key name="packer_overwrite_message">Les fichiers de sortie existent déjà. Écraser ?</key>
+        <key name="packer_output_dir_not_selected_error">Erreur : Répertoire de sortie non sélectionné.</key>
+    </section>
+    <section name="Tooltips">
+        <key name="packer_extensions_tooltip">Extensions de fichiers à inclure dans le pack, séparées par des espaces ou des virgules. ex. .py .txt .md</key>
+        <key name="packer_one_file_tooltip">Fusionne l'arborescence des répertoires et le contenu des fichiers dans un seul fichier .txt.</key>
+        <key name="packer_timestamp_tooltip">Ajoute un horodatage au début du fichier.</key>
+        <key name="packer_split_tooltip">Divise automatiquement la sortie en plusieurs fichiers si la taille dépasse 999 Ko.</key>
+        <key name="packer_select_output_dir_tooltip">Choisissez le répertoire où les fichiers texte empaquetés seront enregistrés.</key>
+        <key name="packer_start_tooltip">Commencer le processus de numérisation, de compilation et d'empaquetage des fichiers du projet.</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_text_packer_standalone_title">Project Text Packer (Autonome)</key>
+    </section>
+</tslang>

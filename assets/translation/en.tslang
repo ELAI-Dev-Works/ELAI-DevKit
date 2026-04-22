@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="core" lang="en">
+    <section name="Interface">
+        <key name="settings_general_group_title">General Settings</key>
+        <key name="settings_main_tab">Main</key>
+        <key name="settings_ui_tab">UI</key>
+        <key name="settings_ui_group_title">UI Settings</key>
+        <key name="ui_always_show_tooltips">Always show tooltip icons</key>
+        <key name="ui_always_show_tooltips_tooltip">If disabled, tooltip icons will only appear when hovering over the element.</key>
+        <key name="settings_extensions_settings_tab">Extension Settings</key>
+        <key name="settings_extensions_manager_tab">Extensions Manager</key>
+        <key name="theme_label">Theme:</key>
+        <key name="color_scheme_label">Color Scheme:</key>
+        <key name="language_label">Language:</key>
+        <key name="reset_btn">Reset</key>
+        <key name="apply_btn">Apply</key>
+        <key name="save_btn">Save</key>
+        <key name="close_btn">Close</key>
+        <key name="window_title">ELAI-DevKit</key>
+        <key name="select_project_folder_btn">Select Project Folder...</key>
+        <key name="project_path_label_unselected">Project folder not selected (@ROOT)</key>
+        <key name="project_path_label_selected">&lt;b&gt;@ROOT:&lt;/b&gt; {}</key>
+        <key name="edit_ignore_list_btn">Ignore Lists</key>
+        <key name="ignore_tab_global">Global List</key>
+        <key name="ignore_tab_temp">Temporary List (Session)</key>
+        <key name="ignore_use_gitignore">Use project .gitignore for backup and packer</key>
+        <key name="settings_btn">Settings</key>
+        <key name="restart_btn">Restart</key>
+        <key name="settings_extensions_manager_accordion">Extension Manager</key>
+        <key name="settings_accordion_suffix">Settings</key>
+        <key name="core_modules_group">Core Modules</key>
+        <key name="custom_modules_group">Custom Modules</key>
+        <key name="author_label">Author:</key>
+        <key name="version_label">Version:</key>
+        <key name="dependencies_label">Dependencies:</key>
+        <key name="select_all_action">Select All</key>
+        <key name="launcher_btn_run">Run ELAI-DevKit</key>
+        <key name="launcher_btn_run_desc">Start the main development environment</key>
+        <key name="launcher_btn_docs">Documentation</key>
+        <key name="launcher_btn_docs_desc">View guides and references</key>
+        <key name="launcher_btn_settings">Settings</key>
+        <key name="launcher_btn_settings_desc">Configure global preferences</key>
+        <key name="launcher_btn_ext">Extensions</key>
+        <key name="launcher_btn_ext_desc">Manage and configure extensions</key>
+        <key name="btn_back_to_launcher">Return to Start</key>
+        <key name="docs_nav_title">Topics</key>
+        <key name="console_start_btn">Start Shell</key>
+        <key name="console_clear_btn">Clear</key>
+        <key name="console_shell_btn">Shell</key>
+        <key name="console_menu_restart">Restart Shell</key>
+        <key name="console_menu_kill">Kill Shell</key>
+        <key name="console_input_placeholder">Type command...</key>
+        <key name="console_input_disabled_placeholder">Input disabled (read-only)...</key>
+        <key name="pl_console_label">Interactive Console (PowerShell/Terminal):</key>
+        <key name="doc_copy_code_link">COPY CODE</key>
+        <key name="ignore_dirs_label">Directories to ignore:</key>
+        <key name="ignore_files_label">Files to ignore:</key>
+        <key name="patcher_log_placeholder">Patcher execution results will be here...</key>
+        <key name="detach_tab_tooltip">Detach Tab</key>
+        <key name="tab_detached_msg">This tab is opened in a separate window.</key>
+        <key name="restore_tab_btn">Restore</key>
+        <key name="project_label">Project:</key>
+        <key name="example_patch_loaded">Example patch loaded.</key>
+    </section>
+    <section name="Logs">
+        <key name="settings_loaded_log">[Settings] Configuration loaded.</key>
+        <key name="restart_signal_sent_log">Restart signal sent...</key>
+        <key name="project_folder_selected_log">Project folder set: {}</key>
+        <key name="log_cleared">========================================</key>
+        <key name="project_folder_missing_error">ERROR: Project folder (@ROOT) is not selected!</key>
+        <key name="settings_saved_log">[OK] Settings saved successfully.</key>
+        <key name="console_started_log">[Console] Shell started in: {}</key>
+        <key name="console_error_pty_log">[Error] Failed to start PTY session: {}</key>
+        <key name="console_terminated_log">[Console] Shell terminated.</key>
+        <key name="console_restarting_log">[Console] Restarting shell...</key>
+    </section>
+    <section name="Dialogs">
+        <key name="restart_dialog_title">Confirm Restart</key>
+        <key name="restart_dialog_msg">Are you sure you want to restart the application?</key>
+        <key name="ignore_settings_title">Ignore Lists Editor</key>
+        <key name="ignore_settings_dirs_info">Directories to ignore (one per line). Affects backup and packer.</key>
+        <key name="ignore_settings_files_info">Filenames to ignore (one per line). Affects backup and packer.</key>
+
+        <key name="ignore_settings_tags_label">Instruction:</key>
+
+        <key name="ignore_settings_tags_info">You can use tags like [!backup], [!packer], [!git] to selectively ignore files for specific modules. Without tags, the file is ignored by all modules. Tags can be combined - if multiple tags are specified, the file will be ignored for all specified contexts. Examples: 'node_modules' - ignore everywhere; 'dist [!packer]' - ignore only for packer; 'build [!git] [!packer]' - ignore for git and packer, but include in backup.</key>
+    </section>
+    <section name="Tooltips">
+        <key name="select_project_folder_tooltip">Open a dialog to select the main project folder.</key>
+        <key name="edit_ignore_list_tooltip">Edit lists of ignored files and folders for backup and packer.</key>
+        <key name="edit_ignore_list_disabled_tooltip">Select a project folder first to enable this button.</key>
+        <key name="settings_tooltip">Open the main application settings panel.</key>
+        <key name="restart_tooltip">Restart the application to apply critical changes.</key>
+        <key name="home_tooltip">Return to the main launcher screen.</key>
+        <key name="ignore_use_gitignore_tooltip">If checked, patterns from the projects .gitignore file will be added to the ignore list automatically.</key>
+        <key name="console_clear_tooltip">Clear Console Output</key>
+        <key name="console_shell_tooltip">Show shell options like restarting or killing the process.</key>
+        <key name="launcher_run_tooltip">Launch the main ELAI-DevKit development environment.</key>
+        <key name="launcher_docs_tooltip">Open the application documentation and guides.</key>
+        <key name="launcher_settings_tooltip">Configure core application settings like theme and language.</key>
+        <key name="launcher_ext_tooltip">Manage, enable, or disable available extensions.</key>
+        <key name="detach_tab_tooltip">Open this tab in a separate, independent window.</key>
+        <key name="docs_find_next_tooltip">Find the next occurrence of the search text.</key>
+        <key name="docs_find_prev_tooltip">Find the previous occurrence of the search text.</key>
+        <key name="settings_reset_tooltip">Reset all settings on this page to their default values (does not save).</key>
+        <key name="settings_apply_tooltip">Apply the current settings for this session. Changes will be lost on restart unless saved.</key>
+        <key name="settings_save_tooltip">Save all applied changes to the settings.toml file.</key>
+        <key name="settings_close_tooltip">Close the settings panel and revert any unapplied changes.</key>
+        <key name="doc_copied_tooltip">Copied!</key>
+    </section>
+    <section name="Standalone">
+        <key name="dev_patcher_standalone_title">Dev Patcher (Standalone)</key>
+        <key name="project_launcher_standalone_title">Project Launcher (Standalone)</key>
+        <key name="project_text_packer_standalone_title">Project Text Packer (Standalone)</key>
+    </section>
+    <section name="Errors">
+        <key name="error_report_title">Error Report</key>
+    </section>
+</tslang>

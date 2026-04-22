@@ -1,0 +1,20 @@
+number = 4
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-copy`: Copies a file or a folder.
+</args_desc>
+<md>
+#### Copying (`-copy`)
+Copies a file or folder to a new location.
+
+**Syntax:** `MANAGE -copy [-dir] <source> to <destination>`
+
+```
+<-@ Copy the configuration file to backup @->
+<@|MANAGE -copy @ROOT/config.ini to @ROOT/config.bak
+---end---
+```
+
+</md>

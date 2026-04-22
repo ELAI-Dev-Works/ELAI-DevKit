@@ -1,0 +1,38 @@
+number = 1
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-create`: Creates a file or a folder.
+</args_desc>
+<md>
+#### Creating files and folders (`-create`)
+Creates a new file with content, or a new directory.
+
+**Modifiers:**
+- `-dir`: Use this flag to create a directory instead of a file.
+
+```
+<-@ Create the `src` folder in the project root @->
+<@|MANAGE -create -dir @ROOT/src
+---end---
+
+<-@ Create the `config.ini` file with content @->
+<@|MANAGE -create @ROOT/config.ini
+[Settings]
+user = admin
+---end---
+```
+
+#### Creating Documentation
+
+```
+<-@ Create a README file @->
+<@|MANAGE -create @ROOT/README.md
+# My Project
+Welcome to my project.
+## Installation
+Run `setup.bat`.
+---end---
+```
+</md>

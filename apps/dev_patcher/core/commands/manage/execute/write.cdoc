@@ -1,0 +1,20 @@
+number = 2
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-write`: Overwrites an existing file with new content.
+</args_desc>
+<md>
+#### Overwriting a file (`-write`)
+Finds an existing file and completely overwrites its content. If the file does not exist, the command will fail.
+
+```
+<-@ Find the `config.ini` file and completely overwrite its content @->
+<@|MANAGE -write @ROOT/config.ini
+[New Settings]
+mode = production
+---end---
+```
+
+</md>

@@ -1,0 +1,25 @@
+number = 6
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-delete`: Deletes a file or a folder.
+</args_desc>
+<md>
+#### Deletion (`-delete`)
+Deletes a file or an entire folder.
+
+**Modifiers:**
+- `-dir`: Indicates that the target is a directory.
+
+```
+<-@ Delete a specific file @->
+<@|MANAGE -delete @ROOT/temp_file.tmp
+---end---
+
+<-@ Delete an entire folder with all content @->
+<@|MANAGE -delete -dir @ROOT/build
+---end---
+```
+
+</md>

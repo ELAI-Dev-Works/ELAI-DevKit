@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_launcher" lang="ja">
+    <section name="Interface">
+        <key name="project_launcher_tab">Project Launcher</key>
+        <key name="pl_launch_file_label">起動ファイル:</key>
+        <key name="pl_args_label">引数:</key>
+        <key name="pl_status_label">ステータス:</key>
+        <key name="pl_start_btn">プロジェクトを開始</key>
+        <key name="pl_start_external_btn">外部実行</key>
+        <key name="pl_stop_btn">プロジェクトを停止</key>
+        <key name="pl_open_folder_btn">プロジェクトフォルダを開く</key>
+        <key name="pl_open_vscode_btn">VS Codeでプロジェクトを開く</key>
+        <key name="pl_status_ready">準備完了</key>
+        <key name="pl_status_running">実行中</key>
+        <key name="pl_status_running_external">実行中（外部）</key>
+        <key name="pl_status_scanning">スキャン中...</key>
+        <key name="pl_no_project_selected">開始するにはプロジェクトフォルダを選択してください。</key>
+        <key name="pl_no_launch_file">プロジェクトルートに起動可能なファイルが見つかりません。</key>
+        <key name="pl_no_settings_label">この拡張機能の設定はまだ利用できません。</key>
+        <key name="pl_console_label">対話型コンソール (PowerShell/ターミナル):</key>
+        <key name="select_project_folder_btn">プロジェクトフォルダーを選択...</key>
+        <key name="packer_status_error">エラー</key>
+        <key name="patch_load_error_title">エラー</key>
+        <key name="project_label">プロジェクト：</key>
+    </section>
+    <section name="Logs">
+        <key name="pl_status_done">完了</key>
+        <key name="pl_run_bat_created_msg">run.batを{}に作成しました</key>
+    </section>
+    <section name="Dialogs">
+        <key name="pl_create_bat_title">起動ファイルを作成</key>
+        <key name="pl_create_bat_q">run.batが見つかりませんが、'requirements'ファイルが存在します。デフォルトのrun.batを作成しますか？</key>
+        <key name="test_run_invalid_file_error">起動する有効なファイルを選択してください（.py、.bat、.html）。</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_launcher_standalone_title">Project Launcher (スタンドアロン)</key>
+    </section>
+    <section name="Tooltips">
+        <key name="pl_open_folder_tooltip">選択したプロジェクトフォルダをシステムのファイルエクスプローラーで開きます。</key>
+        <key name="pl_open_vscode_tooltip">選択したプロジェクトフォルダをVisual Studio Codeで開きます（'code'がPATHに含まれている場合）。</key>
+        <key name="pl_start_external_tooltip">選択したファイルを新しい外部ターミナルウィンドウで起動します。</key>
+        <key name="pl_start_tooltip">選択したファイルを下の統合コンソールで実行します。</key>
+        <key name="pl_stop_tooltip">現在実行中のプロジェクト(内部および外部)を停止します。</key>
+    </section>
+</tslang>

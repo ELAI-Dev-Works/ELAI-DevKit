@@ -1,0 +1,16 @@
+number = 5
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-web`: Activates Web/HTML5 mode. Creates `index.html` and a local server script.
+</args_desc>
+<md>
+#### Web/HTML5 Mode (`-web`)
+Activates Web/HTML5 mode. Creates a basic `index.html` and optionally a local server script to bypass CORS.
+
+*   **Dependencies:** Uses `-requi` to inject scripts.
+    *   Format: `<src:URL|src:URL>`
+    *   Example: `-requi <src:https://cdn.jsdelivr.net/npm/phaser/dist/phaser.min.js>`
+*   **Server:** Uses `-server` to generate a `server.bat/sh`.
+</md>

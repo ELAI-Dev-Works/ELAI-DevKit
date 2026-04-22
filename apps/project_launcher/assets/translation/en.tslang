@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_launcher" lang="en">
+    <section name="Interface">
+        <key name="project_launcher_tab">Project Launcher</key>
+        <key name="pl_launch_file_label">Launch File:</key>
+        <key name="pl_args_label">Arguments:</key>
+        <key name="pl_status_label">Status:</key>
+        <key name="pl_start_btn">Start Project</key>
+        <key name="pl_start_external_btn">Run External</key>
+        <key name="pl_stop_btn">Stop Project</key>
+        <key name="pl_open_folder_btn">Open Project Folder</key>
+        <key name="pl_open_vscode_btn">Open Project in VS Code</key>
+        <key name="pl_status_ready">Ready</key>
+        <key name="pl_status_running">Running</key>
+        <key name="pl_status_running_external">Running (External)</key>
+        <key name="pl_status_scanning">Scanning...</key>
+        <key name="pl_no_project_selected">Select a project folder to begin.</key>
+        <key name="pl_no_launch_file">No launchable file found in project root.</key>
+        <key name="pl_no_settings_label">No settings are available for this extension yet.</key>
+        <key name="pl_console_label">Interactive Console (PowerShell/Terminal):</key>
+        <key name="select_project_folder_btn">Select Project Folder...</key>
+        <key name="packer_status_error">Error</key>
+        <key name="patch_load_error_title">Error</key>
+        <key name="project_label">Project:</key>
+    </section>
+    <section name="Logs">
+        <key name="pl_status_done">Done</key>
+        <key name="pl_run_bat_created_msg">run.bat created in {}</key>
+    </section>
+    <section name="Dialogs">
+        <key name="pl_create_bat_title">Create Launch File</key>
+        <key name="pl_create_bat_q">No run.bat was found, but 'requirements' file exists. Create a default run.bat?</key>
+        <key name="test_run_invalid_file_error">Please select a valid file to launch (.py, .bat, .html).</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_launcher_standalone_title">Project Launcher (Standalone)</key>
+    </section>
+    <section name="Tooltips">
+        <key name="pl_open_folder_tooltip">Open the selected project folder in your system's file explorer.</key>
+        <key name="pl_open_vscode_tooltip">Open the selected project folder in Visual Studio Code (if 'code' is in your PATH).</key>
+        <key name="pl_start_external_tooltip">Launch the selected file in a new, external terminal window.</key>
+        <key name="pl_start_tooltip">Run the selected file inside the integrated console below.</key>
+        <key name="pl_stop_tooltip">Stop the currently running project (both internal and external).</key>
+    </section>
+</tslang>

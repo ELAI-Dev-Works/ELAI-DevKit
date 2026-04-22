@@ -1,0 +1,33 @@
+number = 4
+type = command(base)
+
+<lang[en]>
+<order>
+4 - DOWNLOAD
+</order>
+<md>
+## `DOWNLOAD` Command
+
+Downloads a file from the internet and saves it in the project.
+
+### Arguments
+- `URL`: First argument. Direct link to the file to download.
+- `Destination`: Second argument. The folder within the project where the file will be saved. The filename is required.
+
+### Examples
+
+#### Basic Download
+```
+<-@ Download the `.png` icon to the `assets/icons` folder @->
+<@|DOWNLOAD https://site.com/icon.png @ROOT/assets/icons/icon.png
+---end---
+```
+
+#### Download with Rename
+```
+<-@ Download a file and save it with a specific name @->
+<@|DOWNLOAD https://site.com/logo_v2_final.png @ROOT/assets/logo.png
+---end---
+```
+
+</md>

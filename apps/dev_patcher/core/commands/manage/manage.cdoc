@@ -1,0 +1,19 @@
+number = 5
+type = command(init)
+
+<lang[en]>
+<order>
+5 - MANAGE
+</order>
+<md>
+## The `MANAGE` Command
+
+A powerful command for managing files and folders in the project.
+
+### Arguments
+{args_list}
+
+### Variables
+{args_var}
+
+</md>

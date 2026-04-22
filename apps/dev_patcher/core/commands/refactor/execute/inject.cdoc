@@ -1,0 +1,78 @@
+number = 2
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-inject`: Inserts code based on logical structure rather than text matching.
+</args_desc>
+<variables>
+- `---files---`: List of target files/patterns.
+- `---content---`: The code to inject.
+</variables>
+<md>
+#### Structural Injection (`-inject`)
+
+Inserts code into classes or modules based on AST structure. Unlike `EDIT`, it operates on logical blocks (classes, functions), allowing insertions at specific structural positions (start, end, or relative to other members).
+
+**Syntax:**
+`REFACTOR -inject -type <class|func> -search_type <code|class> -pos <Position> ...`
+
+**Arguments:**
+*   `-type <class|func>`: Specifies the type of the *content being inserted*.
+    *   `class`: Ensures correct spacing for top-level classes (e.g., 2 empty lines).
+    *   `func`: Ensures correct spacing for methods/functions (e.g., 1 empty line inside class, 2 at root).
+*   `-search_type <code|class>`: Defines the scope where the anchor or insertion point is located.
+    *   `code`: Searches in the global file scope (root). Use this to add new classes or functions to the file.
+    *   `<class Name>`: Searches inside the specified class. Use this to add methods to a class.
+*   `-pos <Position>`: Defines where to insert relative to the `search_type` scope.
+    *   `<top:Anchor A|bottom:Anchor B>`: Inserts *between* Anchor A and Anchor B.
+    *   `<start>`: Inserts at the beginning of the scope (e.g., first method in a class).
+    *   `<end>`: Inserts at the end of the scope (e.g., last method in a class).
+    *   **Anchor Format:** `type Name` (e.g., `def my_method`, `class MyClass`).
+
+**Blocks:**
+*   `---files---`: List of target files/patterns.
+*   `---content---`: The code to inject.
+
+### Examples
+
+#### Example 1: Add a new function to the end of a file
+Adds a `main` function to the end of the module.
+
+```
+<@|REFACTOR -inject -type func -search_type <code> -pos <end>
+---files---
+@ROOT/app.py
+---content---
+def main():
+    print("App started")
+---end---
+```
+
+#### Example 2: Add a method to a class
+Adds a `to_string` method to the end of the `User` class.
+
+```
+<@|REFACTOR -inject -type func -search_type <class User> -pos <end>
+---files---
+@ROOT/models/user.py
+---content---
+    def to_string(self):
+        return f"User: {self.name}"
+---end---
+```
+
+#### Example 3: Insert a method between others
+Inserts `pre_process` inside the `Worker` class, placing it between `__init__` and `process`.
+
+```
+<@|REFACTOR -inject -type func -search_type <class Worker> -pos <top:def __init__|bottom:def process>
+---files---
+@ROOT/core/worker.py
+---content---
+    def pre_process(self):
+        print("Pre-processing...")
+---end---
+```
+
+</md>

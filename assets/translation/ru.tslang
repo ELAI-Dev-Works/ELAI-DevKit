@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="core" lang="ru">
+    <section name="Interface">
+        <key name="settings_general_group_title">Общие настройки</key>
+        <key name="settings_main_tab">Основные</key>
+        <key name="settings_ui_tab">Интерфейс</key>
+        <key name="settings_ui_group_title">Настройки интерфейса</key>
+        <key name="ui_always_show_tooltips">Всегда показывать значки подсказок</key>
+        <key name="ui_always_show_tooltips_tooltip">Если отключено, значки подсказок будут появляться только при наведении на элемент.</key>
+        <key name="settings_extensions_settings_tab">Настройки расширений</key>
+        <key name="settings_extensions_manager_tab">Менеджер расширений</key>
+        <key name="theme_label">Тема:</key>
+        <key name="color_scheme_label">Цветовая схема:</key>
+        <key name="language_label">Язык:</key>
+        <key name="reset_btn">Сбросить</key>
+        <key name="apply_btn">Применить</key>
+        <key name="save_btn">Сохранить</key>
+        <key name="close_btn">Закрыть</key>
+        <key name="window_title">ELAI-DevKit</key>
+        <key name="select_project_folder_btn">Выбрать папку проекта...</key>
+        <key name="project_path_label_unselected">Папка проекта не выбрана (@ROOT)</key>
+        <key name="project_path_label_selected">&lt;b&gt;@ROOT:&lt;/b&gt; {}</key>
+        <key name="edit_ignore_list_btn">Списки игнорирования</key>
+        <key name="ignore_tab_global">Глобальный список</key>
+        <key name="ignore_tab_temp">Временный список (сеанс)</key>
+        <key name="ignore_use_gitignore">Использовать .gitignore проекта для резервного копирования и упаковщика</key>
+        <key name="settings_btn">Настройки</key>
+        <key name="restart_btn">Перезапустить</key>
+        <key name="settings_extensions_manager_accordion">Менеджер расширений</key>
+        <key name="settings_accordion_suffix">Настройки</key>
+        <key name="core_modules_group">Основные модули</key>
+        <key name="custom_modules_group">Пользовательские модули</key>
+        <key name="author_label">Автор:</key>
+        <key name="version_label">Версия:</key>
+        <key name="dependencies_label">Зависимости:</key>
+        <key name="select_all_action">Выбрать все</key>
+        <key name="launcher_btn_run">Запустить ELAI-DevKit</key>
+        <key name="launcher_btn_run_desc">Запустить основную среду разработки</key>
+        <key name="launcher_btn_docs">Документация</key>
+        <key name="launcher_btn_docs_desc">Просмотр руководств и справочных материалов</key>
+        <key name="launcher_btn_settings">Настройки</key>
+        <key name="launcher_btn_settings_desc">Настроить глобальные параметры</key>
+        <key name="launcher_btn_ext">Расширения</key>
+        <key name="launcher_btn_ext_desc">Управление и настройка расширений</key>
+        <key name="btn_back_to_launcher">Вернуться к началу</key>
+        <key name="docs_nav_title">Темы</key>
+        <key name="console_start_btn">Запустить оболочку</key>
+        <key name="console_clear_btn">Очистить</key>
+        <key name="console_shell_btn">Оболочка</key>
+        <key name="console_menu_restart">Перезапустить оболочку</key>
+        <key name="console_menu_kill">Завершить оболочку</key>
+        <key name="console_input_placeholder">Введите команду...</key>
+        <key name="console_input_disabled_placeholder">Ввод отключен (только чтение)...</key>
+        <key name="pl_console_label">Интерактивная консоль (PowerShell/Терминал):</key>
+        <key name="doc_copy_code_link">КОПИРОВАТЬ КОД</key>
+        <key name="ignore_dirs_label">Игнорируемые каталоги:</key>
+        <key name="ignore_files_label">Игнорируемые файлы:</key>
+        <key name="patcher_log_placeholder">Результаты выполнения патчера будут здесь...</key>
+        <key name="detach_tab_tooltip">Открепить вкладку</key>
+        <key name="tab_detached_msg">Эта вкладка открыта в отдельном окне.</key>
+        <key name="restore_tab_btn">Восстановить</key>
+        <key name="project_label">Проект:</key>
+        <key name="example_patch_loaded">Пример патча загружен.</key>
+    </section>
+    <section name="Logs">
+        <key name="settings_loaded_log">[Настройки] Конфигурация загружена.</key>
+        <key name="restart_signal_sent_log">Сигнал перезапуска отправлен...</key>
+        <key name="project_folder_selected_log">Папка проекта установлена: {}</key>
+        <key name="log_cleared">========================================</key>
+        <key name="project_folder_missing_error">ОШИБКА: Папка проекта (@ROOT) не выбрана!</key>
+        <key name="settings_saved_log">[OK] Настройки успешно сохранены.</key>
+        <key name="console_started_log">[Консоль] Оболочка запущена в: {}</key>
+        <key name="console_error_pty_log">[Ошибка] Не удалось запустить PTY-сессию: {}</key>
+        <key name="console_terminated_log">[Консоль] Оболочка завершена.</key>
+        <key name="console_restarting_log">[Консоль] Перезапуск оболочки...</key>
+    </section>
+    <section name="Dialogs">
+        <key name="restart_dialog_title">Подтверждение перезапуска</key>
+        <key name="restart_dialog_msg">Вы уверены, что хотите перезапустить приложение?</key>
+        <key name="ignore_settings_title">Редактор списков игнорирования</key>
+        <key name="ignore_settings_dirs_info">Директории для игнорирования (по одной на строку). Влияет на резервное копирование и упаковщик.</key>
+        <key name="ignore_settings_files_info">Имена файлов для игнорирования (по одному на строку). Влияет на резервное копирование и упаковщик.</key>
+
+        <key name="ignore_settings_tags_label">Инструкция:</key>
+
+        <key name="ignore_settings_tags_info">Вы можете использовать теги вроде [!backup], [!packer], [!git] для выборочного игнорирования файлов для конкретных модулей. Без тегов файл игнорируется всеми модулями. Теги можно комбинировать - если указано несколько тегов, файл будет игнорироваться для всех указанных контекстов. Примеры: 'node_modules' - игнорировать везде; 'dist [!packer]' - игнорировать только для упаковщика; 'build [!git] [!packer]' - игнорировать для git и упаковщика, но включить в backup.</key>
+    </section>
+    <section name="Tooltips">
+        <key name="select_project_folder_tooltip">Открыть диалог для выбора основной папки проекта.</key>
+        <key name="edit_ignore_list_tooltip">Редактировать списки игнорируемых файлов и папок для резервного копирования и упаковщика.</key>
+        <key name="edit_ignore_list_disabled_tooltip">Сначала выберите папку проекта, чтобы активировать эту кнопку.</key>
+        <key name="settings_tooltip">Открыть панель основных настроек приложения.</key>
+        <key name="restart_tooltip">Перезапустить приложение для применения критических изменений.</key>
+        <key name="home_tooltip">Вернуться на главный экран запуска.</key>
+        <key name="ignore_use_gitignore_tooltip">Если отмечено, шаблоны из файла .gitignore проекта будут автоматически добавлены в список игнорирования.</key>
+        <key name="console_clear_tooltip">Очистить вывод консоли</key>
+        <key name="console_shell_tooltip">Показать параметры оболочки, такие как перезапуск или завершение процесса.</key>
+        <key name="launcher_run_tooltip">Запустить основную среду разработки ELAI-DevKit.</key>
+        <key name="launcher_docs_tooltip">Открыть документацию и руководства приложения.</key>
+        <key name="launcher_settings_tooltip">Настроить основные параметры приложения, такие как тема и язык.</key>
+        <key name="launcher_ext_tooltip">Управлять, включать или отключать доступные расширения.</key>
+        <key name="detach_tab_tooltip">Открыть эту вкладку в отдельном независимом окне.</key>
+        <key name="docs_find_next_tooltip">Найти следующее вхождение искомого текста.</key>
+        <key name="docs_find_prev_tooltip">Найти предыдущее вхождение искомого текста.</key>
+        <key name="settings_reset_tooltip">Сбросить все настройки на этой странице до значений по умолчанию (не сохраняется).</key>
+        <key name="settings_apply_tooltip">Применить текущие настройки для этого сеанса. Изменения будут потеряны при перезапуске, если не сохранены.</key>
+        <key name="settings_save_tooltip">Сохранить все примененные изменения в файл settings.toml.</key>
+        <key name="settings_close_tooltip">Закрыть панель настроек и отменить все неприменённые изменения.</key>
+        <key name="doc_copied_tooltip">Скопировано!</key>
+    </section>
+    <section name="Standalone">
+        <key name="dev_patcher_standalone_title">Dev Patcher (Автономный)</key>
+        <key name="project_launcher_standalone_title">Project Launcher (Автономный)</key>
+        <key name="project_text_packer_standalone_title">Project Text Packer (Автономный)</key>
+    </section>
+    <section name="Errors">
+        <key name="error_report_title">Отчёт об ошибке</key>
+    </section>
+</tslang>

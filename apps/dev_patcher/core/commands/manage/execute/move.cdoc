@@ -1,0 +1,32 @@
+number = 3
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-move`: Moves a file or a folder.
+</args_desc>
+<md>
+#### Moving (`-move`)
+Moves a file or folder to a new location. Can be used to rename if the destination is in the same directory.
+
+**Syntax:** `MANAGE -move [-dir] <source> to <destination>`
+
+```
+<-@ Move a file and rename it @->
+<@|MANAGE -move @ROOT/main.py to @ROOT/src/app.py
+---end---
+
+<-@ Move the `utils` folder into the `src` folder @->
+<@|MANAGE -move -dir @ROOT/utils to @ROOT/src
+---end---
+```
+
+#### Renaming via Move
+```
+<-@ Move and rename a file simultaneously @->
+<@|MANAGE -move @ROOT/styles/old_style.css to @ROOT/styles/main.css
+---end---
+```
+You have that option, but it's more convenient to use the -rename argument in such scenarios.
+
+</md>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_builder" lang="ko">
+    <section name="Interface">
+        <key name="project_builder_tab">프로젝트 빌더</key>
+        <key name="pb_detected_type_label">감지된 아키텍처:</key>
+        <key name="pb_main_file_label">메인 진입 파일:</key>
+        <key name="pb_output_dir_label">출력 디렉토리:</key>
+        <key name="pb_select_output_btn">선택...</key>
+        <key name="pb_build_btn">프로젝트 빌드</key>
+        <key name="pb_status_ready">준비 완료</key>
+        <key name="pb_status_building">빌드 중...</key>
+        <key name="pb_status_done">빌드 완료</key>
+        <key name="pb_status_error">빌드 실패</key>
+        <key name="pb_log_placeholder">빌드 로그가 여기에 표시됩니다...</key>
+        <key name="project_builder_quick_settings_title">빌더 옵션</key>
+        <key name="pb_qs_onefile">단일 파일로 패킹 (Onefile)</key>
+        <key name="pb_qs_noconsole">창 모드 (콘솔 숨기기)</key>
+        <key name="pb_qs_target_os">대상 OS:</key>
+        <key name="pb_app_name_label">앱 이름:</key>
+        <key name="pb_app_version_label">앱 버전:</key>
+        <key name="pb_app_icon_label">앱 아이콘:</key>
+        <key name="pb_select_icon_btn">아이콘 선택...</key>
+    </section>
+    <section name="Logs">
+        <key name="pb_log_scanning">프로젝트 디렉토리 스캔 중...</key>
+        <key name="pb_log_detect">감지된 아키텍처: {}</key>
+    </section>
+</tslang>

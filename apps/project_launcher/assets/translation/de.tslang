@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_launcher" lang="de">
+    <section name="Interface">
+        <key name="project_launcher_tab">Project Launcher</key>
+        <key name="pl_launch_file_label">Startdatei:</key>
+        <key name="pl_args_label">Argumente:</key>
+        <key name="pl_status_label">Status:</key>
+        <key name="pl_start_btn">Projekt starten</key>
+        <key name="pl_start_external_btn">Extern ausführen</key>
+        <key name="pl_stop_btn">Projekt stoppen</key>
+        <key name="pl_open_folder_btn">Projektordner öffnen</key>
+        <key name="pl_open_vscode_btn">Projekt in VS Code öffnen</key>
+        <key name="pl_status_ready">Bereit</key>
+        <key name="pl_status_running">Läuft</key>
+        <key name="pl_status_running_external">Läuft (Extern)</key>
+        <key name="pl_status_scanning">Scannen...</key>
+        <key name="pl_no_project_selected">Wählen Sie einen Projektordner aus, um zu beginnen.</key>
+        <key name="pl_no_launch_file">Keine startbare Datei im Projektstammverzeichnis gefunden.</key>
+        <key name="pl_no_settings_label">Für diese Erweiterung sind noch keine Einstellungen verfügbar.</key>
+        <key name="pl_console_label">Interaktive Konsole (PowerShell/Terminal):</key>
+        <key name="select_project_folder_btn">Projektordner auswählen...</key>
+        <key name="packer_status_error">Fehler</key>
+        <key name="patch_load_error_title">Fehler</key>
+        <key name="project_label">Projekt:</key>
+    </section>
+    <section name="Logs">
+        <key name="pl_status_done">Fertig</key>
+        <key name="pl_run_bat_created_msg">run.bat erstellt in {}</key>
+    </section>
+    <section name="Dialogs">
+        <key name="pl_create_bat_title">Startdatei erstellen</key>
+        <key name="pl_create_bat_q">Es wurde keine run.bat gefunden, aber eine 'requirements'-Datei existiert. Eine Standard-run.bat erstellen?</key>
+        <key name="test_run_invalid_file_error">Bitte wählen Sie eine gültige Datei zum Starten aus (.py, .bat, .html).</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_launcher_standalone_title">Project Launcher (Standalone)</key>
+    </section>
+    <section name="Tooltips">
+        <key name="pl_open_folder_tooltip">Öffnen Sie den ausgewählten Projektordner im Datei-Explorer Ihres Systems.</key>
+        <key name="pl_open_vscode_tooltip">Öffnen Sie den ausgewählten Projektordner in Visual Studio Code (wenn 'code' in Ihrem PATH ist).</key>
+        <key name="pl_start_external_tooltip">Starten Sie die ausgewählte Datei in einem neuen, externen Terminalfenster.</key>
+        <key name="pl_start_tooltip">Führen Sie die ausgewählte Datei in der integrierten Konsole unten aus.</key>
+        <key name="pl_stop_tooltip">Stoppen Sie das aktuell laufende Projekt (sowohl intern als auch extern).</key>
+    </section>
+</tslang>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_builder" lang="fr">
+    <section name="Interface">
+        <key name="project_builder_tab">Générateur de Projet</key>
+        <key name="pb_detected_type_label">Architecture Détectée :</key>
+        <key name="pb_main_file_label">Fichier d'entrée principal :</key>
+        <key name="pb_output_dir_label">Répertoire de sortie :</key>
+        <key name="pb_select_output_btn">Sélectionner...</key>
+        <key name="pb_build_btn">Compiler le projet</key>
+        <key name="pb_status_ready">Prêt</key>
+        <key name="pb_status_building">Construction...</key>
+        <key name="pb_status_done">Build terminé</key>
+        <key name="pb_status_error">Échec du build</key>
+        <key name="pb_log_placeholder">Les journaux de build apparaîtront ici...</key>
+        <key name="project_builder_quick_settings_title">Options du Builder</key>
+        <key name="pb_qs_onefile">Empaqueter dans un seul fichier (Onefile)</key>
+        <key name="pb_qs_noconsole">Mode fenêtré (Masquer la console)</key>
+        <key name="pb_qs_target_os">Système d'exploitation cible :</key>
+        <key name="pb_app_name_label">Nom de l'application :</key>
+        <key name="pb_app_version_label">Version de l'application :</key>
+        <key name="pb_app_icon_label">Icône de l'application :</key>
+        <key name="pb_select_icon_btn">Sélectionner une icône...</key>
+    </section>
+    <section name="Logs">
+        <key name="pb_log_scanning">Analyse du répertoire du projet...</key>
+        <key name="pb_log_detect">Architecture détectée : {}</key>
+    </section>
+</tslang>

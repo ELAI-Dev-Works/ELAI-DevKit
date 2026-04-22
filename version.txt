@@ -1,0 +1,1 @@
+ELAI-DevKit v130 (ELAI-DevKit(Core) v44 + Dev Patcher v67 + Project Text Packer v7 + Project Launcher v10 + Project Builder v2)

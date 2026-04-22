@@ -1,0 +1,33 @@
+number = 4
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-tree`: (Optional) Indicates that the command body contains a tree structure block.
+</args_desc>
+<md>
+#### Tree Structure (`-tree`)
+(Optional) Indicates that the command body contains a tree structure block.
+Requires the presence of a `---structure---` block in the command body.
+
+### Example
+
+```
+<@|PROJECT -setup -python -run <main.py> -requi <None> -tree
+---structure---
+@ROOT/
+├── main.py
+├── config/
+│   ├── settings.json
+│   └── secrets.yaml
+├── src/
+│   ├── utils/
+│   │   └── helper.py
+│   └── api/
+└── tests/
+---end---
+```
+**Note:** Files listed in the tree structure (like `main.py` or `helper.py`) will be created as empty files unless their content is defined in a separate `---project---` block.
+
+**Note 2(Important):** If you use -tree to create the folder and file structure, do not use the MANAGE -create command, as the patcher will return an error. To change the contents of files, use either the ---project--- block (recommended for the PROJECT command), or the MANAGE -write command to overwrite empty files created via -tree.
+</md>

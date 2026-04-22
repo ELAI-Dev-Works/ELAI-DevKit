@@ -1,0 +1,19 @@
+number = 1
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-run <startup_file>`: **(Mandatory)** Specifies the entry point for the application.
+</args_desc>
+<md>
+#### Startup File (`-run`)
+**Mandatory.** Specifies the entry point for the application.
+
+*   **For Python:** Specifies the script to run.
+    *   Example: `-run <main.py>` -> Executes `python main.py`.
+    *   Example: `-run <src/app.py>` -> Executes `python src/app.py`.
+
+*   **For NodeJS:** Specifies the main entry file for `package.json`.
+    *   Example: `-run <server.js>` -> Sets `"main": "server.js"` and default start command to `node server.js`.
+    *   If combined with `-npm`, this argument only sets the `"main"` field, while the execution command is determined by `-npm`.
+</md>

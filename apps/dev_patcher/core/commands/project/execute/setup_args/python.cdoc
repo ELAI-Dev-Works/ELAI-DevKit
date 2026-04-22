@@ -1,0 +1,13 @@
+number = 5
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-python`: Activates Python mode. Creates launch files for `uv` and `pip`.
+</args_desc>
+<md>
+#### Python Mode (`-python`)
+Activates Python mode. Creates launch files:
+*   `setup_run(uv)`: Uses `uv` for fast setup.
+*   `run(pip)`: Uses standard `pip`.
+</md>

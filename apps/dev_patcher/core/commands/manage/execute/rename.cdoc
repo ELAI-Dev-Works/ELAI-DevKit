@@ -1,0 +1,24 @@
+number = 5
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-rename`: Renames a file or a folder.
+</args_desc>
+<md>
+#### Renaming (`-rename`)
+Renames a file or folder in place.
+
+**Syntax:** `MANAGE -rename [-dir] <old_name> as <new_name>`
+
+```
+<-@ Rename a file @->
+<@|MANAGE -rename @ROOT/old_name.txt as @ROOT/new_name.txt
+---end---
+
+<-@ Rename a folder @->
+<@|MANAGE -rename -dir @ROOT/docs as @ROOT/documentation
+---end---
+```
+
+</md>

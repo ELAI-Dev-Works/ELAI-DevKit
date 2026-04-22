@@ -1,0 +1,62 @@
+number = 1
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-rename <Old> to <New>`: Renames variables, classes, or functions intelligently.
+</args_desc>
+<variables>
+- `---files---`: List of files to process (if `-project` is not used).
+- `---ignore---`: List of identifiers or context lines to skip.
+</variables>
+<md>
+#### Smart Rename (`-rename`)
+
+Renames identifiers (variables, functions, classes) across specific files or the entire project using AST analysis. This ensures that only actual code identifiers are renamed, avoiding matches in strings or comments (unlike simple text replacement).
+
+**Syntax:**
+`REFACTOR -rename <OldName> to <NewName> [-project] [-ignore]`
+
+**Modifiers:**
+*   `-project`: Scans all supported files in `@ROOT`. If omitted, requires `---files---` block.
+*   `-ignore`: Enables the `---ignore---` block to exclude specific matches.
+
+**Blocks:**
+*   `---files---`: List of files to process (if `-project` is not used).
+*   `---ignore---`: List of identifiers to skip if found.
+
+### Examples
+
+#### Example 1: Rename a Class Project-Wide
+Renames the class `BaseConfig` to `AppConfig` in all files, but keeps `OldBaseConfig` untouched using ignore.
+
+```
+<@|REFACTOR -rename <BaseConfig> to <AppConfig> -project -ignore
+---ignore---
+BaseConfig_Backup
+OldBaseConfig
+---end---
+```
+
+#### Example 2: Rename a Function in Specific Files
+Renames `calculate` to `calc_metric` only in the specified paths.
+
+```
+<@|REFACTOR -rename <calculate> to <calc_metric>
+---files---
+@ROOT/core/utils.py
+@ROOT/core/math_lib.py
+---end---
+```
+
+#### Example 3: Rename a Variable
+Renames `data` to `payload` inside a specific script.
+
+```
+<@|REFACTOR -rename <data> to <payload>
+---files---
+@ROOT/api/handler.py
+---end---
+```
+
+</md>

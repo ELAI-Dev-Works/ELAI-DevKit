@@ -1,0 +1,300 @@
+<-@ Prompt @->
+#@#
+Create an HTML5 2D platformer game.
+What it should include:
+1. Main menu
+2. First level
+3. The goal is to collect all the coins and reach the portal at the end of the level.
+4. The level will contain enemies and traps (spikes) that will hinder the character's progress.
+#@#
+
+<-@ Info @->
+#@#
+Model: Qwen 3.6 Plus (mode: Thinking)
+Free Chat on https://chat.qwen.ai/
+Patch Size: 278 lines
+Stage: 1. Game Project Initialization
+Attempts spent: 1
+DevPatcher Syntax Error: 0
+Code Error: 0
+Commands: PROJECT -setup
+#@#
+
+<-@ Initialize HTML5 web project with required structure and populate core game files @->
+<@|PROJECT -setup -all_os -web -server <Python> -run <index.html> -requi <None> -name <(2D Platformer Game)>
+---structure---
+@ROOT/
+├── index.html
+├── style.css
+└── game.js
+---project---
+<###| @ROOT/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Platformer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script src="game.js"></script>
+</body>
+</html>
+---file_end---
+
+<###| @ROOT/style.css
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #111;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+canvas {
+    background: #222;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    image-rendering: pixelated;
+}
+---file_end---
+
+<###| @ROOT/game.js
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 600;
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
+
+// Physics Constants
+const GRAVITY = 0.6;
+const JUMP_FORCE = -12;
+const MOVE_SPEED = 5;
+
+// Game State
+let gameState = 'MENU'; // MENU, PLAYING, WIN, LOSE
+let player = { x: 50, y: 400, w: 32, h: 32, vx: 0, vy: 0, grounded: false };
+let level = { platforms: [], coins: [], enemies: [], spikes: [], portal: {} };
+let keys = { left: false, right: false, up: false };
+
+// Input Listeners
+window.addEventListener('keydown', e => {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.up = true;
+    
+    if (gameState !== 'PLAYING' && (e.code === 'Enter' || e.code === 'Space')) {
+        gameState = (gameState === 'MENU') ? 'PLAYING' : 'MENU';
+        if (gameState === 'PLAYING') loadLevel();
+    }
+});
+window.addEventListener('keyup', e => {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.up = false;
+});
+canvas.addEventListener('click', () => {
+    if (gameState !== 'PLAYING') {
+        gameState = (gameState === 'MENU') ? 'PLAYING' : 'MENU';
+        if (gameState === 'PLAYING') loadLevel();
+    }
+});
+
+function loadLevel() {
+    player = { x: 50, y: 400, w: 32, h: 32, vx: 0, vy: 0, grounded: false };
+    level = {
+        platforms: [
+            { x: 0, y: 550, w: 800, h: 50 },  // Ground
+            { x: 200, y: 450, w: 120, h: 20 }, // Platform 1
+            { x: 400, y: 350, w: 150, h: 20 }, // Platform 2
+            { x: 650, y: 250, w: 150, h: 20 }  // Platform 3
+        ],
+        coins: [
+            { x: 260, y: 420, r: 10, collected: false },
+            { x: 475, y: 320, r: 10, collected: false },
+            { x: 725, y: 220, r: 10, collected: false }
+        ],
+        enemies: [
+            { x: 220, y: 420, w: 30, h: 30, vx: 1.5, minX: 200, maxX: 300 },
+            { x: 660, y: 220, w: 30, h: 30, vx: -1.5, minX: 650, maxX: 770 }
+        ],
+        spikes: [
+            { x: 500, y: 530, w: 40, h: 20 }
+        ],
+        portal: { x: 730, y: 190, w: 40, h: 60 }
+    };
+}
+
+function update() {
+    if (gameState !== 'PLAYING') return;
+
+    // Horizontal Movement
+    if (keys.left) player.vx = -MOVE_SPEED;
+    else if (keys.right) player.vx = MOVE_SPEED;
+    else player.vx = 0;
+
+    // Jumping
+    if (keys.up && player.grounded) {
+        player.vy = JUMP_FORCE;
+        player.grounded = false;
+    }
+
+    // Apply Gravity & Velocity
+    player.vy += GRAVITY;
+    player.x += player.vx;
+    player.y += player.vy;
+    player.grounded = false;
+
+    // Platform Collisions (AABB)
+    for (let p of level.platforms) {
+        if (player.x < p.x + p.w && player.x + player.w > p.x &&
+            player.y < p.y + p.h && player.y + player.h > p.y) {
+            
+            let overlapX = (player.x + player.w / 2) < (p.x + p.w / 2) 
+                ? (player.x + player.w) - p.x : p.x + p.w - player.x;
+            let overlapY = (player.y + player.h / 2) < (p.y + p.h / 2) 
+                ? (player.y + player.h) - p.y : p.y + p.h - player.y;
+
+            if (overlapX < overlapY) {
+                player.vx = 0;
+                player.x += overlapX > 0 ? -overlapX : overlapX;
+            } else {
+                player.vy = 0;
+                if (overlapY > 0) {
+                    player.y = p.y - player.h;
+                    player.grounded = true;
+                } else {
+                    player.y = p.y + p.h;
+                }
+            }
+        }
+    }
+
+    // Enemy Logic & Collision
+    for (let e of level.enemies) {
+        e.x += e.vx;
+        if (e.x <= e.minX || e.x + e.w >= e.maxX) e.vx *= -1;
+
+        // Player vs Enemy
+        if (player.x < e.x + e.w && player.x + player.w > e.x &&
+            player.y < e.y + e.h && player.y + player.h > e.y) {
+            // Check if jumping on top
+            if (player.vy > 0 && player.y + player.h - player.vy <= e.y + 10) {
+                e.y = -100; // Defeat enemy
+                player.vy = JUMP_FORCE * 0.6; // Bounce
+            } else {
+                gameState = 'LOSE';
+            }
+        }
+    }
+
+    // Spike Collision (Tighter hitbox)
+    for (let s of level.spikes) {
+        let box = { x: s.x + 8, y: s.y + 12, w: s.w - 16, h: s.h - 12 };
+        if (player.x < box.x + box.w && player.x + player.w > box.x &&
+            player.y < box.y + box.h && player.y + player.h > box.y) {
+            gameState = 'LOSE';
+        }
+    }
+
+    // Coin Collection
+    let coinsLeft = 0;
+    for (let c of level.coins) {
+        if (!c.collected) {
+            coinsLeft++;
+            let dist = Math.hypot(player.x + player.w/2 - c.x, player.y + player.h/2 - c.y);
+            if (dist < player.w/2 + c.r) c.collected = true;
+        }
+    }
+
+    // Portal Win Condition
+    let p = level.portal;
+    if (player.x < p.x + p.w && player.x + player.w > p.x &&
+        player.y < p.y + p.h && player.y + player.h > p.y) {
+        if (coinsLeft === 0) gameState = 'WIN';
+    }
+
+    // Fall off screen
+    if (player.y > CANVAS_HEIGHT) gameState = 'LOSE';
+}
+
+function draw() {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    
+    if (gameState === 'MENU') {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('2D Platformer', CANVAS_WIDTH/2, 200);
+        ctx.font = '24px Arial';
+        ctx.fillText('Press ENTER or CLICK to Start', CANVAS_WIDTH/2, 280);
+        ctx.font = '18px Arial';
+        ctx.fillText('Move: Arrows/WASD | Jump: Space/Up/W', CANVAS_WIDTH/2, 330);
+    } 
+    else if (gameState === 'PLAYING') {
+        // Platforms
+        ctx.fillStyle = '#6a6';
+        for (let p of level.platforms) ctx.fillRect(p.x, p.y, p.w, p.h);
+        
+        // Coins
+        ctx.fillStyle = '#fc0';
+        for (let c of level.coins) {
+            if (!c.collected) {
+                ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, Math.PI*2); ctx.fill();
+            }
+        }
+        
+        // Spikes
+        ctx.fillStyle = '#d33';
+        for (let s of level.spikes) {
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y + s.h); ctx.lineTo(s.x + s.w/2, s.y); ctx.lineTo(s.x + s.w, s.y + s.h);
+            ctx.fill();
+        }
+        
+        // Portal
+        ctx.fillStyle = '#39f';
+        ctx.fillRect(level.portal.x, level.portal.y, level.portal.w, level.portal.h);
+        
+        // Enemies
+        ctx.fillStyle = '#f44';
+        for (let e of level.enemies) {
+            if (e.y > -10) ctx.fillRect(e.x, e.y, e.w, e.h);
+        }
+        
+        // Player
+        ctx.fillStyle = '#4af';
+        ctx.fillRect(player.x, player.y, player.w, player.h);
+    } 
+    else if (gameState === 'WIN') {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Level Complete!', CANVAS_WIDTH/2, 280);
+        ctx.font = '24px Arial';
+        ctx.fillText('Press ENTER or CLICK for Menu', CANVAS_WIDTH/2, 340);
+    } 
+    else if (gameState === 'LOSE') {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game Over', CANVAS_WIDTH/2, 280);
+        ctx.font = '24px Arial';
+        ctx.fillText('Press ENTER or CLICK for Menu', CANVAS_WIDTH/2, 340);
+    }
+}
+
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+loop();
+---file_end---
+---end---

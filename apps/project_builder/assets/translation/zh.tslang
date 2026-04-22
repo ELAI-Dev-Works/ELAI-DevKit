@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_builder" lang="zh">
+    <section name="Interface">
+        <key name="project_builder_tab">项目构建器</key>
+        <key name="pb_detected_type_label">检测到的架构：</key>
+        <key name="pb_main_file_label">主入口文件：</key>
+        <key name="pb_output_dir_label">输出目录：</key>
+        <key name="pb_select_output_btn">选择...</key>
+        <key name="pb_build_btn">构建项目</key>
+        <key name="pb_status_ready">就绪</key>
+        <key name="pb_status_building">构建中...</key>
+        <key name="pb_status_done">构建完成</key>
+        <key name="pb_status_error">构建失败</key>
+        <key name="pb_log_placeholder">构建日志将显示在此处...</key>
+        <key name="project_builder_quick_settings_title">构建器选项</key>
+        <key name="pb_qs_onefile">打包为单个文件 (Onefile)</key>
+        <key name="pb_qs_noconsole">窗口模式 (隐藏控制台)</key>
+        <key name="pb_qs_target_os">目标操作系统：</key>
+        <key name="pb_app_name_label">应用名称：</key>
+        <key name="pb_app_version_label">应用版本：</key>
+        <key name="pb_app_icon_label">应用图标：</key>
+        <key name="pb_select_icon_btn">选择图标...</key>
+    </section>
+    <section name="Logs">
+        <key name="pb_log_scanning">正在扫描项目目录...</key>
+        <key name="pb_log_detect">检测到的架构：{}</key>
+    </section>
+</tslang>

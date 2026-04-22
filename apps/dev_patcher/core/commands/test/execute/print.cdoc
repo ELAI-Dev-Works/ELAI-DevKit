@@ -1,0 +1,18 @@
+number = 1
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-print`: Required. Everything in the command body will be output to the log.
+</args_desc>
+<md>
+#### Printing a message (`-print`)
+Prints the content of the command body to the log. Useful for debugging or user notifications.
+
+```
+<@|TEST -print
+This message will appear in the log.
+Project path: @ROOT
+---end---
+```
+</md>

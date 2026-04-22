@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_text_packer" lang="en">
+    <section name="Interface">
+        <key name="project_text_packer_tab">Project Text Packer</key>
+        <key name="project_text_packer_quick_settings_title">Project Packer Options</key>
+        <key name="packer_output_dir_label">Output Directory:</key>
+        <key name="packer_select_output_dir_btn">Select...</key>
+        <key name="packer_start_btn">Pack Project</key>
+        <key name="packer_extensions_label">Supported file extensions:</key>
+        <key name="packer_options_group_title">Packing Options</key>
+        <key name="packer_one_file_checkbox">Combine into one file</key>
+        <key name="packer_timestamp_checkbox">Add Date &amp; Time</key>
+        <key name="packer_split_checkbox">Split into parts (limit 1MB)</key>
+        <key name="patch_load_error_title">Error</key>
+        <key name="project_folder_missing_error">ERROR: Project folder (@ROOT) is not selected!</key>
+        <key name="quick_settings_saved_log">[Settings] Quick settings saved.</key>
+        <key name="quick_settings_reset_log">[Settings] Quick settings have been reset to default (not saved).</key>
+        <key name="reset_quick_settings_btn">Reset to Default</key>
+        <key name="save_quick_settings_btn">Save Settings</key>
+    </section>
+    <section name="Logs">
+        <key name="packer_log_placeholder">Project Text Packer logs will appear here...</key>
+        <key name="packer_status_ready">Ready</key>
+        <key name="packer_status_packing">Packing project...</key>
+        <key name="packer_status_done">Complete</key>
+        <key name="packer_status_error">Error during packing.</key>
+        <key name="packer_status_cancelled">Operation cancelled by user.</key>
+        <key name="packer_log_collecting_files">Collecting files...</key>
+        <key name="packer_log_writing_pack">Writing project pack...</key>
+        <key name="packer_log_building_tree">Building file tree...</key>
+        <key name="packer_log_files_saved">Files saved</key>
+        <key name="packer_removing_old_files_log">Removing existing _project_pack.txt and _tree.txt...</key>
+        <key name="packer_empty_file_comment">&lt;!-- File is empty --&gt;</key>
+    </section>
+    <section name="Dialogs">
+        <key name="packer_overwrite_title">Confirm Overwrite</key>
+        <key name="packer_overwrite_message">Output files already exist. Overwrite?</key>
+        <key name="packer_output_dir_not_selected_error">Error: Output directory not selected.</key>
+    </section>
+    <section name="Tooltips">
+        <key name="packer_extensions_tooltip">File extensions to include in the pack, space or comma separated. e.g. .py .txt .md</key>
+        <key name="packer_one_file_tooltip">Merges the directory tree and file contents into a single .txt file.</key>
+        <key name="packer_timestamp_tooltip">Adds a timestamp at the beginning of the file.</key>
+        <key name="packer_split_tooltip">Automatically splits the output into multiple files if size exceeds 999KB.</key>
+        <key name="packer_select_output_dir_tooltip">Choose the directory where the packed text files will be saved.</key>
+        <key name="packer_start_tooltip">Begin the process of scanning, building, and packing the project files.</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_text_packer_standalone_title">Project Text Packer (Standalone)</key>
+    </section>
+</tslang>

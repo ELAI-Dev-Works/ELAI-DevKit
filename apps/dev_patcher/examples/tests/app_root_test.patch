@@ -1,0 +1,8 @@
+<@|TEST -print
+[TEST] Testing @APP-ROOT and Sandbox.
+This patch should SUCCEED if the application folder is writable.
+---end---
+
+<@|MANAGE -create @APP-ROOT/security_token.txt
+Safe token created inside application root via @APP-ROOT variable.
+---end---

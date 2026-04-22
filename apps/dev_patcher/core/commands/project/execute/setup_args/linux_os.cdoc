@@ -1,0 +1,11 @@
+number = 10
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-linux_os`: Generates only Linux (`.sh`) scripts.
+</args_desc>
+<md>
+#### Platform: Linux (`-linux_os`)
+Generates only Linux (`.sh`) scripts.
+</md>

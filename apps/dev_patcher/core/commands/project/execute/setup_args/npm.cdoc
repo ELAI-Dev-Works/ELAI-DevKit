@@ -1,0 +1,44 @@
+number = 7
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-npm <command>`: **(Optional, only for NodeJS)** Configures launch commands and `package.json` scripts.
+</args_desc>
+<md>
+#### NPM Commands (`-npm`)
+(Optional, only for NodeJS) Configures launch commands and `package.json` scripts.
+
+**Formats:**
+1.  **Simple:** `-npm <{command}>` (e.g. `-npm <{npm run dev}>`).
+2.  **Advanced:** `-npm <key:{value}|key:{value}>`.
+    *   `run:{...}`: Command for the `.bat` file.
+    *   `scripts/name:{...}`: Entry in `package.json` scripts section.
+    *   Example: `-npm <run:{npm start}|scripts/start:{electron .}>`.
+
+### Examples
+
+#### Simple Mode
+Adds `npm run dev` to the launch script and registers it as the start script in package.json.
+```
+-npm <{npm run dev}>
+```
+
+#### Advanced Mode (Electron Example)
+1.  Sets the launch script (`run.bat`) to execute `npm start`.
+2.  Adds `"start": "electron ."` to `package.json`.
+3.  Adds `"dist": "electron-builder"` to `package.json`.
+
+```
+-npm <run:{npm start}|scripts/start:{electron .}|scripts/dist:{electron-builder}>
+```
+
+#### Advanced Mode (Vite Example)
+1.  Sets the launch script to `npm run dev`.
+2.  Adds `"dev": "vite"` to `package.json`.
+3.  Adds `"build": "vite build"` to `package.json`.
+
+```
+-npm <run:{npm run dev}|scripts/dev:{vite}|scripts/build:{vite build}>
+```
+</md>

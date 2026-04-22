@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_launcher" lang="ko">
+    <section name="Interface">
+        <key name="project_launcher_tab">Project Launcher</key>
+        <key name="pl_launch_file_label">실행 파일:</key>
+        <key name="pl_args_label">인수:</key>
+        <key name="pl_status_label">상태:</key>
+        <key name="pl_start_btn">프로젝트 시작</key>
+        <key name="pl_start_external_btn">외부 실행</key>
+        <key name="pl_stop_btn">프로젝트 중지</key>
+        <key name="pl_open_folder_btn">프로젝트 폴더 열기</key>
+        <key name="pl_open_vscode_btn">VS Code에서 프로젝트 열기</key>
+        <key name="pl_status_ready">준비됨</key>
+        <key name="pl_status_running">실행 중</key>
+        <key name="pl_status_running_external">실행 중 (외부)</key>
+        <key name="pl_status_scanning">스캔 중...</key>
+        <key name="pl_no_project_selected">시작하려면 프로젝트 폴더를 선택하세요.</key>
+        <key name="pl_no_launch_file">프로젝트 루트에서 실행 가능한 파일을 찾을 수 없습니다.</key>
+        <key name="pl_no_settings_label">이 확장 프로그램에 대한 설정이 아직 제공되지 않습니다.</key>
+        <key name="pl_console_label">대화형 콘솔 (PowerShell/터미널):</key>
+        <key name="select_project_folder_btn">프로젝트 폴더 선택...</key>
+        <key name="packer_status_error">오류</key>
+        <key name="patch_load_error_title">오류</key>
+        <key name="project_label">프로젝트:</key>
+    </section>
+    <section name="Logs">
+        <key name="pl_status_done">완료</key>
+        <key name="pl_run_bat_created_msg">{}에 run.bat 생성됨</key>
+    </section>
+    <section name="Dialogs">
+        <key name="pl_create_bat_title">실행 파일 생성</key>
+        <key name="pl_create_bat_q">run.bat을 찾을 수 없지만 'requirements' 파일이 존재합니다. 기본 run.bat을 생성하시겠습니까?</key>
+        <key name="test_run_invalid_file_error">실행할 유효한 파일을 선택하세요(.py, .bat, .html).</key>
+    </section>
+    <section name="Standalone">
+        <key name="project_launcher_standalone_title">Project Launcher (독립)</key>
+    </section>
+    <section name="Tooltips">
+        <key name="pl_open_folder_tooltip">선택한 프로젝트 폴더를 시스템의 파일 탐색기에서 엽니다.</key>
+        <key name="pl_open_vscode_tooltip">선택한 프로젝트 폴더를 Visual Studio Code에서 엽니다('code'가 PATH에 있는 경우).</key>
+        <key name="pl_start_external_tooltip">선택한 파일을 새 외부 터미널 창에서 실행합니다.</key>
+        <key name="pl_start_tooltip">아래 통합 콘솔에서 선택한 파일을 실행합니다.</key>
+        <key name="pl_stop_tooltip">현재 실행 중인 프로젝트(내부 및 외부)를 중지합니다.</key>
+    </section>
+</tslang>

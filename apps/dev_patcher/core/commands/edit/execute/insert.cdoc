@@ -1,0 +1,285 @@
+number = 2
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-insert`: Inserts a code block (`---new---`) at a specific location inside `---old---`.
+</args_desc>
+<variables>
+- `{code_start}`, `{content}`, `{code_end}`: Marker system for the `-insert` command. These markers are strictly required and must be present in the ---old--- block whenever the EDIT -insert command is used.
+- `{content}`: The location where the `---new---` block will be inserted.
+- `{code_start}` / `{code_end}`: Controls the addition of empty lines around the inserted code.
+</variables>
+<md>
+### Insertion (`-insert`)
+
+Inserts a code block (`---new---`) at a specific location inside `---old---`.
+
+**Visualizing Markers:**
+
+| Marker Type | Syntax | Behavior |
+| :--- | :--- | :--- |
+| **Inline** | `{code_start|content|code_end}` | Inserts code tightly, **no extra empty lines**. Perfect for imports. |
+| **Multiline** | `{code_start}``{content}``{code_end}` | Adds **empty lines** above and below the inserted code. Perfect for functions/classes. |
+
+**Important Note:** These markers are strictly required and must be present in the ---old--- block whenever the EDIT -insert command is used.
+
+#### 1. Insertion with Normalization (`-v1 -insert`)
+
+### Visual Guide: How Insertion Works with Normalization algorithm?
+
+The `EDIT -insert` command allows you to inject code *between* lines without replacing them. It uses special **markers** to tell the patcher exactly where the new code should go.
+
+**The Logic:**
+1.  The patcher finds the `---old---` block in your file.
+2.  It looks for the `{content}` marker.
+3.  It calculates indentation from the line immediately *above* the marker.
+4.  It inserts `---new---` at that position, applying the calculated indentation.
+
+**Note: In the ---new--- block you only need to specify relative indents, without the global insert indent, it is taken from the ---old--- block automatically.**
+
+### Visual Examples
+
+#### Scenario A: Adding an Import (Inline Marker)
+
+**Target File:**
+
+```python
+import os
+import sys  <-- We want to insert between these
+```
+
+**The Patch:**
+
+```
+<@|EDIT -insert main.py
+---old---
+import os
+{code_start|content|code_end}
+import sys
+---new---
+import json
+---end---
+```
+
+**Result:**
+
+```python
+import os
+import json  <-- Inserted here (tight)
+import sys
+```
+
+#### Scenario B: Adding a Method to a Class (Multiline Marker)
+
+**Target File:**
+
+```python
+class Game:
+    def start(self):
+        pass
+    # <--- We want to insert here, with spacing
+    def end(self):
+        pass
+```
+
+**The Patch:**
+
+```
+<@|EDIT -insert game.py
+---old---
+    def start(self):
+        pass
+{code_start}
+{content}
+{code_end}
+    def end(self):
+---new---
+def pause(self):
+    print("Paused")
+---end---
+```
+
+**Result:**
+
+The patcher detects the 4-space indent of `def start...` and applies it to `def pause...`. It also adds blank lines because we used the multiline marker.
+
+```python
+class Game:
+    def start(self):
+        pass
+
+    def pause(self):      <-- Inserted with correct indent + spacing
+        print("Paused")
+
+    def end(self):
+        pass
+```
+
+### Common Mistakes (Anti-Patterns)
+
+#### 1. The Nesting Trap (`-v1 -insert`)
+**Mistake:** Inserting a new sibling method, but using the *content* of the previous method as the anchor.
+
+**Target File:**
+```python
+class User:
+    def get_name(self):
+        return self.name  <-- Indented 8 spaces
+    # We want to insert 'get_age' here (4 spaces)
+```
+
+**Bad Patch:**
+```
+<@|EDIT -insert user.py
+---old---
+        return self.name
+{code_start}
+{content}
+{code_end}
+---new---
+    def get_age(self):
+        return self.age
+---end---
+```
+
+**What Happens:**
+DevPatcher calculates indentation from `return self.name` (8 spaces). It applies 8 spaces to your new function.
+
+**Result (Broken Code):**
+```python
+class User:
+    def get_name(self):
+        return self.name
+        def get_age(self):  <-- ERROR! Nested inside get_name
+            return self.age
+```
+
+**Fix:** Use `def get_name(self):` as the anchor context, or ensure `---old---` includes the end of the previous scope.
+
+### Examples
+
+#### Example 1: Single-line insertion (Imports)
+```
+<@|EDIT -insert @ROOT/main.py
+---old---
+import os
+{code_start|content|code_end}
+import pygame
+---new---
+import sys
+---end---
+```
+
+#### Example 2: Inserting a Method into a Class
+```
+<-@ Insert a new method between existing ones, inheriting indentation @->
+<@|EDIT -insert @ROOT/game.py
+---old---
+    def start(self):
+        print("Game Started")
+
+{code_start}
+{content}
+{code_end}
+
+    def stop(self):
+---new---
+# This will be inserted with the correct 4-space indent
+def pause(self):
+    self.paused = True
+    print("Game Paused")
+---end---
+```
+
+#### 2. Insertion with Delta Strategy (`-v2 -insert`)
+
+The V2 strategy is particularly powerful for insertions because it calculates the indentation context dynamically based on the lines *surrounding* the insertion point.
+
+**How it works:**
+1.  DevPatcher finds the lines specified before or after the `{content}` marker.
+2.  It calculates `Delta` based on the difference between your patch's indentation and the actual file's indentation for those context lines.
+3.  It applies this `Delta` to the inserted `---new---` block.
+
+**Scenario:** Inserting code into a deeply nested structure without knowing the exact depth.
+
+**Target File:**
+```python
+    # Unknown indentation level
+    if valid:
+        start_process()
+        # <--- Insertion point
+        end_process()
+```
+
+**The Patch:**
+```
+<@|EDIT -v2 -insert script.py
+---old---
+start_process()
+{code_start|content|code_end}
+end_process()
+---new---
+log_status()
+---end---
+```
+
+**Result:**
+Even if the file uses 4, 8, or 12 spaces, `log_status()` will be inserted with the exact same indentation as `start_process()` relative to the patch structure.
+
+### Common Mistakes (Anti-Patterns)
+
+#### Wrong Context Location (`-v2 -insert`)
+**Mistake:** Inserting into a block where the surrounding lines imply a different indentation Delta than expected.
+
+**Target File:**
+```python
+def process():
+    if check:
+        do_it()
+    # <-- You want to insert here, outside the 'if' (4 spaces)
+```
+
+**Bad Patch:**
+```
+<@|EDIT -v2 -insert script.py
+---old---
+        do_it()
+{code_start|content|code_end}
+---new---
+    cleanup()
+---end---
+```
+
+**What Happens:**
+The anchor is `do_it()` (8 spaces). The patcher calculates Delta relative to this line. If you provided `cleanup()` with 4 spaces in `---new---`, it *might* work, but if you provided it with 0 spaces in the patch thinking it's absolute, the Delta logic might shift it to 8 spaces (aligning with `do_it`), keeping it inside the `if`.
+
+**Fix:** Always verify what the "Anchor" line is. If you want to break out of a nesting level (dedent), ensure your context includes the line *causing* the scope (e.g., the `if` statement) or manually adjust indentation in `---new---` to match the visual delta you want.
+
+### Examples
+
+#### Example 1: Inserting into a Loop (V2)
+Inserting code inside a loop without knowing the surrounding indentation depth.
+
+**Target File:**
+```python
+    # Arbitrary indentation level
+    for user in users:
+        send_email(user)
+        # <--- We want to insert logging here
+```
+
+**The Patch:**
+```
+<@|EDIT -v2 -insert task.py
+---old---
+send_email(user)
+{code_start|content|code_end}
+---new---
+print(f"Email sent to {user}")
+---end---
+```
+
+**Result:**
+The `print` statement will effectively inherit the indentation of `send_email(user)`.
+</md>

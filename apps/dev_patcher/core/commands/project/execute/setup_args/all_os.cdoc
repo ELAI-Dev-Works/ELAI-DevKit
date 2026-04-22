@@ -1,0 +1,11 @@
+number = 8
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-all_os`: Generates launch scripts for both Windows (`.bat`) and Linux/Mac (`.sh`). This is the default if no platform flag is specified.
+</args_desc>
+<md>
+#### Platform: All (`-all_os`)
+Generates launch scripts for both Windows (`.bat`) and Linux/Mac (`.sh`). This is the default if no platform flag is specified.
+</md>

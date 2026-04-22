@@ -1,0 +1,29 @@
+number = 2
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-search`: Searches for files and folders by keywords.
+- `-ignore`: Modifier for `-search`. Allows excluding folders/files from the search.
+</args_desc>
+<md>
+#### Searching for files (`-search`)
+Searches for files and folders containing specific keywords in their names.
+
+**Modifiers:**
+- `-ignore <pattern1, pattern2...>`: Excludes items matching the patterns.
+
+#### Example 1: Search by Name
+```
+<-@ Find all files containing 'api' or 'test', ignoring '.venv' @->
+<@|TEST -search <api|test> -ignore <.venv>
+---end---
+```
+
+#### Example 2: Search by Extension
+```
+<-@ Find all Python and JavaScript files @->
+<@|TEST -search <.py|.js>
+---end---
+```
+</md>

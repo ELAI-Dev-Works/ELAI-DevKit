@@ -1,0 +1,7 @@
+{
+    "name": "Project Builder",
+    "author": "ELAI",
+    "version": "v2",
+    "dependencies":[],
+    "description": "A modular utility to compile and package projects (Python, NodeJS, Web) into standalone executables."
+}

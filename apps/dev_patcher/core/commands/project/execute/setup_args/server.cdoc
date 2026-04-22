@@ -1,0 +1,15 @@
+number = 12
+type = sub-argument
+
+<lang[en]>
+<args_desc>
+- `-server <Type>`: (Optional, for `-web`) Creates a local server script. Values: `<Python>` or `<NodeJs>`.
+</args_desc>
+<md>
+#### Local Server (`-server`)
+(Optional, only for `-web` mode) Generates a script to run a simple local HTTP server. This is useful for testing HTML5 projects that require bypassing CORS restrictions.
+
+*   **Values:**
+    *   `<Python>`: Uses `python -m http.server`.
+    *   `<NodeJs>`: Creates a minimal `server.js` and runs it with `node`.
+</md>

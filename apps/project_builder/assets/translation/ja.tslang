@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tslang uid="project_builder" lang="ja">
+    <section name="Interface">
+        <key name="project_builder_tab">プロジェクトビルダー</key>
+        <key name="pb_detected_type_label">検出されたアーキテクチャ：</key>
+        <key name="pb_main_file_label">メインエントリファイル:</key>
+        <key name="pb_output_dir_label">出力ディレクトリ:</key>
+        <key name="pb_select_output_btn">選択...</key>
+        <key name="pb_build_btn">プロジェクトをビルド</key>
+        <key name="pb_status_ready">準備完了</key>
+        <key name="pb_status_building">ビルド中...</key>
+        <key name="pb_status_done">ビルド完了</key>
+        <key name="pb_status_error">ビルド失敗</key>
+        <key name="pb_log_placeholder">ビルドログがここに表示されます...</key>
+        <key name="project_builder_quick_settings_title">ビルダーオプション</key>
+        <key name="pb_qs_onefile">単一ファイルにパック (Onefile)</key>
+        <key name="pb_qs_noconsole">ウィンドウモード (コンソールを非表示)</key>
+        <key name="pb_qs_target_os">ターゲットOS：</key>
+        <key name="pb_app_name_label">アプリ名:</key>
+        <key name="pb_app_version_label">アプリバージョン:</key>
+        <key name="pb_app_icon_label">アプリアイコン:</key>
+        <key name="pb_select_icon_btn">アイコンを選択...</key>
+    </section>
+    <section name="Logs">
+        <key name="pb_log_scanning">プロジェクトディレクトリをスキャン中...</key>
+        <key name="pb_log_detect">検出されたアーキテクチャ: {}</key>
+    </section>
+</tslang>

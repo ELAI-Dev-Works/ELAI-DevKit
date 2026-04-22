@@ -1,0 +1,58 @@
+number = 3
+type = argument
+
+<lang[en]>
+<args_desc>
+- `-imports`: Manages Python imports (update, add, remove).
+</args_desc>
+<variables>
+- `---files---`: (Optional) Explicit list of files to process for `-add` or `-remove`.
+</variables>
+<md>
+#### Imports Management (`-imports`)
+
+Automates updating, adding, or removing imports across multiple files. It handles indentation and placement automatically.
+
+**Syntax:**
+`REFACTOR -imports [-update <old> to <new>] [-add <mod> to <scope>] [-remove <mod>]`
+
+**Arguments:**
+*   `-update <old> to <new>`: Renames a module in import statements.
+    *   Example: `-update <utils> to <core.utils>`
+*   `-add <module> to <scope>`: Adds `import module` if it is missing.
+    *   `scope`: Can be a directory (`@ROOT/src`) or file (`@ROOT/main.py`). The import is added to all Python files in that scope.
+*   `-remove <module>`: Removes lines importing this module from the project (or specified files).
+
+**Blocks:**
+*   `---files---`: (Optional) Explicit list of files to process. Overrides scanning logic for `-remove` or provides specific targets for other ops.
+
+### Examples
+
+#### Example 1: Update Import Path
+Changes all occurrences of `import utils` to `import core.utils` in the project.
+
+```
+<@|REFACTOR -imports -update <utils> to <core.utils>
+---end---
+```
+
+#### Example 2: Add Import to a Folder
+Adds `import logging` to all Python files in the `src` folder if it's missing.
+
+```
+<@|REFACTOR -imports -add <logging> to <@ROOT/src>
+---end---
+```
+
+#### Example 3: Remove Unused Import
+Removes `import pdb` from specific files.
+
+```
+<@|REFACTOR -imports -remove <pdb>
+---files---
+@ROOT/main.py
+@ROOT/tests/test_api.py
+---end---
+```
+
+</md>
