@@ -10,7 +10,10 @@
         <key name="packer_options_group_title">Packing Options</key>
         <key name="packer_one_file_checkbox">Combine into one file</key>
         <key name="packer_timestamp_checkbox">Add Date &amp; Time</key>
-        <key name="packer_split_checkbox">Split into parts (limit 1MB)</key>
+        <key name="packer_split_checkbox">Split into parts</key>
+        
+        <key name="packer_split_size_label">Split size limit:</key>
+        
         <key name="patch_load_error_title">Error</key>
         <key name="project_folder_missing_error">ERROR: Project folder (@ROOT) is not selected!</key>
         <key name="quick_settings_saved_log">[Settings] Quick settings saved.</key>
@@ -42,6 +45,9 @@
         <key name="packer_one_file_tooltip">Merges the directory tree and file contents into a single .txt file.</key>
         <key name="packer_timestamp_tooltip">Adds a timestamp at the beginning of the file.</key>
         <key name="packer_split_tooltip">Automatically splits the output into multiple files if size exceeds 999KB.</key>
+        
+        <key name="packer_split_size_tooltip">Maximum size of a single file in megabytes.</key>
+        
         <key name="packer_select_output_dir_tooltip">Choose the directory where the packed text files will be saved.</key>
         <key name="packer_start_tooltip">Begin the process of scanning, building, and packing the project files.</key>
     </section>

@@ -10,7 +10,10 @@
         <key name="packer_options_group_title">Параметри пакування</key>
         <key name="packer_one_file_checkbox">Об'єднати в один файл</key>
         <key name="packer_timestamp_checkbox">Додати Дату та Час</key>
-        <key name="packer_split_checkbox">Розділити на частини (ліміт 1МБ)</key>
+        <key name="packer_split_checkbox">Розділити на частини</key>
+        
+        <key name="packer_split_size_label">Ліміт розміру частини:</key>
+        
         <key name="patch_load_error_title">Помилка</key>
         <key name="project_folder_missing_error">ПОМИЛКА: Папка проєкту (@ROOT) не вибрана!</key>
         <key name="quick_settings_saved_log">[Налаштування] Швидкі налаштування збережено.</key>
@@ -42,6 +45,9 @@
         <key name="packer_one_file_tooltip">Об'єднує дерево каталогів та вміст файлів в один .txt файл.</key>
         <key name="packer_timestamp_tooltip">Додає позначку часу на початку файлу.</key>
         <key name="packer_split_tooltip">Автоматично розділяє вивід на кілька файлів, якщо розмір перевищує 999 КБ.</key>
+        
+        <key name="packer_split_size_tooltip">Максимальний розмір одного файлу в мегабайтах.</key>
+        
         <key name="packer_select_output_dir_tooltip">Виберіть каталог, у якому будуть збережені упаковані текстові файли.</key>
         <key name="packer_start_tooltip">Розпочати процес сканування, збірки та пакування файлів проекту.</key>
     </section>

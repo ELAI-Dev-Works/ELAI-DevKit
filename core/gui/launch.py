@@ -244,7 +244,12 @@ class ExtensionsWindow(QDialog):
                 widget.store_initial_state()
 
     def apply_settings(self):
-        for widget in self.extension_settings_widgets.values():
+        for name, widget in self.extension_settings_widgets.items():
+            if name == 'extensions_manager': continue
+            if hasattr(widget, 'get_settings_to_save'):
+                ind_settings = widget.get_settings_to_save()
+                if ind_settings:
+                    self.settings_manager.update_setting(['apps', name, 'settings'], ind_settings)
             if hasattr(widget, 'apply_settings'):
                 widget.apply_settings()
 
@@ -259,19 +264,6 @@ class ExtensionsWindow(QDialog):
 
     def save_settings(self):
         self.apply_settings()
-        core_settings = self.settings_manager.load_settings_file().get('core', {})
-        if 'extensions' not in core_settings:
-            core_settings['extensions'] = {}
-        core_settings['extensions'].update(self.state_on_open.get('extensions', {}))
-        self.settings_manager.update_setting(['core'], core_settings)
-
-        for name, widget in self.extension_settings_widgets.items():
-            if name == 'extensions_manager': continue
-            if hasattr(widget, 'get_settings_to_save'):
-                ind_settings = widget.get_settings_to_save()
-                if ind_settings:
-                    self.settings_manager.update_setting(['apps', name, 'settings'], ind_settings)
-
         self.settings_manager.save_settings_file()
         QMessageBox.information(self, "Success", "Extension settings saved.")
 

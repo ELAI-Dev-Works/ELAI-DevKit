@@ -10,7 +10,10 @@
         <key name="packer_options_group_title">Opciones de empaquetado</key>
         <key name="packer_one_file_checkbox">Combinar en un solo archivo</key>
         <key name="packer_timestamp_checkbox">Agregar Fecha y Hora</key>
-        <key name="packer_split_checkbox">Dividir en partes (límite 1MB)</key>
+        <key name="packer_split_checkbox">Dividir en partes</key>
+        
+        <key name="packer_split_size_label">Límite de tamaño de parte:</key>
+        
         <key name="patch_load_error_title">Error</key>
         <key name="project_folder_missing_error">ERROR: ¡La carpeta del proyecto (@ROOT) no está seleccionada!</key>
         <key name="quick_settings_saved_log">[Configuración] Ajustes rápidos guardados.</key>
@@ -42,6 +45,9 @@
         <key name="packer_one_file_tooltip">Combina el árbol de directorios y el contenido de los archivos en un único archivo .txt.</key>
         <key name="packer_timestamp_tooltip">Añade una marca de tiempo al principio del archivo.</key>
         <key name="packer_split_tooltip">Divide automáticamente la salida en varios archivos si el tamaño supera los 999 KB.</key>
+        
+        <key name="packer_split_size_tooltip">Tamaño máximo de un solo archivo en megabytes.</key>
+        
         <key name="packer_select_output_dir_tooltip">Elija el directorio donde se guardarán los archivos de texto empaquetados.</key>
         <key name="packer_start_tooltip">Iniciar el proceso de escaneo, compilación y empaquetado de los archivos del proyecto.</key>
     </section>

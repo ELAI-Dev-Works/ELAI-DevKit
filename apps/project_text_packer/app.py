@@ -99,8 +99,8 @@ class Worker(QObject):
         """
         Writes files to output, handling splitting and merging tree header.
         """
-        MAX_SIZE = 999 * 1024 # 999 KB in bytes
-    
+        MAX_SIZE = int(self.settings.get('split_size_mb', 1.0) * 1024 * 1024)
+
         current_part = 1
     
         # Helper to open file
@@ -209,7 +209,8 @@ class ProjectTextPackerApp:
         return {
             'one_file': options.get('one_file', False),
             'add_timestamp': options.get('add_timestamp', True),
-            'split_on_limit': options.get('split_on_limit', True)
+            'split_on_limit': options.get('split_on_limit', True),
+            'split_size_mb': options.get('split_size_mb', 1.0)
         }
 
     def start_pack(self):
@@ -272,7 +273,16 @@ class ProjectTextPackerApp:
     def get_supported_extensions(self):
         settings = self.settings_manager.get_setting(['apps', 'project_text_packer', 'settings'], {})
         extensions_str = settings.get('supported_extensions', '')
-        return {ext.strip() for ext in extensions_str.split(' ') if ext.strip()}
+        exts = set()
+        for line in extensions_str.splitlines():
+            line = line.strip()
+            if not line or line.startswith('['):
+                continue
+            for ext in line.split():
+                ext = ext.strip()
+                if ext:
+                    exts.add(ext)
+        return exts
 
     def collect_files(self, root_dir, handler):
         file_list = []

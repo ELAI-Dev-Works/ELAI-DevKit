@@ -10,7 +10,10 @@
         <key name="packer_options_group_title">패킹 옵션</key>
         <key name="packer_one_file_checkbox">하나의 파일로 결합</key>
         <key name="packer_timestamp_checkbox">날짜 및 시간 추가</key>
-        <key name="packer_split_checkbox">분할하기 (제한 1MB)</key>
+        <key name="packer_split_checkbox">분할하기</key>
+        
+        <key name="packer_split_size_label">파트 크기 제한:</key>
+        
         <key name="patch_load_error_title">오류</key>
         <key name="project_folder_missing_error">오류: 프로젝트 폴더 (@ROOT)가 선택되지 않았습니다!</key>
         <key name="quick_settings_saved_log">[설정] 빠른 설정이 저장되었습니다.</key>
@@ -42,6 +45,9 @@
         <key name="packer_one_file_tooltip">디렉토리 트리와 파일 내용을 하나의 .txt 파일로 병합합니다.</key>
         <key name="packer_timestamp_tooltip">파일 시작 부분에 타임스탬프를 추가합니다.</key>
         <key name="packer_split_tooltip">크기가 999KB를 초과하면 출력을 여러 파일로 자동 분할합니다.</key>
+        
+        <key name="packer_split_size_tooltip">단일 파일의 최대 크기(메가바이트).</key>
+        
         <key name="packer_select_output_dir_tooltip">압축된 텍스트 파일이 저장될 디렉토리를 선택하세요.</key>
         <key name="packer_start_tooltip">프로젝트 파일을 스캔, 빌드 및 패킹하는 프로세스를 시작합니다.</key>
     </section>

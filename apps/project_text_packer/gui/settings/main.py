@@ -2,7 +2,38 @@ import tomllib
 from PySide6.QtWidgets import QWidget, QFormLayout, QPlainTextEdit, QLabel
 
 default_settings = """
-supported_extensions = ".py .in .js .ts .jsx .tsx .html .css .scss .sass .json .yaml .yml .toml .ini .cfg .conf .md .txt .svg .sql .sh .bat .ps1 .dockerfile .gitignore .csv .log .xml .c .cpp .h .hpp .java .kt .swift .go .rs .rb .php .pl .r .scala .dart .lua .m .mm .vue .svelte .as .gd .tscn .tres .res .godot .import .scn .gde .gdc .gdshader .gdns .gdext .mod .cl .rpy .asm .inc .exdoc .cdoc .devpatch"
+supported_extensions = '''[Program Language/Python]
+.py .pyd .pyc .pyw
+
+[Program Language/JavaScript & TypeScript]
+.js .ts .jsx .tsx .node
+
+[Web/HTML & CSS]
+.html .css .scss .sass
+
+[Data & Config]
+.json .yaml .yml .toml .ini .cfg .conf .xml
+
+[Documentation]
+.md .txt
+
+[Shell & Scripts]
+.sh .bat .ps1
+
+[C/C++]
+.c .cpp .h .hpp
+
+[DevPatcher]
+.devpatch .cdoc .csdoc .exdoc .tslang
+
+[Godot]
+.gd .tscn .tres .res .godot .import .scn .gde .gdc .gdshader .gdns .gdext .gdignore
+
+[RenPy]
+.rpy
+
+[Other]
+.svg .sql .dockerfile .gitignore .log .csv .java .kt .swift .go .rs .rb .php .pl .r .scala .dart .lua .m .mm .vue .svelte .as .mod .cl  .asm .inc .ptx .lm .gradle .mf .gitattributes .editorconfig .translation .comp'''
 """
 
 class ProjectTextPackerSettingsWidget(QWidget):
@@ -16,7 +47,7 @@ class ProjectTextPackerSettingsWidget(QWidget):
 
         layout = QFormLayout(self)
         self.extensions_input = QPlainTextEdit()
-        self.extensions_input.setFixedHeight(80)
+        self.extensions_input.setFixedHeight(300)
         self.extensions_label = QLabel()
         layout.addRow(self.extensions_label, self.extensions_input)
 
