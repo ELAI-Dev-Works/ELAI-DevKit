@@ -27,8 +27,6 @@ build/
 dist/
 downloads/
 node_modules/
-translate/
-dataset/
 
 # Generated translation files (auto-generated from .tslang sources)
 lang/*.json
