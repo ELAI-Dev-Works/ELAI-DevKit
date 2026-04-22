@@ -61,7 +61,7 @@
 
 ## 🎯 Overview
 
-**ELAI-DevKit** (Experimental Language AI Development Kit) is an innovative development toolkit designed to revolutionize the way developers interact with AI language models for software development. Built from the ground up with AI collaboration in mind, ELAI-DevKit provides a comprehensive suite of tools that enable iterative, patch-based development workflows.
+**ELAI-DevKit** is an innovative development toolkit designed to revolutionize the way developers interact with AI language models for software development. Built from the ground up with AI collaboration in mind, ELAI-DevKit provides a comprehensive suite of tools that enable iterative, patch-based development workflows.
 
 ### What Makes ELAI-DevKit Unique?
 
