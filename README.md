@@ -174,7 +174,7 @@ In your ELAI-DevKit root folder, you will find a file named `DevPatcherDocsAndIn
 Not all AI models are created equal when it comes to following strict syntax rules. Based on extensive testing, here is a breakdown of model performance for ELAI-DevKit:
 
 *   **Recommended Models(on Free Tiers AI Chats):**
-    *   **Gemini (Pro Models via Google AI Studio):** Highly capable and understands instructions well. *Note: Avoid "Flash" models as they often confuse the patcher syntax; forcing them to work would require overly detailed instructions that consume too much of your context window. Occasional bugs may happen even on Pro models, but they are generally reliable.*
+    *   **Gemini (Pro Models via Google AI Studio):** Highly capable and understands instructions well. *Note: Avoid "Flash" models as they often confuse the patcher syntax; forcing them to work would require overly detailed instructions that consume too much of your context window. Occasional bugs may happen even on Pro models, but they are generally reliable.* *Note 2: Since last year, quotas have been significantly reduced, so only about 10-15 requests per day (I haven't figured out how quota updates work yet, but a couple of requests can be restored in a couple of hours, so with pauses, you can still complete a small project in a day)*
     *   **Claude Opus (v4.6)(tested on Antigravity app with Free Plan):** Consistently good at following formatting rules and understanding project architecture.
     *   **DeepSeek (Expert/Reasoner Mode):** Exceptional at understanding instructions and generating precise, flawless patches.
     *   **Qwen 3.6 Plus:** Shows a decent understanding of the instructions, though occasional minor syntax bugs may occur.
