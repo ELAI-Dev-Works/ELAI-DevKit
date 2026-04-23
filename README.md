@@ -117,6 +117,12 @@ When creating backups or packing your project context for the AI, you often want
     *   `dist[!packer]` — Ignored only by the Project Text Packer.
     *   `build [!git][!packer]` — Ignored for Git commits and the Packer, but included in standard ZIP backups.
 
+### Automated Backup System & Restoration
+To protect your project from AI hallucinations, logical errors, or bad syntax, DevPatcher includes an automated backup system that triggers *before* any patch is applied.
+*   **.zip Backups:** Archives your project folder and saves it in the **parent directory** of your project (e.g., `../ProjectName_backup_2026-04-23_10-15.zip`). Saving outside the project folder prevents nested backup loops and keeps your workspace clean.
+*   **Git Commits:** If enabled, it automatically initializes a Git repository (if one doesn't exist) and creates a commit of your current working tree before applying changes.
+*   **Restoration:** You can restore previous states directly from the DevPatcher "Quick Settings" panel. The system supports "Only Changes" mode (rolling back only the specific files the patch modified) or "Full Replace" mode (extracting the entire ZIP archive over your directory).
+
 ### Extensions & Modularity
 The toolkit is highly modular. Core features (like the Dev Patcher, Project Launcher, and Text Packer) are actually built as extensions. 
 *   You can enable, disable, and configure extensions via the **Extensions Manager** (accessible from the main Launch screen).
@@ -125,12 +131,6 @@ The toolkit is highly modular. Core features (like the Dev Patcher, Project Laun
 ### Diagnostics & Extra Tools
 *   **Diagnostics:** If something goes wrong, you can run `diagnostic.bat` (Windows) or `diagnostic.sh` (Linux/macOS) to verify your Python version, dependencies, and syntax parser.
 *   **Extra Tools:** The `extra_tools.bat` / `extra_tools.sh` scripts provide a menu for additional helpful scripts, such as a System Prompt Builder to help you customize the instructions sent to the AI.
-
-### Automated Backup System & Restoration
-To protect your project from AI hallucinations, logical errors, or bad syntax, DevPatcher includes an automated backup system that triggers *before* any patch is applied.
-*   **.zip Backups:** Archives your project folder and saves it in the **parent directory** of your project (e.g., `../ProjectName_backup_2026-04-23_10-15.zip`). Saving outside the project folder prevents nested backup loops and keeps your workspace clean.
-*   **Git Commits:** If enabled, it automatically initializes a Git repository (if one doesn't exist) and creates a commit of your current working tree before applying changes.
-*   **Restoration:** You can restore previous states directly from the DevPatcher "Quick Settings" panel. The system supports "Only Changes" mode (rolling back only the specific files the patch modified) or "Full Replace" mode (extracting the entire ZIP archive over your directory).
 
 ## Core Applications & Modules
 
