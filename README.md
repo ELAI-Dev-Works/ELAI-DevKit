@@ -105,7 +105,7 @@ ELAI-DevKit is designed with a user-friendly Qt-based interface that provides se
 
 ### Interface Tooltips
 To help you navigate the various options and settings, the interface features an integrated tooltip system. 
-*   **Hover for Info:** Most buttons and settings have a built-in tooltip. Hover over an element (or its `?` icon) to see a detailed explanation of its function.
+*   **Hover for Info:** Most buttons and settings have a built-in clickable tooltip. Hover over an element (or its `?` icon) to see a detailed explanation of its function.
 *   **Always Show Icons:** You can configure the UI to always display these tooltip icons next to their respective elements via the **Main Settings > UI** menu.
 
 ### Ignore Lists (Backup & Packing)
