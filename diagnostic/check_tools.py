@@ -6,10 +6,10 @@ from tree_sitter_language_pack import get_parser
 def check_python_version():
     print("--- 1. Checking Python Version ---")
     print(f"Version: {sys.version.split()[0]}")
-    if sys.version_info.major == 3 and sys.version_info.minor >= 8:
-        print("  [PASS] Python 3.8+ detected")
+    if sys.version_info.major == 3 and sys.version_info.minor >= 11:
+        print("  [PASS] Python 3.11+ detected")
     else:
-        print("  [WARNING] Python version is older than 3.8. Might cause issues.")
+        print("  [WARNING] Python version is older than 3.11. Might cause issues.")
 
 def check_external_tool(name, version_args):
     print(f"--- Checking '{name}' ---")
