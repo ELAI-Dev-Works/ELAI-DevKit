@@ -8,6 +8,14 @@ from typing import Dict, Any, List
 
 def _format_toml_value(value):
     if isinstance(value, str):
+        if '\n' in value or '\r' in value:
+            if "'''" not in value and not value.endswith("'"):
+                return f"'''\n{value}'''"
+            else:
+                escaped_value = value.replace('\\', '\\\\').replace('"""', '\\"\\"\\"').replace('\r', '')
+                if escaped_value.endswith('"'):
+                    escaped_value = escaped_value[:-1] + '\\"'
+                return f'"""\n{escaped_value}"""'
         # Basic escaping for quotes and backslashes
         escaped_value = value.replace('\\', '\\\\').replace('"', '\\"')
         return f'"{escaped_value}"'
