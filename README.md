@@ -99,6 +99,70 @@ chmod +x run.sh
 ```
 This will initialize the toolkit and open the launch window.
 
+## Key Features & Interface Guide
+
+ELAI-DevKit is designed with a user-friendly Qt-based interface that provides several powerful features out of the box.
+
+### Interface Tooltips
+To help you navigate the various options and settings, the interface features an integrated tooltip system. 
+*   **Hover for Info:** Most buttons and settings have a built-in tooltip. Hover over an element (or its `?` icon) to see a detailed explanation of its function.
+*   **Always Show Icons:** You can configure the UI to always display these tooltip icons next to their respective elements via the **Main Settings > UI** menu.
+
+### Ignore Lists (Backup & Packing)
+When creating backups or packing your project context for the AI, you often want to exclude large or sensitive files (like `.venv`, `node_modules`, or `.env`). ELAI-DevKit provides a robust Ignore List system (accessible via the "Ignore Lists" button in the top bar):
+*   **Global & Temporary Lists:** Define a global ignore list that applies to all projects, as well as a temporary list for the current session.
+*   **.gitignore Integration:** Instruct the toolkit to automatically read and apply your project's `.gitignore` file.
+*   **Context Tags:** You can selectively ignore files for specific tools using tags. For example:
+    *   `node_modules` — Ignored everywhere.
+    *   `dist[!packer]` — Ignored only by the Project Text Packer.
+    *   `build [!git][!packer]` — Ignored for Git commits and the Packer, but included in standard ZIP backups.
+
+### Extensions & Modularity
+The toolkit is highly modular. Core features (like the Dev Patcher, Project Launcher, and Text Packer) are actually built as extensions. 
+*   You can enable, disable, and configure extensions via the **Extensions Manager** (accessible from the main Launch screen).
+*   Developers can create their own custom commands and UI modules to expand the toolkit's capabilities without modifying the core code.
+
+### Diagnostics & Extra Tools
+*   **Diagnostics:** If something goes wrong, you can run `diagnostic.bat` (Windows) or `diagnostic.sh` (Linux/macOS) to verify your Python version, dependencies, and syntax parser.
+*   **Extra Tools:** The `extra_tools.bat` / `extra_tools.sh` scripts provide a menu for additional helpful scripts, such as a System Prompt Builder to help you customize the instructions sent to the AI.
+
+### Automated Backup System & Restoration
+To protect your project from AI hallucinations, logical errors, or bad syntax, DevPatcher includes an automated backup system that triggers *before* any patch is applied.
+*   **.zip Backups:** Archives your project folder and saves it in the **parent directory** of your project (e.g., `../ProjectName_backup_2026-04-23_10-15.zip`). Saving outside the project folder prevents nested backup loops and keeps your workspace clean.
+*   **Git Commits:** If enabled, it automatically initializes a Git repository (if one doesn't exist) and creates a commit of your current working tree before applying changes.
+*   **Restoration:** You can restore previous states directly from the DevPatcher "Quick Settings" panel. The system supports "Only Changes" mode (rolling back only the specific files the patch modified) or "Full Replace" mode (extracting the entire ZIP archive over your directory).
+
+## Core Applications & Modules
+
+ELAI-DevKit is built as a modular ecosystem. Here is an overview of the main tools included by default:
+
+### 1. DevPatcher
+The heart of the toolkit. It reads AI-generated patches (using its specific DPCL syntax), simulates the changes in a virtual file system to detect conflicts, checks the code for syntax errors, and securely applies them to your local drive.
+*   **Key Features:** Fuzzy matching (>85% similarity threshold), AST-based structural refactoring (`REFACTOR` commands), automatic patch syntax correction, and an interactive visual diff viewer before applying changes.
+
+![DevPatcher](info/screens/DevPatcher.png)
+*(Advanced Options View)*
+![DevPatcherWithOptions](info/screens/DevPatcherWithOptions.png)
+
+### 2. Project Text Packer
+Converts your entire project (or selected parts) into a single, AI-readable text file containing both the directory tree and the source code.
+*   **Key Features:** Builds an elegant ASCII directory tree, numbers lines for precise patching, and automatically splits output into multiple parts if the context exceeds a specified megabyte limit. Highly respectful of `.gitignore` and global ignore lists.
+
+![ProjectTextPacker](info/screens/ProjectTextPacker.png)
+
+### 3. Project Launcher
+An intelligent runner that automatically detects how to execute your project based on its files (`.py`, `.js`, `index.html`, etc.).
+*   **Key Features:** Built-in interactive PTY console (PowerShell/Bash) to interact with scripts directly in the UI, external terminal launch support, and auto-generation of cross-platform `run.bat`/`run.sh` bootstrap scripts.
+
+![ProjectLauncher](info/screens/ProjectLauncher.png)
+
+### 4. Project Builder
+Compiles your source code into standalone, distributable executables.
+*   **Key Features:** Auto-detects the project architecture and uses the appropriate compiler: `PyInstaller` (for Python), `pkg` (for Node.js), and `Electron Packager` (for Web/HTML5). Allows setting custom icons, hiding the console (windowed mode), and packing into a single file.
+
+![ProjectBuilder](info/screens/ProjectBuilder.png)
+
+
 ## Quick Start: Your First AI-Driven Project
 
 Once you have launched ELAI-DevKit, you will be greeted by the main Launcher window. Click **Run ELAI-DevKit** and select an empty folder where you want your new project to reside.
@@ -173,7 +237,7 @@ The DevPatcher interface with patch editor and execution controls.
 
 ![DevPatcherWithOptions](info/screens/DevPatcherWithOptions.png)
 
-Advanced patching options including simulation, code checking, and experimental features.
+Advanced patching options including backup system, additional checkboxes for automation of execution simulation, code checking, and experimental features for DevPatcher.
 
 ---
 
