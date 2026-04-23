@@ -168,7 +168,7 @@ Compiles your source code into standalone, distributable executables.
 Once you have launched ELAI-DevKit, you will be greeted by the main Launcher window. Click **Run ELAI-DevKit** and select an empty folder where you want your new project to reside.
 
 ### 1. Preparing the AI Context
-In your ELAI-DevKit root folder, you will find a file named `DevPatcherDocsAndInstruction.txt` *(Note: This file may be renamed in future versions)*. This file is your **System Prompt**. It contains all the rules, command syntax, and behavioral instructions the AI needs to generate valid patches for the toolkit.
+In your ELAI-DevKit root folder, you will find a file named [DevPatcherDocsAndInstruction.txt](DevPatcherDocsAndInstruction.txt) *(Note: This file may be renamed in future versions)*. This file is your **System Prompt**. It contains all the rules, command syntax, and behavioral instructions the AI needs to generate valid patches for the toolkit.
 
 ### 2. Choosing the Right AI Model
 Not all AI models are created equal when it comes to following strict syntax rules. Based on extensive testing, here is a breakdown of model performance for ELAI-DevKit:
