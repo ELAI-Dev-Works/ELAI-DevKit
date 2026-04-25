@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">Нечёткое сопоставление (&gt;85%)</key>
         <key name="scope_matching_checkbox">Сопоставление по области (внутри ---scope---)</key>
         <key name="similarity_threshold_label">Порог схожести:</key>
-        <key name="simulation_checkbox">Предпросмотр (симуляция)</key>
-        <key name="code_check_checkbox">Проверка кода</key>
-        <key name="corrector_checkbox">Корректор</key>
         <key name="reset_quick_settings_btn">Сбросить по умолчанию</key>
         <key name="backup_method_label">Метод резервного копирования:</key>
         <key name="backup_method_none">Нет</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">Проверить код</key>
         <key name="correct_patch_btn">Исправить патч</key>
         <key name="test_run_btn">Тестовый запуск</key>
-        <key name="test_run_checkbox">Тестирование</key>
         <key name="load_patch_btn">Загрузить патч...</key>
         <key name="examples_btn">Примеры</key>
         <key name="examples_dialog_title">Примеры патчей</key>
@@ -52,7 +48,6 @@
         <key name="self_update_cancelled_log">Самообновление отменено пользователем.</key>
         <key name="project_folder_missing_error">ОШИБКА: Папка проекта (@ROOT) не выбрана!</key>
         <key name="no_commands_found_log">Команды для выполнения не найдены.</key>
-        <key name="simulation_cancelled_log">Операция отменена пользователем после симуляции.</key>
         <key name="backup_creation_log">Создание резервной копии {}...</key>
         <key name="backup_failed_error_msg">Не удалось создать резервную копию {}: {}</key>
         <key name="backup_success_log">Резервная копия успешно создана: {}</key>
@@ -71,7 +66,6 @@
         <key name="patch_command_error_log">ОШИБКА: {}</key>
         <key name="patch_command_success_log">УСПЕШНО: {}</key>
         <key name="command_executed_default_msg">Команда выполнена.</key>
-        <key name="test_run_disabled_log">[Тестовый запуск] Флажок 'Тестирование' не включен в быстрых настройках.</key>
         <key name="test_run_dependency_error">Тестовый запуск требует включения расширения 'Project Launcher'.</key>
         <key name="test_run_invalid_file_error">Выбранный файл запуска недействителен или не существует.</key>
         <key name="test_run_start_log">--- НАЧАЛО ТЕСТОВОГО ЗАПУСКА ---</key>
@@ -129,11 +123,8 @@
         <key name="copy_report_btn">Скопировать отчёт</key>
         <key name="close_btn_accept">Закрыть</key>
         <key name="simulation_confirm_title">Подтверждение</key>
-        <key name="simulation_success_msg">Симуляция завершена. Применить этот патч к реальным файлам?</key>
-        <key name="simulation_error_msg">Во время симуляции обнаружены ошибки или конфликты! Подробности в логе. Всё равно попытаться применить патч?</key>
         <key name="test_run_report_title">Отчёт о тестовом запуске</key>
         <key name="test_run_report_info">Это вывод консоли из тестового запуска вашего пропатченного приложения.</key>
-        <key name="code_check_error_msg">Обнаружены синтаксические ошибки в пропатченном коде! Подробности в отчёте. Всё равно попытаться применить патч?</key>
         <key name="corrector_title">Корректор синтаксиса патча</key>
         <key name="corrector_info_label">В вашем патче обнаружены синтаксические ошибки или предложения. Просмотрите изменения ниже.</key>
         <key name="corrector_issue_label">Проблема</key>
@@ -157,6 +148,10 @@
         <key name="restore_confirm_msg">Вы уверены, что хотите восстановить проект из этой резервной копии/коммита? Несохранённые изменения будут потеряны.</key>
         <key name="restore_success_msg">Восстановление успешно завершено!</key>
         <key name="restore_error_msg">Не удалось восстановить проект: {}</key>
+        <key name="ai_report_dialog_title">Отчет об исправлении ИИ</key>
+        <key name="ai_report_dialog_info">В патче обнаружены проблемные команды. Они будут пропущены, и патч можно безопасно применить. Составлен отчет об исправлении для ИИ. Скопируйте его вместе с новым контекстом проекта и отправьте ИИ, чтобы он мог написать правильную команду.</key>
+        <key name="ai_report_task">Исправьте только указанную(-ые) проблему(-ы).</key>
+        <key name="simulation_success_msg_new">Симуляция завершена. Ошибок не обнаружено. Все команды могут быть безопасно выполнены.</key>
     </section>
     <section name="Tooltips">
         <key name="load_patch_tooltip">Загрузить файл .devpatch с вашего компьютера в редактор.</key>
@@ -170,10 +165,6 @@
         <key name="fuzzy_matching_tooltip">Ищет наиболее похожий блок вместо точного совпадения. Помогает, если в коде были внесены небольшие изменения.</key>
         <key name="scope_matching_tooltip">Ограничивает поиск блока ---old--- в пределах более крупного блока ---scope---, решая проблему дубликатов.</key>
         <key name="similarity_threshold_tooltip">Устанавливает минимальный требуемый процент сходства (1-100) для успешного нечёткого совпадения.</key>
-        <key name="corrector_checkbox_tooltip">Автоматически запускать корректор патчей перед симуляцией и выполнением.</key>
-        <key name="simulation_checkbox_tooltip">Запустить пробную симуляцию перед выполнением для предварительного просмотра изменений и обнаружения конфликтов.</key>
-        <key name="code_check_checkbox_tooltip">После успешной симуляции проверить синтаксис изменённых файлов (например, Python, JSON).</key>
-        <key name="test_run_checkbox_tooltip">После успешной проверки кода попытаться запустить проект для тестирования ошибок выполнения.</key>
         <key name="restore_refresh_tooltip">Обновить список доступных резервных копий.</key>
     </section>
 </tslang>

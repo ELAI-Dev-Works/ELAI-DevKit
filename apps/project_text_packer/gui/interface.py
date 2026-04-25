@@ -1,9 +1,10 @@
 import os
 from PySide6.QtCore import Qt
+import json
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QFileDialog, QMessageBox, QFrame, QFormLayout,
-            QSizePolicy, QSpacerItem
+            QSizePolicy, QSpacerItem, QComboBox
             )
 from systems.gui.widgets.log_box import LogBox
 from systems.gui.widgets.quick_settings_panel import QuickSettingsPanel
@@ -34,10 +35,12 @@ class ProjectTextPackerInterface(QWidget):
         controls_layout = QFormLayout(controls_frame)
         controls_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.output_dir_input = QLineEdit()
-        self.output_dir_input.setReadOnly(True)
+        self.output_dir_input = QComboBox()
+        self.output_dir_input.setEditable(True)
+        self.load_recent_paths()
+
         output_dir_layout = QHBoxLayout()
-        output_dir_layout.addWidget(self.output_dir_input)
+        output_dir_layout.addWidget(self.output_dir_input, stretch=1)
         self.select_output_button = QPushButton()
         self.select_output_button.clicked.connect(self.select_output_directory)
         output_dir_layout.addWidget(self.select_output_button)
@@ -79,10 +82,45 @@ class ProjectTextPackerInterface(QWidget):
         self.log_box.setPlaceholderText(self.lang.get('packer_log_placeholder'))
         self.log_box.setToolTip(self.lang.get('packer_log_placeholder'))
 
+    def load_recent_paths(self):
+        user_dir = os.path.join(self.app.app_root_path, "user")
+        self.history_file = os.path.join(user_dir, "packer_paths.json")
+        self.recent_paths = []
+        if os.path.exists(self.history_file):
+            try:
+                with open(self.history_file, 'r', encoding='utf-8') as f:
+                    self.recent_paths = json.load(f)
+            except:
+                pass
+        self.output_dir_input.clear()
+        self.output_dir_input.addItems(self.recent_paths)
+
+    def save_recent_path(self, path):
+        if not path: return
+        if path in self.recent_paths:
+            self.recent_paths.remove(path)
+        self.recent_paths.insert(0, path)
+        self.recent_paths = self.recent_paths[:5]
+
+        self.output_dir_input.blockSignals(True)
+        self.output_dir_input.clear()
+        self.output_dir_input.addItems(self.recent_paths)
+        self.output_dir_input.setCurrentText(path)
+        self.output_dir_input.blockSignals(False)
+
+        os.makedirs(os.path.dirname(self.history_file), exist_ok=True)
+        try:
+            with open(self.history_file, 'w', encoding='utf-8') as f:
+                json.dump(self.recent_paths, f, indent=4)
+        except:
+            pass
+
     def select_output_directory(self):
         path = QFileDialog.getExistingDirectory(self, self.lang.get('packer_output_dir_label'))
         if path:
-            self.output_dir_input.setText(os.path.normpath(path))
+            norm_path = os.path.normpath(path)
+            self.output_dir_input.setCurrentText(norm_path)
+            self.save_recent_path(norm_path)
 
     def on_packing_finished(self, created_files_msg):
         self.progress_indicator.finish(self.lang.get('packer_status_done'))

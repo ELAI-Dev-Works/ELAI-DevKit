@@ -14,8 +14,11 @@ env/
 .DS_Store
 Thumbs.db
 
-# User Settings
+# ELAI-DevKit Settings
 settings.toml
+
+# User Configs
+user/
 
 # Logs and Trace
 logs/

@@ -95,7 +95,7 @@ def main():
     print("========================================")
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir) # Go one level up from 'extra_tools'
+    project_root = os.path.dirname(os.path.dirname(script_dir)) # Go two levels up from 'extra_tools/translate'
     status_file = os.path.join(project_root, 'logs', 'translation_status.txt')
 
     unused_keys = get_unused_keys(status_file)

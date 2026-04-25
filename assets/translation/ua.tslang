@@ -26,8 +26,6 @@
         <key name="ignore_use_gitignore">Використовувати .gitignore проєкту для резервного копіювання та пакування</key>
         <key name="settings_btn">Налаштування</key>
         <key name="restart_btn">Перезапустити</key>
-        <key name="settings_extensions_manager_accordion">Менеджер розширень</key>
-        <key name="settings_accordion_suffix">Налаштування</key>
         <key name="core_modules_group">Основні модулі</key>
         <key name="custom_modules_group">Користувацькі модулі</key>
         <key name="author_label">Автор:</key>
@@ -80,9 +78,7 @@
         <key name="ignore_settings_title">Редактор списків ігнорування</key>
         <key name="ignore_settings_dirs_info">Директорії для ігнорування (по одній на рядок). Впливає на резервне копіювання та пакувальник.</key>
         <key name="ignore_settings_files_info">Імена файлів для ігнорування (по одному на рядок). Впливає на резервне копіювання та пакувальник.</key>
-
         <key name="ignore_settings_tags_label">Інструкція:</key>
-
         <key name="ignore_settings_tags_info">Ви можете використовувати теги на кшталт [!backup], [!packer], [!git] для вибіркового ігнорування файлів для конкретних модулів. Без тегів файл ігнорується всіма модулями. Теги можна комбінувати - якщо вказано кілька тегів, файл ігноруватиметься для всіх зазначених контекстів. Приклади: 'node_modules' - ігнорувати скрізь; 'dist [!packer]' - ігнорувати тільки для пакувальника; 'build [!git] [!packer]' - ігнорувати для git і пакувальника, але включити в backup.</key>
     </section>
     <section name="Tooltips">

@@ -26,8 +26,6 @@
         <key name="ignore_use_gitignore">使用项目 .gitignore 进行备份和打包</key>
         <key name="settings_btn">设置</key>
         <key name="restart_btn">重启</key>
-        <key name="settings_extensions_manager_accordion">扩展管理器</key>
-        <key name="settings_accordion_suffix">设置</key>
         <key name="core_modules_group">核心模块</key>
         <key name="custom_modules_group">自定义模块</key>
         <key name="author_label">作者：</key>
@@ -80,9 +78,7 @@
         <key name="ignore_settings_title">忽略列表编辑器</key>
         <key name="ignore_settings_dirs_info">要忽略的目录（每行一个）。影响备份和打包。</key>
         <key name="ignore_settings_files_info">要忽略的文件名（每行一个）。影响备份和打包。</key>
-
         <key name="ignore_settings_tags_label">说明：</key>
-
         <key name="ignore_settings_tags_info">可以使用标签如 [!backup]、[!packer]、[!git] 来选择性地为特定模块忽略文件。不使用标签时，文件将被所有模块忽略。标签可以组合使用 - 如果指定多个标签，文件将在所有指定的上下文中被忽略。示例：'node_modules' - 在所有地方忽略；'dist [!packer]' - 仅在打包时忽略；'build [!git] [!packer]' - 在 git 和打包时忽略，但在备份中包含。</key>
     </section>
     <section name="Tooltips">

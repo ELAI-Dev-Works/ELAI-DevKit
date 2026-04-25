@@ -56,11 +56,12 @@ def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, 
         log_msg = f"[STAGE 1] {cmd_name}: {status_str}. {msg}"
         yield log_msg
     
-        if success:
-            stage1_passed.append(cmd)
-        else:
-            # If a base command fails (e.g. Security Violation), it's a critical failure for the plan
-            stage1_failed.append((cmd, msg))
+        if cmd is not None:
+            if success:
+                stage1_passed.append(cmd)
+            else:
+                # If a base command fails (e.g. Security Violation), it's a critical failure for the plan
+                stage1_failed.append((cmd, msg))
     
     yield lang.get('simulation_stage1_end')
     

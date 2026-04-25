@@ -26,8 +26,6 @@
         <key name="ignore_use_gitignore">Usar .gitignore del proyecto para respaldo y empaquetador</key>
         <key name="settings_btn">Configuración</key>
         <key name="restart_btn">Reiniciar</key>
-        <key name="settings_extensions_manager_accordion">Gestor de Extensiones</key>
-        <key name="settings_accordion_suffix">Configuración</key>
         <key name="core_modules_group">Módulos Principales</key>
         <key name="custom_modules_group">Módulos Personalizados</key>
         <key name="author_label">Autor:</key>
@@ -80,9 +78,7 @@
         <key name="ignore_settings_title">Editor de listas de exclusión</key>
         <key name="ignore_settings_dirs_info">Directorios a ignorar (uno por línea). Afecta a backup y packer.</key>
         <key name="ignore_settings_files_info">Nombres de archivos a ignorar (uno por línea). Afecta a backup y packer.</key>
-
         <key name="ignore_settings_tags_label">Instrucción:</key>
-
         <key name="ignore_settings_tags_info">Puedes usar etiquetas como [!backup], [!packer], [!git] para ignorar archivos selectivamente para módulos específicos. Sin etiquetas, el archivo se ignora en todos los módulos. Las etiquetas se pueden combinar - si se especifican varias etiquetas, el archivo se ignorará para todos los contextos especificados. Ejemplos: 'node_modules' - ignorar en todas partes; 'dist [!packer]' - ignorar solo para packer; 'build [!git] [!packer]' - ignorar para git y packer, pero incluir en backup.</key>
     </section>
     <section name="Tooltips">

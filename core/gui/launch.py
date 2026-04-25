@@ -245,10 +245,9 @@ class ExtensionsWindow(QDialog):
 
     def apply_settings(self):
         for name, widget in self.extension_settings_widgets.items():
-            if name == 'extensions_manager': continue
             if hasattr(widget, 'get_settings_to_save'):
                 ind_settings = widget.get_settings_to_save()
-                if ind_settings:
+                if ind_settings and name != 'extensions_manager':
                     self.settings_manager.update_setting(['apps', name, 'settings'], ind_settings)
             if hasattr(widget, 'apply_settings'):
                 widget.apply_settings()
@@ -350,7 +349,7 @@ class LaunchWindow(QMainWindow):
 
         title = QLabel("ELAI-DevKit")
         title.setStyleSheet("font-size: 32pt; font-weight: bold;") # Removed hardcoded color
-        version_label = QLabel("v130 (core v44)")
+        version_label = QLabel("v131 (core v45)")
         version_label.setStyleSheet("font-size: 12pt; margin-bottom: 5px;") # Removed hardcoded color
         version_label.setAlignment(Qt.AlignmentFlag.AlignBottom)
     

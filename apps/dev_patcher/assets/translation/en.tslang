@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">Fuzzy Matching (&gt;85%)</key>
         <key name="scope_matching_checkbox">Scope Matching (inside ---scope---)</key>
         <key name="similarity_threshold_label">Similarity Threshold:</key>
-        <key name="simulation_checkbox">Preview (Simulation)</key>
-        <key name="code_check_checkbox">Code Check</key>
-        <key name="corrector_checkbox">Corrector</key>
         <key name="reset_quick_settings_btn">Reset to Default</key>
         <key name="backup_method_label">Backup Method:</key>
         <key name="backup_method_none">None</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">Check Code</key>
         <key name="correct_patch_btn">Correct Patch</key>
         <key name="test_run_btn">Test Run</key>
-        <key name="test_run_checkbox">Testing</key>
         <key name="load_patch_btn">Load Patch...</key>
         <key name="examples_btn">Examples</key>
         <key name="examples_dialog_title">Patch Examples</key>
@@ -64,7 +60,6 @@
         <key name="self_update_cancelled_log">Self-update cancelled by user.</key>
         <key name="project_folder_missing_error">ERROR: Project folder (@ROOT) is not selected!</key>
         <key name="no_commands_found_log">No commands found to execute.</key>
-        <key name="simulation_cancelled_log">Operation cancelled by user after simulation.</key>
         <key name="backup_creation_log">Creating backup of the {}...</key>
         <key name="backup_failed_error_msg">Failed to create backup of the {}: {}</key>
         <key name="backup_success_log">Backup successfully created: {}</key>
@@ -83,7 +78,6 @@
         <key name="patch_command_error_log">ERROR: {}</key>
         <key name="patch_command_success_log">SUCCESS: {}</key>
         <key name="command_executed_default_msg">Command executed.</key>
-        <key name="test_run_disabled_log">[Test Run] The 'Testing' checkbox is not enabled in Quick Settings.</key>
         <key name="test_run_dependency_error">Test Run requires the 'Project Launcher' extension to be enabled.</key>
         <key name="test_run_invalid_file_error">The selected launch file is invalid or does not exist.</key>
         <key name="test_run_start_log">--- STARTING TEST RUN ---</key>
@@ -131,14 +125,15 @@
         <key name="self_update_warning_msg">This patch is intended to modify the DevPatcher application files. Are you sure you want to continue?</key>
         <key name="error_report_title">Error Report</key>
         <key name="error_report_msg">Some commands could not be executed. You can copy their content for manual correction.</key>
+        <key name="ai_report_dialog_title">AI Correction Report</key>
+        <key name="ai_report_dialog_info">Problematic commands were found in the patch. They will be skipped, and the patch can be safely applied. A correction report for the AI has been compiled. Copy it along with the new project context and send it to the AI so it can write the correct command.</key>
+        <key name="ai_report_task">Fix only the specified problem(s).</key>
+        <key name="simulation_success_msg_new">The simulation is complete. No errors found. All commands can be safely executed.</key>
         <key name="copy_report_btn">Copy Report</key>
         <key name="close_btn_accept">Close</key>
         <key name="simulation_confirm_title">Confirmation</key>
-        <key name="simulation_success_msg">Simulation complete. Apply this patch to the real files?</key>
-        <key name="simulation_error_msg">Errors or conflicts were detected during simulation! Details are in the log. Attempt to apply the patch anyway?</key>
         <key name="test_run_report_title">Test Run Report</key>
         <key name="test_run_report_info">This is the console output from the test launch of your patched application.</key>
-        <key name="code_check_error_msg">Syntax errors detected in the patched code! See the report for details. Attempt to apply the patch anyway?</key>
         <key name="corrector_title">Patch Syntax Corrector</key>
         <key name="corrector_info_label">Syntax errors or suggestions were found in your patch. Review the changes below.</key>
         <key name="corrector_issue_label">Issue</key>
@@ -170,10 +165,6 @@
         <key name="fuzzy_matching_tooltip">Searches for the most similar block instead of an exact match. Helps if minor edits were made to the code.</key>
         <key name="scope_matching_tooltip">Restricts the search for the ---old--- block within a larger ---scope--- block, solving the duplicate issue.</key>
         <key name="similarity_threshold_tooltip">Sets the minimum required similarity percentage (1-100) for a fuzzy match to be considered successful.</key>
-        <key name="corrector_checkbox_tooltip">Automatically run the patch corrector before simulation and execution.</key>
-        <key name="simulation_checkbox_tooltip">Run a dry-run simulation before execution to preview changes and detect conflicts.</key>
-        <key name="code_check_checkbox_tooltip">After a successful simulation, check the syntax of the changed files (e.g., Python, JSON).</key>
-        <key name="test_run_checkbox_tooltip">After a successful code check, try to launch the project to test for runtime errors.</key>
         <key name="restore_refresh_tooltip">Refresh the list of available backups.</key>
     </section>
 </tslang>

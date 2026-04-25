@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">あいまい一致（&gt;85%）</key>
         <key name="scope_matching_checkbox">スコープ一致（---scope---内）</key>
         <key name="similarity_threshold_label">類似度しきい値:</key>
-        <key name="simulation_checkbox">プレビュー（シミュレーション）</key>
-        <key name="code_check_checkbox">コードチェック</key>
-        <key name="corrector_checkbox">コレクター</key>
         <key name="reset_quick_settings_btn">デフォルトにリセット</key>
         <key name="backup_method_label">バックアップ方法:</key>
         <key name="backup_method_none">なし</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">コードを確認</key>
         <key name="correct_patch_btn">パッチを修正</key>
         <key name="test_run_btn">テスト実行</key>
-        <key name="test_run_checkbox">テスト中</key>
         <key name="load_patch_btn">パッチを読み込む...</key>
         <key name="examples_btn">サンプル</key>
         <key name="examples_dialog_title">パッチのサンプル</key>
@@ -52,7 +48,6 @@
         <key name="self_update_cancelled_log">ユーザーによってセルフアップデートがキャンセルされました。</key>
         <key name="project_folder_missing_error">エラー: プロジェクトフォルダ(@ROOT)が選択されていません!</key>
         <key name="no_commands_found_log">実行するコマンドが見つかりません。</key>
-        <key name="simulation_cancelled_log">シミュレーション後、ユーザーによって操作がキャンセルされました。</key>
         <key name="backup_creation_log">{}のバックアップを作成中...</key>
         <key name="backup_failed_error_msg">{}のバックアップ作成に失敗しました: {}</key>
         <key name="backup_success_log">バックアップが正常に作成されました: {}</key>
@@ -71,7 +66,6 @@
         <key name="patch_command_error_log">エラー: {}</key>
         <key name="patch_command_success_log">成功: {}</key>
         <key name="command_executed_default_msg">コマンドが実行されました。</key>
-        <key name="test_run_disabled_log">[テスト実行] クイック設定で「テスト」チェックボックスが有効になっていません。</key>
         <key name="test_run_dependency_error">テスト実行には「Project Launcher」拡張機能を有効にする必要があります。</key>
         <key name="test_run_invalid_file_error">選択された起動ファイルが無効であるか、存在しません。</key>
         <key name="test_run_start_log">--- テスト実行を開始 ---</key>
@@ -126,11 +120,8 @@
         <key name="copy_report_btn">レポートをコピー</key>
         <key name="close_btn_accept">閉じる</key>
         <key name="simulation_confirm_title">確認</key>
-        <key name="simulation_success_msg">シミュレーション完了。実際のファイルにこのパッチを適用しますか？</key>
-        <key name="simulation_error_msg">シミュレーション中にエラーまたは競合が検出されました！詳細はログを確認してください。それでもパッチを適用しますか？</key>
         <key name="test_run_report_title">テスト実行レポート</key>
         <key name="test_run_report_info">パッチ適用後のアプリケーションのテスト起動時のコンソール出力です。</key>
-        <key name="code_check_error_msg">パッチ適用後のコードに構文エラーが検出されました！詳細はレポートを確認してください。それでもパッチを適用しますか？</key>
         <key name="corrector_title">パッチ構文修正ツール</key>
         <key name="corrector_info_label">パッチに構文エラーまたは修正提案が見つかりました。以下の変更を確認してください。</key>
         <key name="corrector_issue_label">問題</key>
@@ -154,6 +145,10 @@
         <key name="restore_confirm_msg">このバックアップ/コミットからプロジェクトを復元してもよろしいですか？保存されていない変更は失われます。</key>
         <key name="restore_success_msg">復元が正常に完了しました！</key>
         <key name="restore_error_msg">プロジェクトの復元に失敗しました：{}</key>
+        <key name="ai_report_dialog_title">AI修正レポート</key>
+        <key name="ai_report_dialog_info">パッチ内に問題のあるコマンドが見つかりました。これらはスキップされ、パッチは安全に適用できます。AIの修正レポートが作成されました。新しいプロジェクトコンテキストと一緒にコピーしてAIに送信すると、正しいコマンドを書くことができます。</key>
+        <key name="ai_report_task">指定された問題のみを修正してください。</key>
+        <key name="simulation_success_msg_new">シミュレーションが完了しました。エラーは見つかりませんでした。すべてのコマンドを安全に実行できます。</key>
     </section>
     <section name="Tooltips">
         <key name="load_patch_tooltip">コンピュータから.devpatchファイルをエディタに読み込みます。</key>
@@ -167,10 +162,6 @@
         <key name="fuzzy_matching_tooltip">完全一致ではなく、最も類似したブロックを検索します。コードに軽微な編集が加えられた場合に役立ちます。</key>
         <key name="scope_matching_tooltip">より大きな---scope---ブロック内で---old---ブロックの検索を制限し、重複の問題を解決します。</key>
         <key name="similarity_threshold_tooltip">ファジーマッチが成功とみなされるために必要な最小類似度パーセンテージ(1-100)を設定します。</key>
-        <key name="corrector_checkbox_tooltip">シミュレーションと実行の前にパッチ修正を自動的に実行します。</key>
-        <key name="simulation_checkbox_tooltip">実行前にドライランシミュレーションを実行して、変更をプレビューし、競合を検出します。</key>
-        <key name="code_check_checkbox_tooltip">シミュレーションが成功した後、変更されたファイルの構文をチェックします(例: Python、JSON)。</key>
-        <key name="test_run_checkbox_tooltip">コードチェックが成功した後、プロジェクトを起動して実行時エラーをテストします。</key>
         <key name="restore_refresh_tooltip">利用可能なバックアップのリストを更新します。</key>
     </section>
     <section name="Standalone">

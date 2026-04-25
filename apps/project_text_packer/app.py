@@ -193,6 +193,8 @@ class ProjectTextPackerApp:
         self.widget = None
         self.worker_thread = None
 
+        self.app_root_path = getattr(self.context, 'app_root_path', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
         # Compatibility property for old code that might check root_path
         # In V2, we try to get it from the context's main window if available
         self.root_path = None
@@ -217,9 +219,9 @@ class ProjectTextPackerApp:
         # Update root path from main window if available (Dynamic linkage)
         if hasattr(self.context, 'main_window') and self.context.main_window:
              self.root_path = self.context.main_window.root_path
-    
-        output_dir = self.widget.output_dir_input.text()
-    
+
+        output_dir = self.widget.output_dir_input.currentText().strip()
+
         if not self.root_path:
             QMessageBox.warning(self.widget, self.lang.get('patch_load_error_title'), self.lang.get('project_folder_missing_error'))
             return
@@ -230,6 +232,9 @@ class ProjectTextPackerApp:
 
         self.project_name = os.path.basename(os.path.normpath(self.root_path))
         self.output_dir = output_dir # Store for worker
+
+        # Save path to history
+        self.widget.save_recent_path(self.output_dir)
 
         # Basic overwrite check (rough)
         base_path = os.path.join(output_dir, f"{self.project_name}_project_pack")

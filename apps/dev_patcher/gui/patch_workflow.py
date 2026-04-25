@@ -30,6 +30,12 @@ class PatchWorkflowManager(QObject):
         self._exec_current_idx = 0
         self._exec_total = 0
 
+        # Cache for execution plan
+        self.cached_patch_text = ""
+        self.cached_plan = None
+        self.cached_skipped = None
+
+
     def set_quick_settings_widget(self, qs_widget):
         self.qs_widget = qs_widget
 

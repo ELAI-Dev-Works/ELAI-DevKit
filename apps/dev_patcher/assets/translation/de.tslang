@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">Unscharfe Übereinstimmung (&gt;85%)</key>
         <key name="scope_matching_checkbox">Bereichsübereinstimmung (innerhalb ---scope---)</key>
         <key name="similarity_threshold_label">Ähnlichkeitsschwelle:</key>
-        <key name="simulation_checkbox">Vorschau (Simulation)</key>
-        <key name="code_check_checkbox">Code-Prüfung</key>
-        <key name="corrector_checkbox">Korrektor</key>
         <key name="reset_quick_settings_btn">Auf Standard zurücksetzen</key>
         <key name="backup_method_label">Backup-Methode:</key>
         <key name="backup_method_none">Keine</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">Code prüfen</key>
         <key name="correct_patch_btn">Patch korrigieren</key>
         <key name="test_run_btn">Testlauf</key>
-        <key name="test_run_checkbox">Testen</key>
         <key name="load_patch_btn">Patch laden...</key>
         <key name="examples_btn">Beispiele</key>
         <key name="examples_dialog_title">Patch-Beispiele</key>
@@ -52,7 +48,6 @@
         <key name="self_update_cancelled_log">Selbst-Update vom Benutzer abgebrochen.</key>
         <key name="project_folder_missing_error">FEHLER: Projektordner (@ROOT) ist nicht ausgewählt!</key>
         <key name="no_commands_found_log">Keine auszuführenden Befehle gefunden.</key>
-        <key name="simulation_cancelled_log">Vorgang nach Simulation vom Benutzer abgebrochen.</key>
         <key name="backup_creation_log">Erstelle Sicherung von {}...</key>
         <key name="backup_failed_error_msg">Fehler beim Erstellen der Sicherung von {}: {}</key>
         <key name="backup_success_log">Sicherung erfolgreich erstellt: {}</key>
@@ -71,7 +66,6 @@
         <key name="patch_command_error_log">FEHLER: {}</key>
         <key name="patch_command_success_log">ERFOLG: {}</key>
         <key name="command_executed_default_msg">Befehl ausgeführt.</key>
-        <key name="test_run_disabled_log">[Testlauf] Die Option 'Testing' ist in den Schnelleinstellungen nicht aktiviert.</key>
         <key name="test_run_dependency_error">Testlauf erfordert, dass die Erweiterung 'Project Launcher' aktiviert ist.</key>
         <key name="test_run_invalid_file_error">Die ausgewählte Launch-Datei ist ungültig oder existiert nicht.</key>
         <key name="test_run_start_log">--- TESTLAUF GESTARTET ---</key>
@@ -129,11 +123,8 @@
         <key name="copy_report_btn">Bericht kopieren</key>
         <key name="close_btn_accept">Schließen</key>
         <key name="simulation_confirm_title">Bestätigung</key>
-        <key name="simulation_success_msg">Simulation abgeschlossen. Diesen Patch auf die echten Dateien anwenden?</key>
-        <key name="simulation_error_msg">Während der Simulation wurden Fehler oder Konflikte erkannt! Details finden Sie im Protokoll. Trotzdem versuchen, den Patch anzuwenden?</key>
         <key name="test_run_report_title">Testlauf-Bericht</key>
         <key name="test_run_report_info">Dies ist die Konsolenausgabe vom Teststart Ihrer gepatchten Anwendung.</key>
-        <key name="code_check_error_msg">Syntaxfehler im gepatchten Code erkannt! Siehe Bericht für Details. Trotzdem versuchen, den Patch anzuwenden?</key>
         <key name="corrector_title">Patch-Syntaxkorrektor</key>
         <key name="corrector_info_label">In Ihrem Patch wurden Syntaxfehler oder Vorschläge gefunden. Überprüfen Sie die folgenden Änderungen.</key>
         <key name="corrector_issue_label">Problem</key>
@@ -157,6 +148,10 @@
         <key name="restore_confirm_msg">Sind Sie sicher, dass Sie das Projekt aus diesem Backup/Commit wiederherstellen möchten? Nicht gespeicherte Änderungen gehen verloren.</key>
         <key name="restore_success_msg">Wiederherstellung erfolgreich abgeschlossen!</key>
         <key name="restore_error_msg">Projekt konnte nicht wiederhergestellt werden: {}</key>
+        <key name="ai_report_dialog_title">KI-Korrekturbericht</key>
+        <key name="ai_report_dialog_info">Im Patch wurden problematische Befehle gefunden. Diese werden übersprungen, und der Patch kann sicher angewendet werden. Ein Korrekturbericht für die KI wurde erstellt. Kopieren Sie ihn zusammen mit dem neuen Projektkontext und senden Sie ihn an die KI, damit sie den korrekten Befehl schreiben kann.</key>
+        <key name="ai_report_task">Beheben Sie nur das/die angegebene(n) Problem(e).</key>
+        <key name="simulation_success_msg_new">Die Simulation ist abgeschlossen. Keine Fehler gefunden. Alle Befehle können sicher ausgeführt werden.</key>
     </section>
     <section name="Tooltips">
         <key name="load_patch_tooltip">Laden Sie eine .devpatch-Datei von Ihrem Computer in den Editor.</key>
@@ -170,10 +165,6 @@
         <key name="fuzzy_matching_tooltip">Sucht nach dem ähnlichsten Block anstelle einer exakten Übereinstimmung. Hilft, wenn kleinere Änderungen am Code vorgenommen wurden.</key>
         <key name="scope_matching_tooltip">Beschränkt die Suche nach dem ---old--- Block innerhalb eines größeren ---scope--- Blocks und löst das Problem mit Duplikaten.</key>
         <key name="similarity_threshold_tooltip">Legt den minimal erforderlichen Ähnlichkeitsprozentsatz (1-100) fest, damit eine unscharfe Übereinstimmung als erfolgreich gilt.</key>
-        <key name="corrector_checkbox_tooltip">Führt den Patch-Korrektor automatisch vor Simulation und Ausführung aus.</key>
-        <key name="simulation_checkbox_tooltip">Führt eine Testlauf-Simulation vor der Ausführung durch, um Änderungen in der Vorschau anzuzeigen und Konflikte zu erkennen.</key>
-        <key name="code_check_checkbox_tooltip">Überprüft nach einer erfolgreichen Simulation die Syntax der geänderten Dateien (z. B. Python, JSON).</key>
-        <key name="test_run_checkbox_tooltip">Versucht nach einer erfolgreichen Code-Überprüfung, das Projekt zu starten, um Laufzeitfehler zu testen.</key>
         <key name="restore_refresh_tooltip">Liste der verfügbaren Sicherungen aktualisieren.</key>
     </section>
 </tslang>

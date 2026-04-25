@@ -10,9 +10,6 @@ def run_test_launch(manager):
     if not patch_content:
         return
 
-    if not manager.qs_widget.test_run_checkbox.isChecked():
-        mw.patcher_log_output.appendPlainText(mw.lang.get('test_run_disabled_log'))
-        return
 
     if 'project_launcher' not in mw.tabs or not mw.extension_manager.extensions.get('project_launcher', {}).get('enabled'):
         mw.patcher_log_output.appendPlainText(mw.lang.get('test_run_dependency_error'))

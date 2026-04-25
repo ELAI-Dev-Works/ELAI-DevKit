@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">Coincidencia Difusa (&gt;85%)</key>
         <key name="scope_matching_checkbox">Coincidencia de Ámbito (dentro de ---scope---)</key>
         <key name="similarity_threshold_label">Umbral de Similitud:</key>
-        <key name="simulation_checkbox">Vista Previa (Simulación)</key>
-        <key name="code_check_checkbox">Verificación de Código</key>
-        <key name="corrector_checkbox">Corrector</key>
         <key name="reset_quick_settings_btn">Restablecer Valores Predeterminados</key>
         <key name="backup_method_label">Método de Respaldo:</key>
         <key name="backup_method_none">Ninguno</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">Verificar Código</key>
         <key name="correct_patch_btn">Corregir Parche</key>
         <key name="test_run_btn">Ejecutar Prueba</key>
-        <key name="test_run_checkbox">Probando</key>
         <key name="load_patch_btn">Cargar Parche...</key>
         <key name="examples_btn">Ejemplos</key>
         <key name="examples_dialog_title">Ejemplos de Parches</key>
@@ -52,7 +48,6 @@
         <key name="self_update_cancelled_log">Autoactualización cancelada por el usuario.</key>
         <key name="project_folder_missing_error">ERROR: ¡La carpeta del proyecto (@ROOT) no está seleccionada!</key>
         <key name="no_commands_found_log">No se encontraron comandos para ejecutar.</key>
-        <key name="simulation_cancelled_log">Operación cancelada por el usuario después de la simulación.</key>
         <key name="backup_creation_log">Creando copia de seguridad de {}...</key>
         <key name="backup_failed_error_msg">Error al crear copia de seguridad de {}: {}</key>
         <key name="backup_success_log">Copia de seguridad creada exitosamente: {}</key>
@@ -69,7 +64,6 @@
         <key name="patch_command_error_log">ERROR: {}</key>
         <key name="patch_command_success_log">ÉXITO: {}</key>
         <key name="command_executed_default_msg">Comando ejecutado.</key>
-        <key name="test_run_disabled_log">[Ejecución de Prueba] La casilla 'Testing' no está habilitada en Configuración Rápida.</key>
         <key name="test_run_dependency_error">La Ejecución de Prueba requiere que la extensión 'Project Launcher' esté habilitada.</key>
         <key name="test_run_invalid_file_error">El archivo de lanzamiento seleccionado es inválido o no existe.</key>
         <key name="test_run_start_log">--- INICIANDO EJECUCIÓN DE PRUEBA ---</key>
@@ -129,11 +123,8 @@
         <key name="copy_report_btn">Copiar Informe</key>
         <key name="close_btn_accept">Cerrar</key>
         <key name="simulation_confirm_title">Confirmación</key>
-        <key name="simulation_success_msg">Simulación completa. ¿Aplicar este parche a los archivos reales?</key>
-        <key name="simulation_error_msg">¡Se detectaron errores o conflictos durante la simulación! Los detalles están en el registro. ¿Intentar aplicar el parche de todos modos?</key>
         <key name="test_run_report_title">Informe de Ejecución de Prueba</key>
         <key name="test_run_report_info">Esta es la salida de consola del lanzamiento de prueba de su aplicación parcheada.</key>
-        <key name="code_check_error_msg">¡Se detectaron errores de sintaxis en el código parcheado! Consulte el informe para más detalles. ¿Intentar aplicar el parche de todos modos?</key>
         <key name="corrector_title">Corrector de Sintaxis de Parches</key>
         <key name="corrector_info_label">Se encontraron errores de sintaxis o sugerencias en su parche. Revise los cambios a continuación.</key>
         <key name="corrector_issue_label">Problema</key>
@@ -157,6 +148,10 @@
         <key name="restore_confirm_msg">¿Estás seguro de que quieres restaurar el proyecto desde esta copia de seguridad/commit? Los cambios no guardados se perderán.</key>
         <key name="restore_success_msg">¡Restauración completada exitosamente!</key>
         <key name="restore_error_msg">Error al restaurar el proyecto: {}</key>
+        <key name="ai_report_dialog_title">Informe de Corrección de IA</key>
+        <key name="ai_report_dialog_info">Se encontraron comandos problemáticos en el parche. Se omitirán y el parche se puede aplicar de forma segura. Se ha compilado un informe de corrección para la IA. Cópielo junto con el nuevo contexto del proyecto y envíelo a la IA para que pueda escribir el comando correcto.</key>
+        <key name="ai_report_task">Corrija solo el/los problema(s) especificado(s).</key>
+        <key name="simulation_success_msg_new">La simulación está completa. No se encontraron errores. Todos los comandos se pueden ejecutar de forma segura.</key>
     </section>
     <section name="Tooltips">
         <key name="load_patch_tooltip">Cargar un archivo .devpatch desde tu computadora al editor.</key>
@@ -170,10 +165,6 @@
         <key name="fuzzy_matching_tooltip">Busca el bloque más similar en lugar de una coincidencia exacta. Útil si se hicieron ediciones menores al código.</key>
         <key name="scope_matching_tooltip">Restringe la búsqueda del bloque ---old--- dentro de un bloque ---scope--- más grande, resolviendo el problema de duplicados.</key>
         <key name="similarity_threshold_tooltip">Establece el porcentaje mínimo de similitud requerido (1-100) para que una coincidencia difusa se considere exitosa.</key>
-        <key name="corrector_checkbox_tooltip">Ejecutar automáticamente el corrector de parches antes de la simulación y ejecución.</key>
-        <key name="simulation_checkbox_tooltip">Ejecutar una simulación de prueba antes de la ejecución para previsualizar cambios y detectar conflictos.</key>
-        <key name="code_check_checkbox_tooltip">Después de una simulación exitosa, verificar la sintaxis de los archivos modificados (ej. Python, JSON).</key>
-        <key name="test_run_checkbox_tooltip">Después de una verificación de código exitosa, intentar lanzar el proyecto para probar errores de ejecución.</key>
         <key name="restore_refresh_tooltip">Actualizar la lista de copias de seguridad disponibles.</key>
     </section>
 </tslang>

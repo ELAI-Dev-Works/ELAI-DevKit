@@ -26,8 +26,6 @@
         <key name="ignore_use_gitignore">.gitignore des Projekts für Backup und Packer verwenden</key>
         <key name="settings_btn">Einstellungen</key>
         <key name="restart_btn">Neu starten</key>
-        <key name="settings_extensions_manager_accordion">Erweiterungsverwaltung</key>
-        <key name="settings_accordion_suffix">Einstellungen</key>
         <key name="core_modules_group">Kernmodule</key>
         <key name="custom_modules_group">Benutzerdefinierte Module</key>
         <key name="author_label">Autor:</key>
@@ -80,9 +78,7 @@
         <key name="ignore_settings_title">Ignorierlisten-Editor</key>
         <key name="ignore_settings_dirs_info">Zu ignorierende Verzeichnisse (eines pro Zeile). Betrifft Backup und Packer.</key>
         <key name="ignore_settings_files_info">Zu ignorierende Dateinamen (einer pro Zeile). Betrifft Backup und Packer.</key>
-
         <key name="ignore_settings_tags_label">Anweisung:</key>
-
         <key name="ignore_settings_tags_info">Sie können Tags wie [!backup], [!packer], [!git] verwenden, um Dateien selektiv für bestimmte Module zu ignorieren. Ohne Tags wird die Datei von allen Modulen ignoriert. Tags können kombiniert werden - wenn mehrere Tags angegeben sind, wird die Datei für alle angegebenen Kontexte ignoriert. Beispiele: 'node_modules' - überall ignorieren; 'dist [!packer]' - nur für Packer ignorieren; 'build [!git] [!packer]' - für git und Packer ignorieren, aber in Backup einschließen.</key>
     </section>
     <section name="Tooltips">

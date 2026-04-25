@@ -26,8 +26,6 @@
         <key name="ignore_use_gitignore">バックアップとパッカーに.gitignoreを使用</key>
         <key name="settings_btn">設定</key>
         <key name="restart_btn">再起動</key>
-        <key name="settings_extensions_manager_accordion">拡張機能マネージャー</key>
-        <key name="settings_accordion_suffix">設定</key>
         <key name="core_modules_group">コアモジュール</key>
         <key name="custom_modules_group">カスタムモジュール</key>
         <key name="author_label">作成者:</key>
@@ -80,9 +78,7 @@
         <key name="ignore_settings_title">除外リストエディター</key>
         <key name="ignore_settings_dirs_info">除外するディレクトリ（1行に1つ）。バックアップとパッカーに影響します。</key>
         <key name="ignore_settings_files_info">除外するファイル名（1行に1つ）。バックアップとパッカーに影響します。</key>
-
         <key name="ignore_settings_tags_label">指示:</key>
-
         <key name="ignore_settings_tags_info">[!backup]、[!packer]、[!git]などのタグを使用して、特定のモジュールに対してファイルを選択的に除外できます。タグがない場合、ファイルはすべてのモジュールで除外されます。タグは組み合わせることができます - 複数のタグが指定されている場合、ファイルは指定されたすべてのコンテキストで除外されます。例：「node_modules」- すべての場所で除外；「dist [!packer]」- パッカーのみで除外；「build [!git] [!packer]」- gitとパッカーで除外しますが、バックアップには含まれます。</key>
     </section>
     <section name="Tooltips">

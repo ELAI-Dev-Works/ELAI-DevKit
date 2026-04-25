@@ -16,13 +16,6 @@ def execute_patch_workflow(manager):
     if not patch_content:
         return
 
-    if manager.qs_widget.corrector_checkbox.isChecked():
-        patch_was_modified, new_patch_content = run_corrector(manager, patch_content)
-        if patch_was_modified is None:
-            return
-        if patch_was_modified:
-            patch_content = new_patch_content
-
     is_self_update = "@APP-ROOT" in patch_content
     target_path = mw.app_root_path if is_self_update else mw.root_path
 
@@ -46,97 +39,15 @@ def execute_patch_workflow(manager):
         mw.patcher_log_output.appendPlainText(mw.lang.get('no_commands_found_log'))
         return
 
-    final_plan, skipped_commands =[],[]
-
-    if manager.qs_widget.simulate_checkbox.isChecked():
-        mw.patcher_log_output.appendPlainText(mw.lang.get('simulation_start_log'))
-        QApplication.processEvents()
-
-        # Reset State
-        manager._sim_success = False
-        manager._sim_result_data = {}
-
-        # Init Simulation Worker
-        manager._sim_worker = PatchWorker(commands, target_path, experimental_flags, ignore_dirs, ignore_files, mode='simulate', lang=mw.lang)
-        manager._sim_thread = QThread()
-        manager._sim_worker.moveToThread(manager._sim_thread)
-
-        # Connections
-        manager._sim_worker.progress_log.connect(manager._on_worker_progress)
-        manager._sim_worker.simulation_finished.connect(manager._on_simulation_finished)
-        manager._sim_worker.error.connect(manager._on_worker_error)
-
-        manager._sim_thread.started.connect(manager._sim_worker.run)
-        manager._sim_thread.finished.connect(manager._sim_worker.deleteLater)
-
-        manager.widget.run_button.setEnabled(False)
-
-        manager._active_loop = QEventLoop()
-        manager._sim_thread.start()
-        manager._active_loop.exec()
-
-        # Cleanup
-        manager._sim_thread.quit()
-        manager._sim_thread.wait()
-        manager._sim_worker = None
-        if manager._sim_thread:
-            manager._sim_thread.deleteLater()
-        manager._sim_thread = None
-        manager._active_loop = None
-
-        manager.widget.run_button.setEnabled(True)
-
-        mw.patcher_log_output.appendPlainText(mw.lang.get('simulation_end_log'))
-
-        final_plan = manager._sim_result_data.get('plan', [])
-        skipped_commands = manager._sim_result_data.get('skipped',[])
-
-        has_skips = bool(skipped_commands)
-        msg_box_text = mw.lang.get('simulation_error_msg') if has_skips else mw.lang.get('simulation_success_msg')
-
-        reply = QMessageBox.question(mw, mw.lang.get('simulation_confirm_title'), msg_box_text,
-                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-                                    QMessageBox.StandardButton.No)
-
-        if reply == QMessageBox.StandardButton.No:
-            mw.patcher_log_output.appendPlainText(mw.lang.get('simulation_cancelled_log'))
-            return
-
+    if patch_content == manager.cached_patch_text and manager.cached_plan is not None:
+        final_plan = manager.cached_plan
+        skipped_commands = manager.cached_skipped
     else:
         final_plan = commands
+        skipped_commands =[]
 
     if skipped_commands:
-        simulation_failures =[]
-        for cmd, reason in skipped_commands:
-            simulation_failures.append((cmd, reason))
-        show_error_report(manager, simulation_failures)
-
-    # Start Code Check phase if enabled
-    if manager.qs_widget.code_check_checkbox.isChecked():
-        mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_running_log'))
-        QApplication.processEvents()
-
-        vfs = simulate_patch_and_get_vfs(commands, target_path, experimental_flags, ignore_dirs)
-        checker = CodeChecker(vfs, target_path)
-
-        for log_line in checker.run():
-            mw.patcher_log_output.appendPlainText(log_line)
-            QApplication.processEvents()
-
-        if checker.errors:
-            formatted_errors =[(("CodeCheck", [fp], ""), err) for fp, err in checker.errors]
-            show_error_report(manager, formatted_errors)
-
-            msg_box_text = mw.lang.get('code_check_error_msg')
-            reply = QMessageBox.warning(mw, mw.lang.get('simulation_confirm_title'), msg_box_text,
-                                        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-                                        QMessageBox.StandardButton.No)
-
-            if reply == QMessageBox.StandardButton.No:
-                mw.patcher_log_output.appendPlainText(mw.lang.get('simulation_cancelled_log'))
-                return
-        else:
-            mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_no_errors_log'))
+        mw.patcher_log_output.appendPlainText(f"[INFO] Skipping {len(skipped_commands)} problematic commands based on Check Patch results.")
 
     backup_method = manager.qs_widget.backup_method_combo.currentData()
     if backup_method and backup_method != 'none':

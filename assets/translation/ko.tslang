@@ -26,8 +26,6 @@
         <key name="ignore_use_gitignore">백업 및 패커에 프로젝트 .gitignore 사용</key>
         <key name="settings_btn">설정</key>
         <key name="restart_btn">재시작</key>
-        <key name="settings_extensions_manager_accordion">확장 관리자</key>
-        <key name="settings_accordion_suffix">설정</key>
         <key name="core_modules_group">핵심 모듈</key>
         <key name="custom_modules_group">사용자 정의 모듈</key>
         <key name="author_label">작성자:</key>
@@ -80,9 +78,7 @@
         <key name="ignore_settings_title">무시 목록 편집기</key>
         <key name="ignore_settings_dirs_info">무시할 디렉토리 (한 줄에 하나씩). 백업 및 패커에 영향을 줍니다.</key>
         <key name="ignore_settings_files_info">무시할 파일명 (한 줄에 하나씩). 백업 및 패커에 영향을 줍니다.</key>
-
         <key name="ignore_settings_tags_label">설명:</key>
-
         <key name="ignore_settings_tags_info">[!backup], [!packer], [!git]과 같은 태그를 사용하여 특정 모듈에 대해 선택적으로 파일을 무시할 수 있습니다. 태그가 없으면 파일은 모든 모듈에서 무시됩니다. 태그는 결합할 수 있습니다 - 여러 태그가 지정되면 파일은 지정된 모든 컨텍스트에서 무시됩니다. 예: 'node_modules' - 모든 곳에서 무시; 'dist [!packer]' - 패커에서만 무시; 'build [!git] [!packer]' - git과 패커에서 무시하지만 백업에는 포함.</key>
     </section>
     <section name="Tooltips">

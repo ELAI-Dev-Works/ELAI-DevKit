@@ -75,14 +75,16 @@ def run_simulation_only(manager):
 
     mw.patcher_log_output.appendPlainText(mw.lang.get('simulation_end_log'))
 
+    manager.cached_patch_text = patch_content
+    manager.cached_plan = manager._sim_result_data.get('plan',[])
+    manager.cached_skipped = manager._sim_result_data.get('skipped',[])
+
     simulation_failures =[]
-    for cmd, reason in manager._sim_result_data.get('skipped',[]):
+    for cmd, reason in manager.cached_skipped:
         simulation_failures.append((cmd, reason))
 
     if simulation_failures:
-        show_error_report(manager, simulation_failures)
-
-    if not manager._sim_result_data.get('skipped'):
-        QMessageBox.information(mw, mw.lang.get('simulation_confirm_title'), "The simulation is complete. All commands can be safely executed.")
+        from .error_report import show_ai_correction_report
+        show_ai_correction_report(manager, simulation_failures)
     else:
-        QMessageBox.warning(mw, mw.lang.get('simulation_confirm_title'), "The simulation has ended. Unresolvable conflicts or errors were detected.")
+        QMessageBox.information(mw, mw.lang.get('simulation_confirm_title'), mw.lang.get('simulation_success_msg_new', "The simulation is complete. No errors found. All commands can be safely executed."))

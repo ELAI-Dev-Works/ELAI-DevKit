@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">Correspondance approximative (&gt;85%)</key>
         <key name="scope_matching_checkbox">Correspondance de portée (dans ---scope---)</key>
         <key name="similarity_threshold_label">Seuil de similarité :</key>
-        <key name="simulation_checkbox">Aperçu (Simulation)</key>
-        <key name="code_check_checkbox">Vérification du code</key>
-        <key name="corrector_checkbox">Correcteur</key>
         <key name="reset_quick_settings_btn">Réinitialiser par défaut</key>
         <key name="backup_method_label">Méthode de sauvegarde :</key>
         <key name="backup_method_none">Aucune</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">Vérifier le code</key>
         <key name="correct_patch_btn">Corriger le patch</key>
         <key name="test_run_btn">Exécution test</key>
-        <key name="test_run_checkbox">Test en cours</key>
         <key name="load_patch_btn">Charger un patch...</key>
         <key name="examples_btn">Exemples</key>
         <key name="examples_dialog_title">Exemples de patches</key>
@@ -52,7 +48,6 @@
         <key name="self_update_cancelled_log">Mise à jour automatique annulée par l'utilisateur.</key>
         <key name="project_folder_missing_error">ERREUR : Le dossier du projet (@ROOT) n'est pas sélectionné !</key>
         <key name="no_commands_found_log">Aucune commande à exécuter.</key>
-        <key name="simulation_cancelled_log">Opération annulée par l'utilisateur après la simulation.</key>
         <key name="backup_creation_log">Création de la sauvegarde de {}...</key>
         <key name="backup_failed_error_msg">Échec de la création de la sauvegarde de {} : {}</key>
         <key name="backup_success_log">Sauvegarde créée avec succès : {}</key>
@@ -71,7 +66,6 @@
         <key name="patch_command_error_log">ERREUR : {}</key>
         <key name="patch_command_success_log">SUCCÈS : {}</key>
         <key name="command_executed_default_msg">Commande exécutée.</key>
-        <key name="test_run_disabled_log">[Test Run] La case 'Testing' n'est pas activée dans les Paramètres Rapides.</key>
         <key name="test_run_dependency_error">Test Run nécessite l'activation de l'extension 'Project Launcher'.</key>
         <key name="test_run_invalid_file_error">Le fichier de lancement sélectionné est invalide ou n'existe pas.</key>
         <key name="test_run_start_log">--- DÉMARRAGE DU TEST RUN ---</key>
@@ -129,11 +123,8 @@
         <key name="copy_report_btn">Copier le rapport</key>
         <key name="close_btn_accept">Fermer</key>
         <key name="simulation_confirm_title">Confirmation</key>
-        <key name="simulation_success_msg">Simulation terminée. Appliquer ce correctif aux fichiers réels ?</key>
-        <key name="simulation_error_msg">Des erreurs ou conflits ont été détectés pendant la simulation ! Les détails sont dans le journal. Tenter d'appliquer le correctif quand même ?</key>
         <key name="test_run_report_title">Rapport d'exécution de test</key>
         <key name="test_run_report_info">Ceci est la sortie console du lancement de test de votre application corrigée.</key>
-        <key name="code_check_error_msg">Erreurs de syntaxe détectées dans le code corrigé ! Consultez le rapport pour plus de détails. Tenter d'appliquer le correctif quand même ?</key>
         <key name="corrector_title">Correcteur de syntaxe de correctif</key>
         <key name="corrector_info_label">Des erreurs de syntaxe ou suggestions ont été trouvées dans votre correctif. Examinez les modifications ci-dessous.</key>
         <key name="corrector_issue_label">Problème</key>
@@ -157,6 +148,10 @@
         <key name="restore_confirm_msg">Êtes-vous sûr de vouloir restaurer le projet depuis cette sauvegarde/commit ? Les modifications non enregistrées seront perdues.</key>
         <key name="restore_success_msg">Restauration terminée avec succès !</key>
         <key name="restore_error_msg">Échec de la restauration du projet : {}</key>
+        <key name="ai_report_dialog_title">Rapport de Correction IA</key>
+        <key name="ai_report_dialog_info">Des commandes problématiques ont été trouvées dans le patch. Elles seront ignorées et le patch peut être appliqué en toute sécurité. Un rapport de correction pour l'IA a été compilé. Copiez-le avec le nouveau contexte du projet et envoyez-le à l'IA afin qu'elle puisse écrire la commande correcte.</key>
+        <key name="ai_report_task">Corrigez uniquement le(s) problème(s) spécifié(s).</key>
+        <key name="simulation_success_msg_new">La simulation est terminée. Aucune erreur trouvée. Toutes les commandes peuvent être exécutées en toute sécurité.</key>
     </section>
     <section name="Tooltips">
         <key name="load_patch_tooltip">Charger un fichier .devpatch depuis votre ordinateur dans l'éditeur.</key>
@@ -170,10 +165,6 @@
         <key name="fuzzy_matching_tooltip">Recherche le bloc le plus similaire au lieu d'une correspondance exacte. Utile si des modifications mineures ont été apportées au code.</key>
         <key name="scope_matching_tooltip">Restreint la recherche du bloc ---old--- dans un bloc ---scope--- plus large, résolvant le problème des doublons.</key>
         <key name="similarity_threshold_tooltip">Définit le pourcentage de similarité minimum requis (1-100) pour qu'une correspondance approximative soit considérée comme réussie.</key>
-        <key name="corrector_checkbox_tooltip">Exécuter automatiquement le correcteur de patch avant la simulation et l'exécution.</key>
-        <key name="simulation_checkbox_tooltip">Effectuer une simulation à blanc avant l'exécution pour prévisualiser les modifications et détecter les conflits.</key>
-        <key name="code_check_checkbox_tooltip">Après une simulation réussie, vérifier la syntaxe des fichiers modifiés (par ex. Python, JSON).</key>
-        <key name="test_run_checkbox_tooltip">Après une vérification de code réussie, tenter de lancer le projet pour tester les erreurs d'exécution.</key>
         <key name="restore_refresh_tooltip">Actualiser la liste des sauvegardes disponibles.</key>
     </section>
 </tslang>

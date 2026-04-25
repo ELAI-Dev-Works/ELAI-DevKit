@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">퍼지 매칭 (&gt;85%)</key>
         <key name="scope_matching_checkbox">범위 매칭 (---scope--- 내부)</key>
         <key name="similarity_threshold_label">유사도 임계값:</key>
-        <key name="simulation_checkbox">미리보기 (시뮬레이션)</key>
-        <key name="code_check_checkbox">코드 검사</key>
-        <key name="corrector_checkbox">교정기</key>
         <key name="reset_quick_settings_btn">기본값으로 재설정</key>
         <key name="backup_method_label">백업 방법:</key>
         <key name="backup_method_none">없음</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">코드 확인</key>
         <key name="correct_patch_btn">패치 수정</key>
         <key name="test_run_btn">테스트 실행</key>
-        <key name="test_run_checkbox">테스트 중</key>
         <key name="load_patch_btn">패치 불러오기...</key>
         <key name="examples_btn">예제</key>
         <key name="examples_dialog_title">패치 예제</key>
@@ -52,7 +48,6 @@
         <key name="self_update_cancelled_log">사용자가 자체 업데이트를 취소했습니다.</key>
         <key name="project_folder_missing_error">오류: 프로젝트 폴더(@ROOT)가 선택되지 않았습니다!</key>
         <key name="no_commands_found_log">실행할 명령을 찾을 수 없습니다.</key>
-        <key name="simulation_cancelled_log">시뮬레이션 후 사용자가 작업을 취소했습니다.</key>
         <key name="backup_creation_log">{} 백업 생성 중...</key>
         <key name="backup_failed_error_msg">{} 백업 생성 실패: {}</key>
         <key name="backup_success_log">백업이 성공적으로 생성되었습니다: {}</key>
@@ -71,7 +66,6 @@
         <key name="patch_command_error_log">오류: {}</key>
         <key name="patch_command_success_log">성공: {}</key>
         <key name="command_executed_default_msg">명령이 실행되었습니다.</key>
-        <key name="test_run_disabled_log">[테스트 실행] 빠른 설정에서 '테스팅' 체크박스가 활성화되지 않았습니다.</key>
         <key name="test_run_dependency_error">테스트 실행을 위해서는 'Project Launcher' 확장 프로그램이 활성화되어야 합니다.</key>
         <key name="test_run_invalid_file_error">선택한 실행 파일이 유효하지 않거나 존재하지 않습니다.</key>
         <key name="test_run_start_log">--- 테스트 실행 시작 ---</key>
@@ -126,11 +120,8 @@
         <key name="copy_report_btn">보고서 복사</key>
         <key name="close_btn_accept">닫기</key>
         <key name="simulation_confirm_title">확인</key>
-        <key name="simulation_success_msg">시뮬레이션이 완료되었습니다. 실제 파일에 이 패치를 적용하시겠습니까?</key>
-        <key name="simulation_error_msg">시뮬레이션 중 오류 또는 충돌이 감지되었습니다! 자세한 내용은 로그를 참조하세요. 그래도 패치를 적용하시겠습니까?</key>
         <key name="test_run_report_title">테스트 실행 보고서</key>
         <key name="test_run_report_info">패치된 애플리케이션의 테스트 실행에서 나온 콘솔 출력입니다.</key>
-        <key name="code_check_error_msg">패치된 코드에서 구문 오류가 감지되었습니다! 자세한 내용은 보고서를 참조하세요. 그래도 패치를 적용하시겠습니까?</key>
         <key name="corrector_title">패치 구문 교정기</key>
         <key name="corrector_info_label">패치에서 구문 오류 또는 제안 사항이 발견되었습니다. 아래 변경 사항을 검토하세요.</key>
         <key name="corrector_issue_label">문제</key>
@@ -154,6 +145,10 @@
         <key name="restore_confirm_msg">이 백업/커밋에서 프로젝트를 복원하시겠습니까? 저장되지 않은 변경 사항은 손실됩니다.</key>
         <key name="restore_success_msg">복원이 성공적으로 완료되었습니다!</key>
         <key name="restore_error_msg">프로젝트 복원 실패: {}</key>
+        <key name="ai_report_dialog_title">AI 수정 보고서</key>
+        <key name="ai_report_dialog_info">패치에서 문제가 있는 명령이 발견되었습니다. 해당 명령은 건너뛰며 패치는 안전하게 적용할 수 있습니다. AI를 위한 수정 보고서가 작성되었습니다. 새 프로젝트 컨텍스트와 함께 복사하여 AI에 전송하면 올바른 명령을 작성할 수 있습니다.</key>
+        <key name="ai_report_task">지정된 문제만 수정하세요.</key>
+        <key name="simulation_success_msg_new">시뮬레이션이 완료되었습니다. 오류가 발견되지 않았습니다. 모든 명령을 안전하게 실행할 수 있습니다.</key>
     </section>
     <section name="Tooltips">
         <key name="load_patch_tooltip">컴퓨터에서 .devpatch 파일을 편집기로 불러옵니다.</key>
@@ -167,10 +162,6 @@
         <key name="fuzzy_matching_tooltip">정확히 일치하는 대신 가장 유사한 블록을 검색합니다. 코드에 사소한 편집이 있었을 때 유용합니다.</key>
         <key name="scope_matching_tooltip">더 큰 ---scope--- 블록 내에서 ---old--- 블록 검색을 제한하여 중복 문제를 해결합니다.</key>
         <key name="similarity_threshold_tooltip">퍼지 매치가 성공으로 간주되기 위한 최소 유사도 백분율(1-100)을 설정합니다.</key>
-        <key name="corrector_checkbox_tooltip">시뮬레이션 및 실행 전에 패치 교정기를 자동으로 실행합니다.</key>
-        <key name="simulation_checkbox_tooltip">실행 전에 드라이런 시뮬레이션을 실행하여 변경 사항을 미리 보고 충돌을 감지합니다.</key>
-        <key name="code_check_checkbox_tooltip">시뮬레이션 성공 후 변경된 파일의 구문을 검사합니다(예: Python, JSON).</key>
-        <key name="test_run_checkbox_tooltip">코드 검사 성공 후 프로젝트를 실행하여 런타임 오류를 테스트합니다.</key>
         <key name="restore_refresh_tooltip">사용 가능한 백업 목록을 새로 고칩니다.</key>
     </section>
     <section name="Standalone">

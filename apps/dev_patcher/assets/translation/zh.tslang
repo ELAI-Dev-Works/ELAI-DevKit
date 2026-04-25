@@ -12,9 +12,6 @@
         <key name="fuzzy_matching_checkbox">模糊匹配 (&gt;85%)</key>
         <key name="scope_matching_checkbox">范围匹配（在 ---scope--- 内）</key>
         <key name="similarity_threshold_label">相似度阈值：</key>
-        <key name="simulation_checkbox">预览（模拟）</key>
-        <key name="code_check_checkbox">代码检查</key>
-        <key name="corrector_checkbox">修正器</key>
         <key name="reset_quick_settings_btn">重置为默认</key>
         <key name="backup_method_label">备份方法：</key>
         <key name="backup_method_none">无</key>
@@ -29,7 +26,6 @@
         <key name="check_code_btn">检查代码</key>
         <key name="correct_patch_btn">修正补丁</key>
         <key name="test_run_btn">测试运行</key>
-        <key name="test_run_checkbox">测试</key>
         <key name="load_patch_btn">加载补丁...</key>
         <key name="examples_btn">示例</key>
         <key name="examples_dialog_title">补丁示例</key>
@@ -52,7 +48,6 @@
         <key name="self_update_cancelled_log">用户取消了自我更新。</key>
         <key name="project_folder_missing_error">错误：未选择项目文件夹 (@ROOT)！</key>
         <key name="no_commands_found_log">没有找到要执行的命令。</key>
-        <key name="simulation_cancelled_log">用户在模拟后取消了操作。</key>
         <key name="backup_creation_log">正在创建 {} 的备份...</key>
         <key name="backup_failed_error_msg">无法创建 {} 的备份：{}</key>
         <key name="backup_success_log">备份已成功创建：{}</key>
@@ -71,7 +66,6 @@
         <key name="patch_command_error_log">错误：{}</key>
         <key name="patch_command_success_log">成功：{}</key>
         <key name="command_executed_default_msg">命令已执行</key>
-        <key name="test_run_disabled_log">[测试运行] 快速设置中未启用"测试"复选框。</key>
         <key name="test_run_dependency_error">测试运行需要在快速设置中启用"测试"复选框。</key>
         <key name="test_run_invalid_file_error">所选的启动文件无效或不存在。</key>
         <key name="test_run_start_log">--- 开始测试运行 ---</key>
@@ -126,11 +120,8 @@
         <key name="copy_report_btn">复制报告</key>
         <key name="close_btn_accept">关闭</key>
         <key name="simulation_confirm_title">确认</key>
-        <key name="simulation_success_msg">模拟完成。将此补丁应用到真实文件？</key>
-        <key name="simulation_error_msg">模拟过程中检测到错误或冲突！详情见日志。仍然尝试应用补丁？</key>
         <key name="test_run_report_title">测试运行报告</key>
         <key name="test_run_report_info">这是已修补应用程序的测试启动的控制台输出。</key>
-        <key name="code_check_error_msg">在修补后的代码中检测到语法错误！详见报告。仍然尝试应用补丁？</key>
         <key name="corrector_title">补丁语法修正器</key>
         <key name="corrector_info_label">在您的补丁中发现语法错误或建议。查看下面的更改。</key>
         <key name="corrector_issue_label">问题</key>
@@ -154,6 +145,10 @@
         <key name="restore_confirm_msg">确定要从此备份/提交恢复项目吗？未保存的更改将丢失。</key>
         <key name="restore_success_msg">恢复成功完成！</key>
         <key name="restore_error_msg">恢复项目失败：{}</key>
+        <key name="ai_report_dialog_title">AI 修正报告</key>
+        <key name="ai_report_dialog_info">在补丁中发现了有问题的命令。这些命令将被跳过,补丁可以安全应用。已为 AI 编译了修正报告。请将其与新的项目上下文一起复制并发送给 AI,以便它能够编写正确的命令。</key>
+        <key name="ai_report_task">仅修复指定的问题。</key>
+        <key name="simulation_success_msg_new">模拟已完成。未发现错误。所有命令均可安全执行。</key>
     </section>
     <section name="Tooltips">
         <key name="load_patch_tooltip">将.devpatch文件从您的计算机加载到编辑器中。</key>
@@ -167,10 +162,6 @@
         <key name="fuzzy_matching_tooltip">搜索最相似的块而不是精确匹配。如果代码有细微编辑则有帮助。</key>
         <key name="scope_matching_tooltip">将"---old---"块的搜索限制在更大的"---scope---"块内，解决重复问题。</key>
         <key name="similarity_threshold_tooltip">设置模糊匹配成功的最小相似度百分比（1-100）。</key>
-        <key name="corrector_checkbox_tooltip">在模拟和执行前自动运行补丁校正器。</key>
-        <key name="simulation_checkbox_tooltip">在执行前运行试运行模拟以预览更改和检测冲突。</key>
-        <key name="code_check_checkbox_tooltip">模拟成功后，检查修改文件的语法（例如Python、JSON）。</key>
-        <key name="test_run_checkbox_tooltip">代码检查成功后，尝试启动项目以测试运行时错误。</key>
         <key name="restore_refresh_tooltip">刷新可用备份列表。</key>
     </section>
     <section name="Standalone">

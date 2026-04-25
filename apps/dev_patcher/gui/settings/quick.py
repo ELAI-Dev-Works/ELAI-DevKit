@@ -14,10 +14,6 @@ default_settings = """
 fuzzy_matching = true
 scope_matching = true
 precise_patching = false
-corrector = false
-code_check = false
-simulation = false
-test_run = false
 similarity_threshold = 85
 
 [Backup]
@@ -47,13 +43,6 @@ class DevPatcherQuickSettingsWidget(QWidget):
         features_h_layout.addWidget(self.additional_features_group)
         layout.addLayout(features_h_layout)
 
-        options_h_layout = QHBoxLayout()
-        options_h_layout.addWidget(self.corrector_checkbox)
-        options_h_layout.addWidget(self.simulate_checkbox)
-        options_h_layout.addWidget(self.code_check_checkbox)
-        options_h_layout.addWidget(self.test_run_checkbox)
-        options_h_layout.addStretch()
-        layout.addLayout(options_h_layout)
 
         backup_layout = QHBoxLayout()
         self.backup_method_label = QLabel()
@@ -118,10 +107,6 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.similarity_label = QLabel()
         form_layout.addRow(self.similarity_label, self.similarity_spinbox)
 
-        self.corrector_checkbox = QCheckBox()
-        self.simulate_checkbox = QCheckBox()
-        self.code_check_checkbox = QCheckBox()
-        self.test_run_checkbox = QCheckBox()
 
         self.backup_method_combo = QComboBox()
         self.backup_commit_msg = QLineEdit()
@@ -220,10 +205,6 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.scope_checkbox.setChecked(features.get('scope_matching', False))
         self.lineno_checkbox.setChecked(features.get('precise_patching', False))
         self.similarity_spinbox.setValue(int(features.get('similarity_threshold', 85)))
-        self.corrector_checkbox.setChecked(features.get('corrector', True))
-        self.simulate_checkbox.setChecked(features.get('simulation', True))
-        self.code_check_checkbox.setChecked(features.get('code_check', False))
-        self.test_run_checkbox.setChecked(features.get('test_run', True))
 
         method = backup.get('method', 'zip')
         if isinstance(method, bool):
@@ -245,10 +226,6 @@ class DevPatcherQuickSettingsWidget(QWidget):
                 'fuzzy_matching': self.fuzzy_checkbox.isChecked(),
                 'scope_matching': self.scope_checkbox.isChecked(),
                 'precise_patching': self.lineno_checkbox.isChecked(),
-                'corrector': self.corrector_checkbox.isChecked(),
-                'simulation': self.simulate_checkbox.isChecked(),
-                'code_check': self.code_check_checkbox.isChecked(),
-                'test_run': self.test_run_checkbox.isChecked(),
                 'similarity_threshold': self.similarity_spinbox.value(),
             },
             'Backup': {
@@ -268,10 +245,6 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.fuzzy_checkbox.setChecked(features.get('fuzzy_matching', False))
         self.scope_checkbox.setChecked(features.get('scope_matching', False))
         self.lineno_checkbox.setChecked(features.get('precise_patching', False))
-        self.corrector_checkbox.setChecked(features.get('corrector', False))
-        self.simulate_checkbox.setChecked(features.get('simulation', False))
-        self.code_check_checkbox.setChecked(features.get('code_check', False))
-        self.test_run_checkbox.setChecked(features.get('test_run', False))
         self.similarity_spinbox.setValue(int(features.get('similarity_threshold', 85)))
 
         method = backup.get('method', 'zip')
@@ -288,10 +261,6 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.fuzzy_checkbox.setText(self.lang.get('fuzzy_matching_checkbox')).addGUITooltip(self.lang.get('fuzzy_matching_tooltip'))
         self.scope_checkbox.setText(self.lang.get('scope_matching_checkbox')).addGUITooltip(self.lang.get('scope_matching_tooltip'))
         self.similarity_spinbox.setToolTip(self.lang.get('similarity_threshold_tooltip'))
-        self.corrector_checkbox.setText(self.lang.get('corrector_checkbox')).addGUITooltip(self.lang.get('corrector_checkbox_tooltip'))
-        self.simulate_checkbox.setText(self.lang.get('simulation_checkbox')).addGUITooltip(self.lang.get('simulation_checkbox_tooltip'))
-        self.code_check_checkbox.setText(self.lang.get('code_check_checkbox')).addGUITooltip(self.lang.get('code_check_checkbox_tooltip'))
-        self.test_run_checkbox.setText(self.lang.get('test_run_checkbox')).addGUITooltip(self.lang.get('test_run_checkbox_tooltip'))
 
         self.experimental_group.setTitle(self.lang.get('experimental_group_title'))
         self.lineno_checkbox.setText(self.lang.get('precise_patching_checkbox'))
@@ -299,10 +268,6 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.fuzzy_checkbox.setText(self.lang.get('fuzzy_matching_checkbox'))
         self.scope_checkbox.setText(self.lang.get('scope_matching_checkbox'))
         self.similarity_label.setText(self.lang.get('similarity_threshold_label'))
-        self.corrector_checkbox.setText(self.lang.get('corrector_checkbox'))
-        self.simulate_checkbox.setText(self.lang.get('simulation_checkbox'))
-        self.code_check_checkbox.setText(self.lang.get('code_check_checkbox'))
-        self.test_run_checkbox.setText(self.lang.get('test_run_checkbox'))
 
         self.backup_method_label.setText(self.lang.get('backup_method_label'))
         self.backup_commit_msg.setPlaceholderText(self.lang.get('backup_commit_msg_placeholder'))
