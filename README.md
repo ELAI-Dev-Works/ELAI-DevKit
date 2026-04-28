@@ -178,7 +178,7 @@ Not all AI models are created equal when it comes to following strict syntax rul
     *   **Claude Opus (v4.6)(tested on Antigravity app with Free Plan):** Consistently good at following formatting rules and understanding project architecture.
     *   **DeepSeek (Expert/Reasoner Mode):** Exceptional at understanding instructions and generating precise, flawless patches.
     *   **Qwen 3.6 Plus:** Shows a decent understanding of the instructions, though occasional minor syntax bugs may occur.
-    *   **GLM (5, 5.1):** Understands the logic well(sometimes clarifications on commands and instructions are required), but its web interface is currently problematic (There is no normal codeblocks, which is why standard copying from the chat also copies the response text, requiring manual cleanup before pasting into DevPatcher).
+    *   **GLM (5, 5.1):** Understands the logic well(sometimes clarifications on commands and instructions are required).
     *   **Kimi K2.6:** Currently experiencing website stability issues; it has not been fully evaluated yet.
 *   **Local Models:**
     *   Not officially tested yet. In the future, ELAI-DevKit may introduce a dedicated mode for local models using structured outputs (e.g., GBNF grammar or strict JSON) and a smart context-gathering tool to compensate for smaller context windows.
