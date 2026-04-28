@@ -14,7 +14,7 @@
         <key name="language_label">Язык:</key>
         <key name="reset_btn">Сбросить</key>
         <key name="apply_btn">Применить</key>
-        <key name="save_btn">Сохранить</key>
+        <key name="save_btn">Сохранить глобально</key>
         <key name="close_btn">Закрыть</key>
         <key name="window_title">ELAI-DevKit</key>
         <key name="select_project_folder_btn">Выбрать папку проекта...</key>
@@ -59,6 +59,23 @@
         <key name="restore_tab_btn">Восстановить</key>
         <key name="project_label">Проект:</key>
         <key name="example_patch_loaded">Пример патча загружен.</key>
+        <key name="ui_font_size">Глобальный размер шрифта:</key>
+        <key name="save_project_btn">Сохранить для текущего проекта</key>
+        <key name="ignore_tab_project">Список Текущих Проектов</key>
+        <key name="bookmarks_title">Закладки проекта</key>
+        <key name="bookmarks_add_btn">Добавить текущее</key>
+        <key name="bookmarks_load_btn">Загрузить выбранное</key>
+        <key name="bookmarks_del_btn">Удалить</key>
+        <key name="mode_project">Проект</key>
+        <key name="mode_workspace">Рабочая область</key>
+        <key name="workspace_label">Рабочая область: {}</key>
+        <key name="workspace_projects_dialog_title">Проекты Рабочего Пространства</key>
+        <key name="rename_btn">Переименовать</key>
+        <key name="delete_btn">Удалить</key>
+        <key name="mode_switch_warning_title">Режим переключен</key>
+        <key name="mode_switch_to_workspace_msg">Вы переключились в режим Workspace, но в данный момент выбрана папка проекта. Пожалуйста, выберите действительную папку Workspace или вернитесь в режим проекта.</key>
+        <key name="mode_switch_to_project_msg">Вы переключились из режима Workspace в режим проекта. Текущий путь проекта будет установлен на: {}. При необходимости вы можете изменить папку проекта.</key>
+        <key name="select_workspace_folder_btn">Выбрать папку рабочей области...</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[Настройки] Конфигурация загружена.</key>
@@ -71,6 +88,8 @@
         <key name="console_error_pty_log">[Ошибка] Не удалось запустить PTY-сессию: {}</key>
         <key name="console_terminated_log">[Консоль] Оболочка завершена.</key>
         <key name="console_restarting_log">[Консоль] Перезапуск оболочки...</key>
+        <key name="project_settings_saved_log">[Настройки] Настройки проекта успешно сохранены.</key>
+        <key name="quick_settings_project_saved_log">[Настройки] Быстрые настройки проекта сохранены.</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">Подтверждение перезапуска</key>
@@ -80,6 +99,12 @@
         <key name="ignore_settings_files_info">Имена файлов для игнорирования (по одному на строку). Влияет на резервное копирование и упаковщик.</key>
         <key name="ignore_settings_tags_label">Инструкция:</key>
         <key name="ignore_settings_tags_info">Вы можете использовать теги вроде [!backup], [!packer], [!git] для выборочного игнорирования файлов для конкретных модулей. Без тегов файл игнорируется всеми модулями. Теги можно комбинировать - если указано несколько тегов, файл будет игнорироваться для всех указанных контекстов. Примеры: 'node_modules' - игнорировать везде; 'dist [!packer]' - игнорировать только для упаковщика; 'build [!git] [!packer]' - игнорировать для git и упаковщика, но включить в backup.</key>
+        <key name="rename_project_title">Переименовать проект</key>
+        <key name="rename_project_prompt">Введите новое имя для проекта '{}':</key>
+        <key name="add_workspace_project_title">Добавить новый проект в рабочую область</key>
+        <key name="add_workspace_project_prompt">Введите имя нового проекта в папке рабочей области:</key>
+        <key name="delete_project_warning_title">Удалить проект</key>
+        <key name="delete_project_warning_msg">Вы уверены, что хотите навсегда удалить проект '{}'? Это действие нельзя отменить!</key>
     </section>
     <section name="Tooltips">
         <key name="select_project_folder_tooltip">Открыть диалог для выбора основной папки проекта.</key>
@@ -99,10 +124,14 @@
         <key name="docs_find_next_tooltip">Найти следующее вхождение искомого текста.</key>
         <key name="docs_find_prev_tooltip">Найти предыдущее вхождение искомого текста.</key>
         <key name="settings_reset_tooltip">Сбросить все настройки на этой странице до значений по умолчанию (не сохраняется).</key>
-        <key name="settings_apply_tooltip">Применить текущие настройки для этого сеанса. Изменения будут потеряны при перезапуске, если не сохранены.</key>
+        <key name="settings_apply_tooltip">Применить текущие настройки для этого сеанса. Изменения будут потеряны при перезапуске, если не сохранить.</key>
         <key name="settings_save_tooltip">Сохранить все примененные изменения в файл settings.toml.</key>
         <key name="settings_close_tooltip">Закрыть панель настроек и отменить все неприменённые изменения.</key>
         <key name="doc_copied_tooltip">Скопировано!</key>
+        <key name="workspace_add_project_tooltip">Добавить новый проект в рабочую область</key>
+        <key name="workspace_edit_projects_tooltip">Редактировать проекты рабочего пространства</key>
+        <key name="workspace_refresh_tooltip">Обновить проекты рабочего пространства</key>
+        <key name="select_workspace_folder_tooltip">Выберите папку рабочей области, содержащую несколько проектов.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Автономный)</key>

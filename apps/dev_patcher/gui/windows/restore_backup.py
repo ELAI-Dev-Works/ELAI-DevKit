@@ -15,7 +15,10 @@ class RestoreBackupDialog(QDialog):
         self.setWindowTitle(self.lang.get('restore_modal_title', 'Restore from Backup'))
         self.resize(600, 400)
         self._init_ui()
-        
+
+        from systems.gui.utils.windows import center_window
+        center_window(self, main_window)
+
     def _init_ui(self):
         layout = QVBoxLayout(self)
         

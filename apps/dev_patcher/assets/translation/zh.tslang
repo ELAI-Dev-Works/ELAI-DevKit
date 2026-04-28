@@ -20,7 +20,7 @@
         <key name="backup_method_all">全部 (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">提交信息...</key>
         <key name="init_git_btn">初始化仓库</key>
-        <key name="save_quick_settings_btn">保存设置</key>
+        <key name="save_quick_settings_btn">全局保存</key>
         <key name="execute_patch_btn">应用补丁</key>
         <key name="check_patch_btn">检查补丁</key>
         <key name="check_code_btn">检查代码</key>
@@ -38,6 +38,11 @@
         <key name="restore_mode_changes">仅更改 (标准)</key>
         <key name="restore_mode_full">完全替换 (旧版)</key>
         <key name="restore_btn">恢复</key>
+        <key name="apply_quick_settings_btn">应用设置</key>
+        <key name="test_file_select_title">选择启动文件</key>
+        <key name="test_file_select_label">选择要测试运行的文件:</key>
+        <key name="test_console_title">测试运行控制台</key>
+        <key name="stop_test_run_btn">停止测试运行</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[设置] 快速设置已保存。</key>
@@ -66,12 +71,11 @@
         <key name="patch_command_error_log">错误：{}</key>
         <key name="patch_command_success_log">成功：{}</key>
         <key name="command_executed_default_msg">命令已执行</key>
-        <key name="test_run_dependency_error">测试运行需要在快速设置中启用"测试"复选框。</key>
         <key name="test_run_invalid_file_error">所选的启动文件无效或不存在。</key>
         <key name="test_run_start_log">--- 开始测试运行 ---</key>
         <key name="test_run_finished_log">--- 测试运行完成 ---</key>
         <key name="test_run_simulating_log">[测试运行] 正在模拟补丁以准备环境...</key>
-        <key name="test_run_launching_log">[测试运行] 在隔离模式下启动已修补的项目...</key>
+        <key name="test_run_launching_log">[测试运行] 正在以隔离模式启动已打补丁的项目...</key>
         <key name="simulation_start_log">--- 开始高级模拟 ---</key>
         <key name="simulation_end_log">--- 高级模拟完成 ---</key>
         <key name="code_check_start_log">--- 开始代码检查 ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_fail">失败</key>
         <key name="example_patch_loaded">示例补丁已加载。</key>
         <key name="simulation_no_commands">没有要模拟的命令。</key>
+        <key name="quick_settings_applied_log">[设置] 已应用快速设置。</key>
+        <key name="test_run_env_required_error">项目使用 PROJECT 命令初始化或需要环境（.venv、node_modules），但尚未初始化。请在运行测试之前先应用补丁以初始化环境。</key>
     </section>
     <section name="Dialogs">
         <key name="patch_load_error_title">错误</key>
@@ -146,7 +152,7 @@
         <key name="restore_success_msg">恢复成功完成！</key>
         <key name="restore_error_msg">恢复项目失败：{}</key>
         <key name="ai_report_dialog_title">AI 修正报告</key>
-        <key name="ai_report_dialog_info">在补丁中发现了有问题的命令。这些命令将被跳过,补丁可以安全应用。已为 AI 编译了修正报告。请将其与新的项目上下文一起复制并发送给 AI,以便它能够编写正确的命令。</key>
+        <key name="ai_report_dialog_info">在补丁中发现了有问题的命令。它们将被跳过,补丁可以安全应用。已为AI编译了更正报告。将其与新的项目上下文一起复制并发送给AI,以便它可以编写正确的命令。</key>
         <key name="ai_report_task">仅修复指定的问题。</key>
         <key name="simulation_success_msg_new">模拟已完成。未发现错误。所有命令均可安全执行。</key>
     </section>

@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QFrame
-from assets.icons import ICON_QUICK_SETTINGS, svg_to_icon, get_svg_content
+from systems.gui.icons import ICON_QUICK_SETTINGS, svg_to_icon, get_svg_content
 
 class QuickSettingsPanel(QWidget):
     def __init__(self, context_or_window, extension_name_filter: str = None):
@@ -29,10 +29,10 @@ class QuickSettingsPanel(QWidget):
         self.extension_name_filter = extension_name_filter
         
         self.accordions = {} # To hold {'ext_name': (button, widget)}
-        
+
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
-        
+
         self._populate_quick_settings()
         self.retranslate_ui()
 
@@ -89,6 +89,14 @@ class QuickSettingsPanel(QWidget):
     
             if hasattr(content, 'retranslate_ui'):
                 content.retranslate_ui()
+
+    def project_folder_changed(self, root_path):
+        for button, content in self.accordions.values():
+            if hasattr(content, 'project_folder_changed'):
+                content.project_folder_changed(root_path)
+            if hasattr(content, 'load_settings'):
+                content.load_settings()
+
     def update_icons(self):
         p = self.main_window.theme_manager.current_palette if self.main_window and hasattr(self.main_window, 'theme_manager') else {}
         icon_color = p.get("icon_default", "#e0e0e0")

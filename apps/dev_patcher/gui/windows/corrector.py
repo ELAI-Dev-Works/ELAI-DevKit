@@ -1,11 +1,12 @@
 import difflib
 from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QTextEdit, QPushButton,
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QScrollArea, QWidget, QFrame, QDialogButtonBox, QMessageBox,
     QLineEdit
 )
 from PySide6.QtGui import QFont, QColor
 from PySide6.QtCore import Qt
+from plugins.code_editor.editor import CodeEditor
 
 class CorrectorDialog(QDialog):
     def __init__(self, issues, original_patch, main_window, qs_widget):
@@ -65,13 +66,14 @@ class CorrectorDialog(QDialog):
         desc_label.setWordWrap(True)
         layout.addWidget(desc_label)
 
-        text_view = QTextEdit()
-        text_view.setReadOnly(True)
-        text_view.setFont(QFont("Courier New", 9))
+        text_view = CodeEditor()
+        text_view.setMinimumHeight(150)
+
         if issue['original'] != issue['corrected']:
-            self._populate_diff_view(text_view, issue['original'], issue['corrected'])
+            self._populate_diff_view(text_view, issue['original'], issue['corrected'], issue.get('start_line', 1))
         else:
-            text_view.setText(self.lang.get('corrector_suggestion_no_change'))
+            text_view.setReadOnly(True)
+            text_view.setPlainText(self.lang.get('corrector_suggestion_no_change'))
         layout.addWidget(text_view)
 
         action_layout = QHBoxLayout()
@@ -106,23 +108,22 @@ class CorrectorDialog(QDialog):
         layout.addLayout(action_layout)
         return frame
 
-    def _populate_diff_view(self, text_edit, original, corrected):
-        lines = difflib.unified_diff(original.splitlines(), corrected.splitlines(), lineterm='', n=100)
-        try:
-            for _ in range(3): next(lines, None)
-        except StopIteration:
-            pass
+    def _populate_diff_view(self, text_edit, original, corrected, start_line=1):
+        lines = list(difflib.unified_diff(original.splitlines(), corrected.splitlines(), lineterm='', n=100))
 
-        for line in lines:
-            if line.startswith('+'):
-                text_edit.setTextColor(QColor('#a7ffa7'))
-                text_edit.append(line)
-            elif line.startswith('-'):
-                text_edit.setTextColor(QColor('#ff9f9f'))
-                text_edit.append(line)
-            else:
-                text_edit.setTextColor(QColor('grey'))
-                text_edit.append(line)
+        # Keep the @@ header, drop the ---/+++ file headers manually
+        if len(lines) > 2:
+            lines = lines[2:]
+
+        import re
+        for i in range(len(lines)):
+            if lines[i].startswith('@@'):
+                # Replace the start lines in @@ to reflect the real patch line
+                lines[i] = re.sub(r"^@@ -\d+", f"@@ -{start_line}", lines[i])
+                lines[i] = re.sub(r" \+\d+", f" +{start_line}", lines[i])
+
+        diff_text = '\n'.join(lines)
+        text_edit.set_diff_text(diff_text)
 
     def _apply_fix(self, issue):
         original_block = issue['original']

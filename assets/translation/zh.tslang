@@ -14,7 +14,7 @@
         <key name="language_label">语言:</key>
         <key name="reset_btn">重置</key>
         <key name="apply_btn">应用</key>
-        <key name="save_btn">保存</key>
+        <key name="save_btn">全局保存</key>
         <key name="close_btn">关闭</key>
         <key name="window_title">ELAI-DevKit</key>
         <key name="select_project_folder_btn">选择项目文件夹...</key>
@@ -57,20 +57,39 @@
         <key name="detach_tab_tooltip">分离标签页</key>
         <key name="tab_detached_msg">此标签页已在单独窗口中打开。</key>
         <key name="restore_tab_btn">恢复</key>
-        <key name="project_label">项目：</key>
+        <key name="project_label">项目:</key>
         <key name="example_patch_loaded">示例补丁已加载。</key>
+        <key name="ui_font_size">全局字体大小：</key>
+        <key name="save_project_btn">保存到当前项目</key>
+        <key name="ignore_tab_project">当前项目列表</key>
+        <key name="bookmarks_title">项目书签</key>
+        <key name="bookmarks_add_btn">添加当前</key>
+        <key name="bookmarks_load_btn">加载所选</key>
+        <key name="bookmarks_del_btn">删除</key>
+        <key name="mode_project">项目</key>
+        <key name="mode_workspace">工作区</key>
+        <key name="workspace_label">工作区：{}</key>
+        <key name="workspace_projects_dialog_title">工作区项目</key>
+        <key name="rename_btn">重命名</key>
+        <key name="delete_btn">删除</key>
+        <key name="mode_switch_warning_title">模式已切换</key>
+        <key name="mode_switch_to_workspace_msg">您已切换到工作区模式,但当前选择的是项目文件夹。请选择有效的工作区文件夹,或切换回项目模式。</key>
+        <key name="mode_switch_to_project_msg">您已从工作区模式切换到项目模式。当前项目路径将设置为:{}。如有需要,您可以更改项目文件夹。</key>
+        <key name="select_workspace_folder_btn">选择工作区文件夹...</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[设置] 配置已加载。</key>
         <key name="restart_signal_sent_log">重启信号已发送...</key>
         <key name="project_folder_selected_log">项目文件夹已设置：{}</key>
         <key name="log_cleared">========================================</key>
-        <key name="project_folder_missing_error">错误：未选择项目文件夹（@ROOT）！</key>
-        <key name="settings_saved_log">[成功] 设置已保存。</key>
+        <key name="project_folder_missing_error">错误：未选择项目文件夹 (@ROOT)！</key>
+        <key name="settings_saved_log">[OK] 设置已成功保存。</key>
         <key name="console_started_log">[控制台] Shell 已启动于：{}</key>
         <key name="console_error_pty_log">[错误] 启动 PTY 会话失败：{}</key>
         <key name="console_terminated_log">[控制台] Shell 已终止。</key>
         <key name="console_restarting_log">[控制台] 正在重启 Shell...</key>
+        <key name="project_settings_saved_log">[设置] 项目设置已成功保存。</key>
+        <key name="quick_settings_project_saved_log">[设置] 项目快速设置已保存。</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">确认重启</key>
@@ -80,9 +99,15 @@
         <key name="ignore_settings_files_info">要忽略的文件名（每行一个）。影响备份和打包。</key>
         <key name="ignore_settings_tags_label">说明：</key>
         <key name="ignore_settings_tags_info">可以使用标签如 [!backup]、[!packer]、[!git] 来选择性地为特定模块忽略文件。不使用标签时，文件将被所有模块忽略。标签可以组合使用 - 如果指定多个标签，文件将在所有指定的上下文中被忽略。示例：'node_modules' - 在所有地方忽略；'dist [!packer]' - 仅在打包时忽略；'build [!git] [!packer]' - 在 git 和打包时忽略，但在备份中包含。</key>
+        <key name="rename_project_title">重命名项目</key>
+        <key name="rename_project_prompt">输入项目'{}'的新名称：</key>
+        <key name="add_workspace_project_title">添加新的工作区项目</key>
+        <key name="add_workspace_project_prompt">输入工作区文件夹中新项目的名称：</key>
+        <key name="delete_project_warning_title">删除项目</key>
+        <key name="delete_project_warning_msg">您确定要永久删除项目'{}'吗?此操作无法撤销!</key>
     </section>
     <section name="Tooltips">
-        <key name="select_project_folder_tooltip">打开对话框选择主项目文件夹。</key>
+        <key name="select_project_folder_tooltip">打开对话框以选择主项目文件夹。</key>
         <key name="edit_ignore_list_tooltip">编辑备份和打包的忽略文件和文件夹列表。</key>
         <key name="edit_ignore_list_disabled_tooltip">请先选择项目文件夹以启用此按钮。</key>
         <key name="settings_tooltip">打开主应用程序设置面板。</key>
@@ -99,10 +124,14 @@
         <key name="docs_find_next_tooltip">查找搜索文本的下一个匹配项。</key>
         <key name="docs_find_prev_tooltip">查找搜索文本的上一个匹配项。</key>
         <key name="settings_reset_tooltip">将此页面上的所有设置重置为默认值（不保存）。</key>
-        <key name="settings_apply_tooltip">应用当前会话的设置。除非保存，否则更改将在重启后丢失。</key>
+        <key name="settings_apply_tooltip">应用当前会话的设置。除非保存，否则重启后更改将丢失。</key>
         <key name="settings_save_tooltip">将所有已应用的更改保存到 settings.toml 文件。</key>
         <key name="settings_close_tooltip">关闭设置面板并还原任何未应用的更改。</key>
         <key name="doc_copied_tooltip">已复制！</key>
+        <key name="workspace_add_project_tooltip">向工作区添加新项目</key>
+        <key name="workspace_edit_projects_tooltip">编辑工作区项目</key>
+        <key name="workspace_refresh_tooltip">刷新工作区项目</key>
+        <key name="select_workspace_folder_tooltip">选择包含多个项目的工作区文件夹。</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (独立)</key>

@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QMainWindow, QPushButton, QVBoxLayout, QHBoxLayout,
     QWidget, QApplication, QFileDialog, QLabel,
         QMessageBox,
-        QFrame, QStackedLayout, QTabWidget, QTabBar
+        QFrame, QStackedLayout, QTabWidget, QTabBar, QSizePolicy
     )
 from PySide6.QtCore import Qt
 import os
@@ -18,7 +18,9 @@ from systems.gui.utils.key_manager import KeyManager
 from systems.gui.themes.manager import ThemeManager
 from systems.settings.gui.main import SettingsPanel
 from systems.gui.widgets.quick_settings_panel import QuickSettingsPanel
-from assets.icons import ICON_HOME, ICON_MAIN_SETTINGS, ICON_DETACH, svg_to_icon, get_svg_content
+from systems.project.bookmarks import BookmarksDialog
+from PySide6.QtWidgets import QComboBox
+from systems.gui.icons import ICON_HOME, ICON_MAIN_SETTINGS, ICON_EXTENSIONS, ICON_DETACH, ICON_BOOKMARKS, ICON_RESTART, ICON_PLUS, ICON_EDIT, ICON_REFRESH, svg_to_icon, get_svg_content
 
 # Special code that will signal launch.py that a restart is needed
 RESTART_CODE = 100
@@ -46,6 +48,10 @@ class MainWindow(QMainWindow):
         super().__init__()
     
         self.root_path = None
+        
+        self.current_mode = 'Project'
+        self.workspace_path = None
+        
         if context:
             context.main_window = self
         self.context = context
@@ -155,19 +161,70 @@ class MainWindow(QMainWindow):
         project_panel = QFrame()
         project_panel.setFrameShape(QFrame.Shape.StyledPanel)
         project_layout = QHBoxLayout(project_panel)
+
+        self.bookmarks_button = QPushButton()
+        self.bookmarks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.bookmarks_button.clicked.connect(self.open_bookmarks)
+        self.bookmarks_button.setProperty("no_custom_tooltip", True)
+
+        self.mode_combo = QComboBox()
+        self.mode_combo.addItems(["Project", "Workspace"])
+        self.mode_combo.currentTextChanged.connect(self.on_mode_changed)
+
         self.select_folder_button = QPushButton()
         self.select_folder_button.clicked.connect(self.select_project_folder)
+
+        self.workspace_controls_widget = QWidget()
+        ws_layout = QHBoxLayout(self.workspace_controls_widget)
+        ws_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.workspace_project_combo = QComboBox()
+        self.workspace_project_combo.setEditable(True)
+        self.workspace_project_combo.currentTextChanged.connect(self.on_workspace_project_changed)
+        self.workspace_project_combo.lineEdit().returnPressed.connect(self._create_workspace_project)
+
+        self.ws_add_btn = QPushButton()
+        self.ws_add_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.ws_add_btn.setProperty("no_custom_tooltip", True)
+        self.ws_add_btn.clicked.connect(self._add_workspace_project)
+
+        self.ws_edit_btn = QPushButton()
+        self.ws_edit_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.ws_edit_btn.setProperty("no_custom_tooltip", True)
+        self.ws_edit_btn.clicked.connect(self._edit_workspace_projects)
+
+        self.ws_refresh_btn = QPushButton()
+        self.ws_refresh_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.ws_refresh_btn.setProperty("no_custom_tooltip", True)
+        self.ws_refresh_btn.clicked.connect(self._scan_workspace)
+
+        ws_layout.addWidget(self.workspace_project_combo, stretch=1)
+        ws_layout.addWidget(self.ws_add_btn)
+        ws_layout.addWidget(self.ws_edit_btn)
+        ws_layout.addWidget(self.ws_refresh_btn)
+
+        self.workspace_controls_widget.setVisible(False)
+
         self.path_label = QLabel()
+
         self.edit_ignore_list_button = QPushButton()
         self.edit_ignore_list_button.clicked.connect(self.open_ignore_settings)
-        self.edit_ignore_list_button.setEnabled(False) # Disabled by default
-        
+        self.edit_ignore_list_button.setEnabled(False)
+
+        project_layout.addWidget(self.bookmarks_button)
+        project_layout.addWidget(self.mode_combo)
         project_layout.addWidget(self.select_folder_button)
-        project_layout.addWidget(self.path_label, stretch=1)
+        project_layout.addWidget(self.workspace_controls_widget, stretch=1)
+        project_layout.addWidget(self.path_label, stretch=2)
         project_layout.addWidget(self.edit_ignore_list_button)
-        
+
         top_bar_layout.addWidget(project_panel, stretch=1)
     
+        self.ext_button = QPushButton()
+        self.ext_button.setIcon(svg_to_icon(get_svg_content(ICON_EXTENSIONS)))
+        self.ext_button.clicked.connect(self.open_extensions)
+        self.ext_button.addGUITooltip(self.lang.get('launcher_ext_tooltip'))
+
         self.settings_button = QPushButton()
         self.settings_button.setIcon(svg_to_icon(get_svg_content(ICON_MAIN_SETTINGS)))
         self.settings_button.clicked.connect(self.toggle_settings_panel)
@@ -185,28 +242,152 @@ class MainWindow(QMainWindow):
             self.home_button.clicked.connect(self.go_home)
             top_bar_layout.addWidget(self.home_button)
     
+        top_bar_layout.addWidget(self.ext_button)
         top_bar_layout.addWidget(self.settings_button)
         top_bar_layout.addWidget(self.restart_button)
         return top_bar_layout
         
     def go_home(self):
-        self.close()
+        self.hide()
         if self.on_home_callback:
             self.on_home_callback()
+
+    def open_extensions(self):
+        from core.gui.launch import ExtensionsWindow
+        dialog = ExtensionsWindow(self)
+        dialog.exec()
+
+    def _create_workspace_project(self):
+        if self.current_mode != 'Workspace' or not self.workspace_path:
+            return
+        new_project_name = self.workspace_project_combo.currentText().strip()
+        if not new_project_name:
+            return
+
+        new_path = os.path.join(self.workspace_path, new_project_name)
+        if not os.path.exists(new_path):
+            try:
+                os.makedirs(new_path, exist_ok=True)
+                self._scan_workspace()
+                idx = self.workspace_project_combo.findText(new_project_name)
+                if idx >= 0:
+                    self.workspace_project_combo.setCurrentIndex(idx)
+            except Exception as e:
+                QMessageBox.warning(self, "Error", f"Could not create project folder: {e}")
+        else:
+            idx = self.workspace_project_combo.findText(new_project_name)
+            if idx >= 0:
+                self.workspace_project_combo.setCurrentIndex(idx)
+
+    def _add_workspace_project(self):
+        if self.current_mode != 'Workspace' or not self.workspace_path:
+            return
+        from PySide6.QtWidgets import QInputDialog, QMessageBox
+        name, ok = QInputDialog.getText(
+            self, 
+            self.lang.get('add_workspace_project_title', 'Add new workspace project'), 
+            self.lang.get('add_workspace_project_prompt', 'Enter name for new project in workspace folder:')
+        )
+        if ok and name.strip():
+            new_path = os.path.join(self.workspace_path, name.strip())
+            if not os.path.exists(new_path):
+                try:
+                    os.makedirs(new_path, exist_ok=True)
+                    self._scan_workspace()
+                    idx = self.workspace_project_combo.findText(name.strip())
+                    if idx >= 0:
+                        self.workspace_project_combo.setCurrentIndex(idx)
+                except Exception as e:
+                    QMessageBox.warning(self, self.lang.get('patch_load_error_title', 'Error'), f"Could not create project folder: {e}")
+            else:
+                QMessageBox.warning(self, self.lang.get('patch_load_error_title', 'Error'), "A folder with this name already exists.")
+
+    def _edit_workspace_projects(self):
+        if self.current_mode != 'Workspace' or not self.workspace_path:
+            return
+        from systems.project.workspace_dialogs import WorkspaceProjectsDialog
+        dialog = WorkspaceProjectsDialog(self)
+        dialog.exec()
+        self._scan_workspace()
+        if self.root_path:
+            idx = self.workspace_project_combo.findText(os.path.basename(self.root_path))
+            if idx >= 0:
+                self.workspace_project_combo.setCurrentIndex(idx)
+            else:
+                self.root_path = None
+                self.theme_manager.update_path_label_style()
+
+
     
+    def reload_tabs(self):
+        """Adds tabs for newly enabled extensions and removes tabs for disabled ones."""
+        extension_widgets = dict(self.extension_manager.get_extension_widgets())
+
+        # 1. Remove tabs for extensions that are no longer enabled
+        for name in list(self.tabs.keys()):
+            if name not in extension_widgets:
+                widget = self.tabs[name]
+
+                # If detached, re-attach first to cleanly remove
+                if hasattr(self, 'detached_tabs') and name in self.detached_tabs:
+                    self.attach_tab(name)
+
+                index = self.tab_widget.indexOf(widget)
+                if index != -1:
+                    self.tab_widget.removeTab(index)
+
+                widget.deleteLater()
+                del self.tabs[name]
+
+        # 2. Add tabs for newly enabled extensions
+        tab_order = ['dev_patcher', 'project_text_packer', 'project_launcher']
+
+        newly_added =[]
+        for name in tab_order:
+            if name in extension_widgets and name not in self.tabs:
+                widget_class = extension_widgets[name]
+                tab_widget_instance = widget_class(self)
+                index = self.tab_widget.addTab(tab_widget_instance, self.lang.get(f'{name}_tab'))
+                self.tabs[name] = tab_widget_instance
+                self._add_detach_button(index, name)
+                if hasattr(tab_widget_instance, 'project_folder_changed') and self.root_path:
+                    tab_widget_instance.project_folder_changed(self.root_path)
+                newly_added.append(name)
+
+        for name in sorted(extension_widgets.keys()):
+            if name not in tab_order and name not in self.tabs:
+                widget_class = extension_widgets[name]
+                tab_widget_instance = widget_class(self)
+                tab_title = self.lang.get(f'{name}_tab')
+                if tab_title == f'{name}_tab':
+                    tab_title = name.replace('_', ' ').title()
+                index = self.tab_widget.addTab(tab_widget_instance, tab_title)
+                self.tabs[name] = tab_widget_instance
+                self._add_detach_button(index, name)
+                if hasattr(tab_widget_instance, 'project_folder_changed') and self.root_path:
+                    tab_widget_instance.project_folder_changed(self.root_path)
+                newly_added.append(name)
+
+        # Register hooks for newly added tabs
+        for name in newly_added:
+            meta = self.extension_manager.extensions[name]
+            self.extension_manager.comp_loader.register_ui_hooks(meta, self.key_manager, self.context_menu_manager)
+
+        self.retranslate_ui()
+
     def _create_main_tabs(self):
         """Creates and populates the main QTabWidget using the extension manager."""
         self.tab_widget = QTabWidget()
-        
+
         # This is needed for the dev patcher tab, so it's created here
         self.patcher_log_output = LogBox(self)
 
         # Define the desired order for the tabs
         tab_order = ['dev_patcher', 'project_text_packer', 'project_launcher']
-        
+
         # Get all available widgets from the extension manager and store them in a dict for easy lookup
         extension_widgets = dict(self.extension_manager.get_extension_widgets())
-        
+
         # Add tabs in the specified order
         for name in tab_order:
             if name in extension_widgets:
@@ -331,15 +512,15 @@ class MainWindow(QMainWindow):
     
     def get_combined_ignore_lists(self):
         """
-        Aggregates Global settings, Temporary session lists, and .gitignore (if enabled).
+        Aggregates Global settings, Project settings, Temporary session lists, and .gitignore.
         Returns: (combined_dirs, combined_files)
         """
-        # 1. Global
-        global_dirs, global_files, use_gitignore = self.settings_manager.get_ignore_lists()
-    
-        # 2. Temporary
-        combined_dirs = set(global_dirs + self.temp_ignore_dirs)
-        combined_files = set(global_files + self.temp_ignore_files)
+        # 1. Global & Project
+        g_dirs, g_files, use_gitignore, p_dirs, p_files = self.settings_manager.get_ignore_lists()
+
+        # 2. Temporary & Combined
+        combined_dirs = set(g_dirs + p_dirs + self.temp_ignore_dirs)
+        combined_files = set(g_files + p_files + self.temp_ignore_files)
     
         # 3. .gitignore
         if use_gitignore and self.root_path:
@@ -356,12 +537,17 @@ class MainWindow(QMainWindow):
             self.lang.set_language(settings['language'])
 
         if 'ui' in settings:
-            app = QApplication.instance()
-            if hasattr(app, '_tooltip_enhancer'):
-                app._tooltip_enhancer.always_show = settings['ui'].get('always_show_tooltips', False)
+            if 'ui' in settings:
+                app = QApplication.instance()
+                if hasattr(app, '_tooltip_enhancer'):
+                    app._tooltip_enhancer.always_show = settings['ui'].get('always_show_tooltips', False)
 
-    
-        # Theme settings are now handled directly by the ThemeManager
+                font_size = settings['ui'].get('font_size', 10)
+                font = app.font()
+                font.setPointSize(font_size)
+                app.setFont(font)
+
+            # Theme settings are now handled directly by the ThemeManager
         # based on its current state, which is updated via the settings panel.
         # This method is now primarily for language updates.
     
@@ -377,14 +563,35 @@ class MainWindow(QMainWindow):
         icon_def = p.get("icon_default", "#e0e0e0")
         icon_dim = p.get("icon_dim", "#888888")
         
-        self.select_folder_button.setText(self.lang.get('select_project_folder_btn'))
+        if self.current_mode == 'Workspace':
+            self.select_folder_button.setText(self.lang.get('select_workspace_folder_btn', 'Select Workspace Folder...'))
+            if hasattr(self.select_folder_button, 'addGUITooltip'):
+                self.select_folder_button.addGUITooltip(self.lang.get('select_workspace_folder_tooltip', 'Select a workspace folder containing multiple projects.'))
+        else:
+            self.select_folder_button.setText(self.lang.get('select_project_folder_btn'))
+            if hasattr(self.select_folder_button, 'addGUITooltip'):
+                self.select_folder_button.addGUITooltip(self.lang.get('select_project_folder_tooltip'))
+
+        self.mode_combo.setItemText(0, self.lang.get('mode_project', 'Project'))
+        self.mode_combo.setItemText(1, self.lang.get('mode_workspace', 'Workspace'))
+        self.bookmarks_button.setToolTip(self.lang.get('bookmarks_title', 'Project Bookmarks'))
+
+        self.ws_add_btn.setToolTip(self.lang.get('workspace_add_project_tooltip', 'Add new project to workspace'))
+        self.ws_edit_btn.setToolTip(self.lang.get('workspace_edit_projects_tooltip', 'Edit workspace projects'))
+        self.ws_refresh_btn.setToolTip(self.lang.get('workspace_refresh_tooltip', 'Refresh workspace projects'))
+        self.ws_add_btn.setIcon(svg_to_icon(get_svg_content(ICON_PLUS), icon_def))
+        self.ws_edit_btn.setIcon(svg_to_icon(get_svg_content(ICON_EDIT), icon_def))
+        self.ws_refresh_btn.setIcon(svg_to_icon(get_svg_content(ICON_REFRESH), icon_def))
+
         self.edit_ignore_list_button.setText(self.lang.get('edit_ignore_list_btn'))
         if self.edit_ignore_list_button.isEnabled():
             self.edit_ignore_list_button.addGUITooltip(self.lang.get('edit_ignore_list_tooltip'))
         else:
             self.edit_ignore_list_button.addGUITooltip(self.lang.get('edit_ignore_list_disabled_tooltip'))
 
-        if self.root_path:
+        if self.current_mode == 'Workspace' and self.workspace_path:
+             self.path_label.setText(self.lang.get('workspace_label', 'Workspace: {}').format(self.workspace_path))
+        elif self.root_path:
              self.path_label.setText(self.lang.get('project_path_label_selected').format(self.root_path))
         else:
              self.path_label.setText(self.lang.get('project_path_label_unselected'))
@@ -419,10 +626,15 @@ class MainWindow(QMainWindow):
                 if restore_btn:
                     restore_btn.setText(self.lang.get('restore_tab_btn'))
 
+        self.bookmarks_button.setIcon(svg_to_icon(get_svg_content(ICON_BOOKMARKS), icon_def))
+        self.ext_button.setIcon(svg_to_icon(get_svg_content(ICON_EXTENSIONS), icon_def))
+        self.ext_button.setText(self.lang.get('launcher_btn_ext')).addGUITooltip(self.lang.get('launcher_ext_tooltip'))
+
         self.settings_button.setIcon(svg_to_icon(get_svg_content(ICON_MAIN_SETTINGS), icon_def))
         self.settings_button.setText(self.lang.get('settings_btn')).addGUITooltip(self.lang.get('settings_tooltip'))
+
+        self.restart_button.setIcon(svg_to_icon(get_svg_content(ICON_RESTART), icon_def))
         self.restart_button.setText(self.lang.get('restart_btn')).addGUITooltip(self.lang.get('restart_tooltip'))
-        self.select_folder_button.setText(self.lang.get('select_project_folder_btn')).addGUITooltip(self.lang.get('select_project_folder_tooltip'))
         self.edit_ignore_list_button.setText(self.lang.get('edit_ignore_list_btn'))
 
         if hasattr(self, 'home_button'):
@@ -465,11 +677,16 @@ class MainWindow(QMainWindow):
         self.theme_manager.apply_theme(color_scheme, theme)
 
         ui_settings = core_settings.get('ui', {})
+        ui_settings = core_settings.get('ui', {})
         app = QApplication.instance()
         if hasattr(app, '_tooltip_enhancer'):
             app._tooltip_enhancer.always_show = ui_settings.get('always_show_tooltips', False)
 
-    
+        font_size = ui_settings.get('font_size', 10)
+        font = app.font()
+        font.setPointSize(font_size)
+        app.setFont(font)
+
         # Settings for tabs are loaded by the tabs themselves when they are created
         # or when settings panel is opened.
         self.patcher_log_output.appendPlainText(self.lang.get('settings_loaded_log'))
@@ -491,16 +708,107 @@ class MainWindow(QMainWindow):
             self.patcher_log_output.appendPlainText(self.lang.get('restart_signal_sent_log'))
             QApplication.exit(RESTART_CODE)
 
+    def _apply_project_change(self):
+        self.settings_manager.set_project_path(self.root_path)
+        self.load_all_settings()
+        self.extension_manager.reload_extensions()
+
+        # Notify all tabs that the folder has changed
+        for tab in self.tabs.values():
+            if hasattr(tab, 'project_folder_changed'):
+                tab.project_folder_changed(self.root_path)
+
     def select_project_folder(self):
         folder_path = QFileDialog.getExistingDirectory(self, self.lang.get('select_project_folder_btn'))
         if folder_path:
-            self.root_path = os.path.normpath(folder_path)
-            self.path_label.setText(self.lang.get('project_path_label_selected').format(self.root_path))
+            folder_path = os.path.normpath(folder_path)
+
+            if self.current_mode == 'Project':
+                self.root_path = folder_path
+                self.workspace_path = None
+                self.path_label.setText(self.lang.get('project_path_label_selected').format(self.root_path))
+                self.workspace_controls_widget.setVisible(False)
+            else:
+                self.workspace_path = folder_path
+                self.path_label.setText(self.lang.get('workspace_label', 'Workspace: {}').format(self.workspace_path))
+                self.workspace_controls_widget.setVisible(True)
+                self._scan_workspace()
+                if self.workspace_project_combo.count() > 0:
+                    self.root_path = os.path.join(self.workspace_path, self.workspace_project_combo.currentText())
+                else:
+                    self.root_path = None
+
             self.edit_ignore_list_button.setEnabled(True)
             self.theme_manager.update_path_label_style()
-            self.patcher_log_output.appendPlainText(self.lang.get('project_folder_selected_log').format(self.root_path))
-            
-            # Notify all tabs that the folder has changed
-            for tab in self.tabs.values():
-                if hasattr(tab, 'project_folder_changed'):
-                    tab.project_folder_changed(self.root_path)
+            self.patcher_log_output.appendPlainText(self.lang.get('project_folder_selected_log').format(self.root_path or self.workspace_path))
+            self._apply_project_change()
+
+    def on_mode_changed(self, mode):
+        old_mode = self.current_mode
+        self.current_mode = mode
+        if old_mode == mode: return
+
+        if mode == 'Workspace':
+            self.mode_combo.setItemText(0, self.lang.get('mode_project', 'Project'))
+            self.mode_combo.setItemText(1, self.lang.get('mode_workspace', 'Workspace'))
+            self.workspace_controls_widget.setVisible(True)
+
+            if old_mode == 'Project' and self.root_path:
+                QMessageBox.warning(
+                    self,
+                    self.lang.get('mode_switch_warning_title', "Mode Switched"),
+                    self.lang.get('mode_switch_to_workspace_msg', 
+                        "You switched to Workspace mode, but a Project folder is currently selected.\n"
+                        "Please select a valid Workspace folder, or switch back to Project mode.")
+                )
+                self.workspace_path = os.path.dirname(self.root_path)
+                self.path_label.setText(self.lang.get('workspace_label', 'Workspace: {}').format(self.workspace_path))
+                self._scan_workspace()
+                idx = self.workspace_project_combo.findText(os.path.basename(self.root_path))
+                if idx >= 0:
+                    self.workspace_project_combo.setCurrentIndex(idx)
+            elif self.root_path and not self.workspace_path:
+                self.workspace_path = os.path.dirname(self.root_path)
+                self.path_label.setText(self.lang.get('workspace_label', 'Workspace: {}').format(self.workspace_path))
+                self._scan_workspace()
+                idx = self.workspace_project_combo.findText(os.path.basename(self.root_path))
+                if idx >= 0:
+                    self.workspace_project_combo.setCurrentIndex(idx)
+
+        else: # mode == 'Project'
+            self.workspace_controls_widget.setVisible(False)
+            if old_mode == 'Workspace' and self.root_path:
+                QMessageBox.information(
+                    self,
+                    self.lang.get('mode_switch_warning_title', "Mode Switched"),
+                    self.lang.get('mode_switch_to_project_msg', 
+                        f"You switched from Workspace to Project mode.\n"
+                        f"The current project path will be set to:\n{self.root_path}\n"
+                        "You can change the project folder if needed.")
+                )
+                self.path_label.setText(self.lang.get('project_path_label_selected').format(self.root_path))
+            elif self.root_path:
+                self.path_label.setText(self.lang.get('project_path_label_selected').format(self.root_path))
+
+        self.retranslate_ui()
+
+    def on_workspace_project_changed(self, project_name):
+        if self.current_mode == 'Workspace' and self.workspace_path and project_name:
+            potential_path = os.path.join(self.workspace_path, project_name)
+            if os.path.isdir(potential_path):
+                self.root_path = potential_path
+                self.theme_manager.update_path_label_style()
+                self._apply_project_change()
+
+    def _scan_workspace(self):
+        self.workspace_project_combo.blockSignals(True)
+        self.workspace_project_combo.clear()
+        if self.workspace_path and os.path.isdir(self.workspace_path):
+            dirs =[d for d in os.listdir(self.workspace_path) 
+                    if os.path.isdir(os.path.join(self.workspace_path, d)) and not d.startswith('.')]
+            self.workspace_project_combo.addItems(sorted(dirs))
+        self.workspace_project_combo.blockSignals(False)
+
+    def open_bookmarks(self):
+        dialog = BookmarksDialog(self)
+        dialog.exec()

@@ -4,7 +4,6 @@ def get_stylesheet(colors: dict) -> str:
     QWidget {{
         background-color: {colors["background"]};
         color: {colors["text"]};
-        font-size: 10pt;
         font-family: 'Segoe UI', 'San Francisco', sans-serif;
     }}
     QTabWidget::pane {{

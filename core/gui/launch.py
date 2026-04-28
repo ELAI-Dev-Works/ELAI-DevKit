@@ -9,7 +9,7 @@ from PySide6.QtGui import QIcon, QPainter, QPixmap
 from PySide6.QtSvg import QSvgRenderer
 
 from systems.extension.app_context import AppContext
-from assets.icons import ICON_CODE, ICON_BOOK, ICON_MAIN_SETTINGS, ICON_EXTENSIONS, ICON_HOME, ICON_LOGO, svg_to_icon, get_svg_content
+from systems.gui.icons import ICON_CODE, ICON_BOOK, ICON_MAIN_SETTINGS, ICON_EXTENSIONS, ICON_HOME, ICON_LOGO, svg_to_icon, get_svg_content
 from core.gui.main import MainWindow
 from systems.documentation.gui.window import DocumentationWindow
 from systems.settings.gui.main import SettingsPanel
@@ -155,6 +155,9 @@ class ExtensionsWindow(QDialog):
         self.setWindowTitle(self.lang.get('launcher_btn_ext'))
         self.resize(900, 700)
 
+        from systems.gui.utils.windows import center_window
+        center_window(self, parent_launcher)
+
         layout = QVBoxLayout(self)
 
         # Header with Back button
@@ -185,15 +188,20 @@ class ExtensionsWindow(QDialog):
         btn_layout = QHBoxLayout()
         self.reset_btn = QPushButton(self.lang.get('reset_btn'))
         self.apply_btn = QPushButton(self.lang.get('apply_btn'))
+        self.save_project_btn = QPushButton(self.lang.get('save_project_btn', 'Save for Current Project'))
         self.save_btn = QPushButton(self.lang.get('save_btn'))
 
+        self.save_project_btn.setEnabled(bool(self.main_window.root_path))
+
         self.reset_btn.clicked.connect(self.reset_to_defaults)
-        self.apply_btn.clicked.connect(self.apply_settings)
-        self.save_btn.clicked.connect(self.save_settings)
+        self.apply_btn.clicked.connect(lambda: self.apply_settings(is_project=False))
+        self.save_project_btn.clicked.connect(lambda: self.save_settings(is_project=True))
+        self.save_btn.clicked.connect(lambda: self.save_settings(is_project=False))
 
         btn_layout.addWidget(self.reset_btn)
         btn_layout.addStretch()
         btn_layout.addWidget(self.apply_btn)
+        btn_layout.addWidget(self.save_project_btn)
         btn_layout.addWidget(self.save_btn)
         layout.addLayout(btn_layout)
 
@@ -243,28 +251,35 @@ class ExtensionsWindow(QDialog):
             if hasattr(widget, 'store_initial_state'):
                 widget.store_initial_state()
 
-    def apply_settings(self):
+    def apply_settings(self, is_project=False):
         for name, widget in self.extension_settings_widgets.items():
             if hasattr(widget, 'get_settings_to_save'):
                 ind_settings = widget.get_settings_to_save()
                 if ind_settings and name != 'extensions_manager':
-                    self.settings_manager.update_setting(['apps', name, 'settings'], ind_settings)
+                    self.settings_manager.update_setting(['apps', name, 'settings'], ind_settings, is_project)
             if hasattr(widget, 'apply_settings'):
                 widget.apply_settings()
 
-        core_settings = self.settings_manager.load_settings_file().get('core', {})
-        if 'extensions' not in core_settings:
-            core_settings['extensions'] = {}
-        core_settings['extensions'].update(self.state_on_open.get('extensions', {}))
-        self.settings_manager.update_setting(['core'], core_settings)
+        core_ext = self.state_on_open.get('extensions', {})
+        self.settings_manager.update_setting(['core', 'extensions'], core_ext, is_project)
 
         self.extension_manager.reload_extensions()
         self._populate_settings()
 
-    def save_settings(self):
-        self.apply_settings()
-        self.settings_manager.save_settings_file()
-        QMessageBox.information(self, "Success", "Extension settings saved.")
+        if hasattr(self.main_window, 'reload_tabs'):
+            self.main_window.reload_tabs()
+        elif hasattr(self.main_window, 'main_window') and self.main_window.main_window:
+            if hasattr(self.main_window.main_window, 'reload_tabs'):
+                self.main_window.main_window.reload_tabs()
+
+    def save_settings(self, is_project=False):
+        self.apply_settings(is_project)
+        if is_project:
+            self.settings_manager.save_project_settings()
+            QMessageBox.information(self, "Success", "Extension settings saved for Current Project.")
+        else:
+            self.settings_manager.save_settings_file()
+            QMessageBox.information(self, "Success", "Global extension settings saved.")
 
     def close_and_revert(self):
         for widget in self.extension_settings_widgets.values():
@@ -293,8 +308,8 @@ class LaunchWindow(QMainWindow):
         self.extension_manager = self.context.extension_manager
         
         self.setWindowTitle("ELAI-DevKit Launcher")
-        self.setFixedSize(800, 500)
-        
+        self.setMinimumSize(800, 500)
+
         # Apply theme initially
         self._apply_initial_theme()
         
@@ -349,7 +364,7 @@ class LaunchWindow(QMainWindow):
 
         title = QLabel("ELAI-DevKit")
         title.setStyleSheet("font-size: 32pt; font-weight: bold;") # Removed hardcoded color
-        version_label = QLabel("v131 (core v45)")
+        version_label = QLabel("v134 (core v46)")
         version_label.setStyleSheet("font-size: 12pt; margin-bottom: 5px;") # Removed hardcoded color
         version_label.setAlignment(Qt.AlignmentFlag.AlignBottom)
     
@@ -396,10 +411,12 @@ class LaunchWindow(QMainWindow):
     
     def launch_main(self):
         self.hide()
-        self.main_window = MainWindow(context=self.context, on_home=self.show_launcher)
+        # Create the window if it doesn't exist yet
+        if not hasattr(self, 'main_window') or not self.main_window:
+            self.main_window = MainWindow(context=self.context, on_home=self.show_launcher)
+
         self.main_window.show()
-        # Don't close, just hide, so we can show it again
-    
+        QApplication.processEvents()
     def launch_docs(self):
         self.hide()
         self.doc_window = DocumentationWindow(self.context, on_home=self.show_launcher)
@@ -413,6 +430,10 @@ class LaunchWindow(QMainWindow):
         self.settings_dialog = QDialog(self)
         self.settings_dialog.setWindowTitle(self.lang.get('launcher_btn_settings'))
         self.settings_dialog.resize(700, 600)
+
+        from systems.gui.utils.windows import center_window
+        center_window(self.settings_dialog, self)
+
         layout = QVBoxLayout(self.settings_dialog)
     
         # Header with Back button

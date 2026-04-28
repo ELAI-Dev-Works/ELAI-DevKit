@@ -1,7 +1,7 @@
 {
     "name": "Project Text Packer",
     "author": "ELAI",
-    "version": "v7",
+    "version": "v8",
     "dependencies": [],
     "description": "A utility that allows to pack the entire structure/tree of a project and all the project code into a text file."
 }

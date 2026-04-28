@@ -11,15 +11,15 @@
         <key name="packer_one_file_checkbox">合并为一个文件</key>
         <key name="packer_timestamp_checkbox">添加日期和时间</key>
         <key name="packer_split_checkbox">拆分为多个部分</key>
-        
         <key name="packer_split_size_label">部分大小限制：</key>
-        
         <key name="patch_load_error_title">错误</key>
         <key name="project_folder_missing_error">错误：未选择项目文件夹 (@ROOT)！</key>
         <key name="quick_settings_saved_log">[设置] 快速设置已保存。</key>
         <key name="quick_settings_reset_log">[设置] 快速设置已重置为默认值（未保存）。</key>
         <key name="reset_quick_settings_btn">恢复默认</key>
         <key name="save_quick_settings_btn">保存设置</key>
+        <key name="packer_category_label">类别：</key>
+        <key name="catalogs_title">目录类别</key>
     </section>
     <section name="Logs">
         <key name="packer_log_placeholder">Project Text Packer 日志将显示在此处...</key>
@@ -45,9 +45,7 @@
         <key name="packer_one_file_tooltip">将目录树和文件内容合并到单个 .txt 文件中。</key>
         <key name="packer_timestamp_tooltip">在文件开头添加时间戳。</key>
         <key name="packer_split_tooltip">如果大小超过999KB，自动将输出拆分为多个文件。</key>
-        
         <key name="packer_split_size_tooltip">单个文件的最大大小（以兆字节为单位）。</key>
-        
         <key name="packer_select_output_dir_tooltip">选择保存打包文本文件的目录。</key>
         <key name="packer_start_tooltip">开始扫描、构建和打包项目文件的过程。</key>
     </section>

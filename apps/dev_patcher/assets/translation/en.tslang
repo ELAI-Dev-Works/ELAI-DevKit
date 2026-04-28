@@ -21,6 +21,8 @@
         <key name="backup_commit_msg_placeholder">Commit message...</key>
         <key name="init_git_btn">Initialize Repository</key>
         <key name="save_quick_settings_btn">Save Settings</key>
+        <key name="save_quick_settings_btn">Save Global</key>
+        <key name="apply_quick_settings_btn">Apply Settings</key>
         <key name="execute_patch_btn">Apply Patch</key>
         <key name="check_patch_btn">Check Patch</key>
         <key name="check_code_btn">Check Code</key>
@@ -38,6 +40,10 @@
         <key name="restore_mode_changes">Only Changes (Standard)</key>
         <key name="restore_mode_full">Full Replace (Legacy)</key>
         <key name="restore_btn">Restore</key>
+        <key name="test_file_select_title">Select Launch File</key>
+        <key name="test_file_select_label">Choose a file to test run:</key>
+        <key name="test_console_title">Test Run Console</key>
+        <key name="stop_test_run_btn">Stop Test Run</key>
     </section>
     <section name="Logs">
         <key name="app_target_name">application</key>
@@ -53,6 +59,7 @@
         <key name="simulation_success">SUCCESS</key>
         <key name="simulation_fail">FAIL</key>
         <key name="quick_settings_saved_log">[Settings] Quick settings saved.</key>
+        <key name="quick_settings_applied_log">[Settings] Quick settings applied.</key>
         <key name="quick_settings_reset_log">[Settings] Quick settings have been reset to default (not saved).</key>
         <key name="patch_loaded_log">Patch loaded from file: {}</key>
         <key name="patch_empty_error">ERROR: Patch window is empty.</key>
@@ -78,12 +85,12 @@
         <key name="patch_command_error_log">ERROR: {}</key>
         <key name="patch_command_success_log">SUCCESS: {}</key>
         <key name="command_executed_default_msg">Command executed.</key>
-        <key name="test_run_dependency_error">Test Run requires the 'Project Launcher' extension to be enabled.</key>
         <key name="test_run_invalid_file_error">The selected launch file is invalid or does not exist.</key>
         <key name="test_run_start_log">--- STARTING TEST RUN ---</key>
         <key name="test_run_finished_log">--- TEST RUN FINISHED ---</key>
         <key name="test_run_simulating_log">[Test Run] Simulating patch to prepare environment...</key>
         <key name="test_run_launching_log">[Test Run] Launching patched project in isolated mode...</key>
+        <key name="test_run_env_required_error">The project initialize with PROJECT command or requires an environment (.venv, node_modules) but it is not yet initialized. Please Apply the patch to initialize the environment first before running a Test Run.</key>
         <key name="simulation_start_log">--- STARTING ADVANCED SIMULATION ---</key>
         <key name="simulation_end_log">--- ADVANCED SIMULATION FINISHED ---</key>
         <key name="code_check_start_log">--- STARTING CODE CHECK ---</key>

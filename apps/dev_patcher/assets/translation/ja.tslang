@@ -20,7 +20,7 @@
         <key name="backup_method_all">すべて（.zip + Git）</key>
         <key name="backup_commit_msg_placeholder">コミットメッセージ...</key>
         <key name="init_git_btn">リポジトリを初期化</key>
-        <key name="save_quick_settings_btn">設定を保存</key>
+        <key name="save_quick_settings_btn">グローバルに保存</key>
         <key name="execute_patch_btn">パッチを適用</key>
         <key name="check_patch_btn">パッチを確認</key>
         <key name="check_code_btn">コードを確認</key>
@@ -38,9 +38,14 @@
         <key name="restore_mode_changes">変更のみ (標準)</key>
         <key name="restore_mode_full">完全置換 (レガシー)</key>
         <key name="restore_btn">復元</key>
+        <key name="apply_quick_settings_btn">設定を適用</key>
+        <key name="test_file_select_title">起動ファイルを選択</key>
+        <key name="test_file_select_label">テスト実行するファイルを選択してください:</key>
+        <key name="test_console_title">テスト実行コンソール</key>
+        <key name="stop_test_run_btn">テスト実行を停止</key>
     </section>
     <section name="Logs">
-        <key name="quick_settings_saved_log">[設定] クイック設定が保存されました。</key>
+        <key name="quick_settings_saved_log">[設定] クイック設定を保存しました。</key>
         <key name="quick_settings_reset_log">[設定] クイック設定がデフォルトにリセットされました(保存されていません)。</key>
         <key name="patch_loaded_log">ファイルからパッチを読み込みました: {}</key>
         <key name="patch_empty_error">エラー: パッチウィンドウが空です。</key>
@@ -66,10 +71,9 @@
         <key name="patch_command_error_log">エラー: {}</key>
         <key name="patch_command_success_log">成功: {}</key>
         <key name="command_executed_default_msg">コマンドが実行されました。</key>
-        <key name="test_run_dependency_error">テスト実行には「Project Launcher」拡張機能を有効にする必要があります。</key>
         <key name="test_run_invalid_file_error">選択された起動ファイルが無効であるか、存在しません。</key>
-        <key name="test_run_start_log">--- テスト実行を開始 ---</key>
-        <key name="test_run_finished_log">--- テスト実行が完了 ---</key>
+        <key name="test_run_start_log">--- テスト実行開始 ---</key>
+        <key name="test_run_finished_log">--- テスト実行完了 ---</key>
         <key name="test_run_simulating_log">[テスト実行] 環境準備のためパッチをシミュレート中...</key>
         <key name="test_run_launching_log">[テスト実行] パッチ適用済みプロジェクトを隔離モードで起動中...</key>
         <key name="simulation_start_log">--- 高度なシミュレーションを開始 ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_final_warn">[最終] 警告! 競合またはエラーが検出されました。パッチが完全に適用されない可能性があります。</key>
         <key name="simulation_success">成功</key>
         <key name="simulation_fail">失敗</key>
+        <key name="quick_settings_applied_log">[設定] クイック設定が適用されました。</key>
+        <key name="test_run_env_required_error">プロジェクトはPROJECTコマンドで初期化されるか、環境（.venv、node_modules）が必要ですが、まだ初期化されていません。テスト実行を行う前に、パッチを適用して環境を初期化してください。</key>
     </section>
     <section name="Dialogs">
         <key name="patch_load_error_title">エラー</key>
@@ -146,7 +152,7 @@
         <key name="restore_success_msg">復元が正常に完了しました！</key>
         <key name="restore_error_msg">プロジェクトの復元に失敗しました：{}</key>
         <key name="ai_report_dialog_title">AI修正レポート</key>
-        <key name="ai_report_dialog_info">パッチ内に問題のあるコマンドが見つかりました。これらはスキップされ、パッチは安全に適用できます。AIの修正レポートが作成されました。新しいプロジェクトコンテキストと一緒にコピーしてAIに送信すると、正しいコマンドを書くことができます。</key>
+        <key name="ai_report_dialog_info">パッチに問題のあるコマンドが見つかりました。これらはスキップされ、パッチは安全に適用できます。AIの修正レポートが作成されました。新しいプロジェクトコンテキストと一緒にコピーしてAIに送信すると、正しいコマンドを書くことができます。</key>
         <key name="ai_report_task">指定された問題のみを修正してください。</key>
         <key name="simulation_success_msg_new">シミュレーションが完了しました。エラーは見つかりませんでした。すべてのコマンドを安全に実行できます。</key>
     </section>

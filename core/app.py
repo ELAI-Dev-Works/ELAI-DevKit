@@ -9,7 +9,7 @@ from core.gui.main import MainWindow
 from core.gui.launch import LaunchWindow
 from systems.error_handler import setup_error_handling
 from systems.gui.utils.tooltip_enhancer import setup_tooltip_enhancer
-from assets.icons import svg_to_icon, get_svg_content, ICON_LOGO
+from systems.gui.icons import svg_to_icon, get_svg_content, ICON_LOGO
 
 def main():
     """

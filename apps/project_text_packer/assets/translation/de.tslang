@@ -11,15 +11,15 @@
         <key name="packer_one_file_checkbox">In eine Datei kombinieren</key>
         <key name="packer_timestamp_checkbox">Datum &amp; Uhrzeit hinzufügen</key>
         <key name="packer_split_checkbox">In Teile aufteilen</key>
-        
         <key name="packer_split_size_label">Größenlimit für Teile:</key>
-        
         <key name="patch_load_error_title">Fehler</key>
         <key name="project_folder_missing_error">FEHLER: Projektordner (@ROOT) ist nicht ausgewählt!</key>
         <key name="quick_settings_saved_log">[Einstellungen] Schnelleinstellungen gespeichert.</key>
         <key name="quick_settings_reset_log">[Einstellungen] Schnelleinstellungen wurden auf Standard zurückgesetzt (nicht gespeichert).</key>
         <key name="reset_quick_settings_btn">Auf Standard zurücksetzen</key>
         <key name="save_quick_settings_btn">Einstellungen speichern</key>
+        <key name="packer_category_label">Kategorie:</key>
+        <key name="catalogs_title">Katalogkategorien</key>
     </section>
     <section name="Logs">
         <key name="packer_log_placeholder">Project Text Packer-Protokolle werden hier angezeigt...</key>
@@ -45,9 +45,7 @@
         <key name="packer_one_file_tooltip">Führt den Verzeichnisbaum und die Dateiinhalte in einer einzigen .txt-Datei zusammen.</key>
         <key name="packer_timestamp_tooltip">Fügt einen Zeitstempel am Anfang der Datei hinzu.</key>
         <key name="packer_split_tooltip">Teilt die Ausgabe automatisch in mehrere Dateien auf, wenn die Größe 999 KB überschreitet.</key>
-        
         <key name="packer_split_size_tooltip">Maximale Größe einer einzelnen Datei in Megabyte.</key>
-        
         <key name="packer_select_output_dir_tooltip">Wählen Sie das Verzeichnis aus, in dem die gepackten Textdateien gespeichert werden.</key>
         <key name="packer_start_tooltip">Starten Sie den Prozess zum Scannen, Erstellen und Packen der Projektdateien.</key>
     </section>

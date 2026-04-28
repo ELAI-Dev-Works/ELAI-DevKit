@@ -1,6 +1,7 @@
 import os
 from PySide6.QtCore import Qt
 import json
+from systems.gui.icons import svg_to_icon, get_svg_content, ICON_CATEGORIES
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QFileDialog, QMessageBox, QFrame, QFormLayout,
@@ -8,6 +9,7 @@ from PySide6.QtWidgets import (
             )
 from systems.gui.widgets.log_box import LogBox
 from systems.gui.widgets.quick_settings_panel import QuickSettingsPanel
+from apps.project_text_packer.gui.windows.catalogs_dialog import CatalogsDialog
 from systems.gui.widgets.task_progress import TaskProgressIndicator
 
 class ProjectTextPackerInterface(QWidget):
@@ -48,6 +50,19 @@ class ProjectTextPackerInterface(QWidget):
         self.output_dir_label = QLabel()
         controls_layout.addRow(self.output_dir_label, output_dir_layout)
 
+        self.category_label = QLabel()
+        self.category_combo = QComboBox()
+        self.edit_categories_btn = QPushButton()
+        self.edit_categories_btn.setFixedWidth(30)
+        self.edit_categories_btn.clicked.connect(self.open_categories_dialog)
+        category_layout = QHBoxLayout()
+        category_layout.addWidget(self.category_combo, stretch=1)
+        category_layout.addWidget(self.edit_categories_btn)
+        controls_layout.addRow(self.category_label, category_layout)
+
+        self.load_categories()
+
+
         layout.addWidget(controls_frame)
 
         start_layout = QHBoxLayout()
@@ -76,6 +91,13 @@ class ProjectTextPackerInterface(QWidget):
                 self.quick_settings_panel.update_icons()
 
         self.output_dir_label.setText(self.lang.get('packer_output_dir_label'))
+
+        self.category_label.setText(self.lang.get('packer_category_label', 'Category:'))
+
+        p = self.main_window.theme_manager.current_palette if hasattr(self.main_window, 'theme_manager') else {}
+        icon_color = p.get("icon_default", "#e0e0e0")
+        self.edit_categories_btn.setIcon(svg_to_icon(get_svg_content(ICON_CATEGORIES), icon_color))
+
         self.select_output_button.setText(self.lang.get('packer_select_output_dir_btn')).addGUITooltip(self.lang.get('packer_select_output_dir_tooltip'))
         self.start_button.setText(self.lang.get('packer_start_btn')).addGUITooltip(self.lang.get('packer_start_tooltip'))
         self.progress_indicator.set_status(self.lang.get('packer_status_ready'))
@@ -107,6 +129,31 @@ class ProjectTextPackerInterface(QWidget):
         self.output_dir_input.addItems(self.recent_paths)
         self.output_dir_input.setCurrentText(path)
         self.output_dir_input.blockSignals(False)
+
+    def load_categories(self):
+        self.category_combo.clear()
+        catalogs_file = os.path.join(self.app.app_root_path, "user", "catalogs.json")
+        if os.path.exists(catalogs_file):
+            try:
+                with open(catalogs_file, 'r', encoding='utf-8') as f:
+                    catalogs = json.load(f)
+            except Exception:
+                catalogs = []
+        else:
+            catalogs =[
+                {"name": "@Packer-ROOT", "comment": "Base output directory", "is_default": True, "path": ""},
+                {"name": "@Packer-ROOT/Python", "comment": "Python projects", "is_default": True, "path": "Python"},
+                {"name": "@Packer-ROOT/NodeJS", "comment": "NodeJS projects", "is_default": True, "path": "NodeJS"},
+                {"name": "@Packer-ROOT/Web", "comment": "HTML5 projects", "is_default": True, "path": "Web"}
+            ]
+
+        for c in catalogs:
+            self.category_combo.addItem(f"{c['name']} | {c['comment']}", c['path'])
+
+    def open_categories_dialog(self):
+        dialog = CatalogsDialog(self)
+        dialog.exec()
+
 
         os.makedirs(os.path.dirname(self.history_file), exist_ok=True)
         try:

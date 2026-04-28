@@ -1,6 +1,7 @@
 import difflib
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QTextEdit, QPushButton, QHBoxLayout, QLabel
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QPushButton, QHBoxLayout, QLabel
 from PySide6.QtGui import QFont, QColor
+from plugins.code_editor.editor import CodeEditor
 
 class DiffViewerDialog(QDialog):
     def __init__(self, parent, file_path, old_text, new_text):
@@ -17,10 +18,8 @@ class DiffViewerDialog(QDialog):
         info_label = QLabel("Visual Diff of proposed changes:")
         layout.addWidget(info_label)
 
-        self.diff_view = QTextEdit()
-        self.diff_view.setReadOnly(True)
-        self.diff_view.setFont(QFont("Courier New", 10))
-        self.diff_view.setStyleSheet("background-color: #1e1e1e; color: #d4d4d4;")
+        self.diff_view = CodeEditor()
+        # CodeEditor handles styles and fonts correctly via theme
         layout.addWidget(self.diff_view)
 
         self._populate_diff()
@@ -44,25 +43,8 @@ class DiffViewerDialog(QDialog):
         ))
 
         if not lines:
-            self.diff_view.setTextColor(QColor('#cccccc'))
-            self.diff_view.append("No changes detected.")
+            self.diff_view.setPlainText("No changes detected.")
             return
 
-        for line in lines:
-            if line.startswith('+++') or line.startswith('---'):
-                self.diff_view.setTextColor(QColor('#cccccc'))
-                self.diff_view.setFontWeight(QFont.Weight.Bold)
-                self.diff_view.append(line)
-                self.diff_view.setFontWeight(QFont.Weight.Normal)
-            elif line.startswith('@@'):
-                self.diff_view.setTextColor(QColor('#569cd6'))
-                self.diff_view.append(line)
-            elif line.startswith('+'):
-                self.diff_view.setTextColor(QColor('#a7ffa7'))
-                self.diff_view.append(line)
-            elif line.startswith('-'):
-                self.diff_view.setTextColor(QColor('#ff9f9f'))
-                self.diff_view.append(line)
-            else:
-                self.diff_view.setTextColor(QColor('#858585'))
-                self.diff_view.append(line)
+        diff_text = '\n'.join(lines)
+        self.diff_view.set_diff_text(diff_text)

@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt, QSize, QUrl
 from PySide6.QtGui import QCursor
 
 from systems.documentation.manager import DocManager
-from assets.icons import ICON_HOME, svg_to_icon, get_svg_content
+from systems.gui.icons import ICON_HOME, svg_to_icon, get_svg_content
 from systems.gui.utils.markdown_styler import MarkdownStyler
 
 

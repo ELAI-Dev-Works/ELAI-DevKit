@@ -54,3 +54,12 @@ class BaseCommand:
         :return: A tuple containing a success boolean and a message.
         """
         raise NotImplementedError("Each command must implement the execute method.")
+
+
+    def validate(self, full_block: str, command_name: str, args: list, content: str, lang) -> list:
+        """
+        Validates the syntax and structure of the command block.
+        Returns a list of issue dictionaries.
+        """
+        return[]
+

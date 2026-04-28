@@ -24,3 +24,16 @@ class Command(BaseCommand):
         except Exception as e:
             import traceback
             return False, f"Error executing DOWNLOAD command: {e}\n{traceback.format_exc()}"
+
+
+    def validate(self, full_block: str, command_name: str, args: list, content: str, lang) -> list:
+        issues =[]
+        if len(args) != 2:
+            issues.append({
+                "original": full_block,
+                "corrected": full_block,
+                "description": "DOWNLOAD command requires exactly 2 arguments: URL and destination.",
+                "type": "syntax"
+            })
+        return issues
+

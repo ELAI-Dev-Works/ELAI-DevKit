@@ -52,10 +52,16 @@ class ProjectTextPackerQuickSettingsWidget(QWidget):
         button_layout = QHBoxLayout()
         button_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         self.reset_button = QPushButton()
+        self.apply_button = QPushButton()
+        self.save_project_button = QPushButton()
         self.save_button = QPushButton()
         self.reset_button.clicked.connect(self.reset_quick_settings)
-        self.save_button.clicked.connect(self.save_quick_settings)
+        self.apply_button.clicked.connect(self.apply_quick_settings)
+        self.save_project_button.clicked.connect(lambda: self.save_quick_settings(is_project=True))
+        self.save_button.clicked.connect(lambda: self.save_quick_settings(is_project=False))
         button_layout.addWidget(self.reset_button)
+        button_layout.addWidget(self.apply_button)
+        button_layout.addWidget(self.save_project_button)
         button_layout.addWidget(self.save_button)
         layout.addLayout(button_layout)
     def load_settings(self):
@@ -67,8 +73,8 @@ class ProjectTextPackerQuickSettingsWidget(QWidget):
         self.split_size_spinbox.setValue(options.get('split_size_mb', 1.0))
         self.split_size_spinbox.setEnabled(self.split_checkbox.isChecked())
     
-    def save_quick_settings(self):
-        settings_to_save = {
+    def _get_current_settings(self):
+        return {
             'Options': {
                 'one_file': self.one_file_checkbox.isChecked(),
                 'add_timestamp': self.timestamp_checkbox.isChecked(),
@@ -76,9 +82,22 @@ class ProjectTextPackerQuickSettingsWidget(QWidget):
                 'split_size_mb': self.split_size_spinbox.value()
             }
         }
-        self.settings_manager.update_setting(['apps', 'project_text_packer', 'quick'], settings_to_save)
-        self.settings_manager.save_settings_file()
-        self._log_message(self.lang.get('quick_settings_saved_log'))
+
+    def apply_quick_settings(self):
+        self.settings_manager.update_setting(['apps', 'project_text_packer', 'quick'], self._get_current_settings())
+        self._log_message(self.lang.get('quick_settings_applied_log', '[Settings] Quick settings applied.'))
+
+    def project_folder_changed(self, root_path):
+        self.save_project_button.setEnabled(bool(root_path))
+
+    def save_quick_settings(self, is_project=False):
+        self.settings_manager.update_setting(['apps', 'project_text_packer', 'quick'], self._get_current_settings(), is_project)
+        if is_project:
+            self.settings_manager.save_project_settings()
+            self._log_message(self.lang.get('quick_settings_project_saved_log', '[Settings] Project quick settings saved.'))
+        else:
+            self.settings_manager.save_settings_file()
+            self._log_message(self.lang.get('quick_settings_saved_log'))
 
     def reset_quick_settings(self):
         options = self.defaults.get('Options', {})
@@ -105,7 +124,11 @@ class ProjectTextPackerQuickSettingsWidget(QWidget):
         self.split_size_label.setText(self.lang.get('packer_split_size_label', 'Split size limit:'))
         self.split_size_spinbox.setToolTip(self.lang.get('packer_split_size_tooltip', 'Maximum size of a single file in megabytes.'))
         self.reset_button.setText(self.lang.get('reset_quick_settings_btn'))
-        self.save_button.setText(self.lang.get('save_quick_settings_btn'))
+        self.apply_button.setText(self.lang.get('apply_quick_settings_btn', 'Apply Settings'))
+        self.save_project_button.setText(self.lang.get('save_project_btn', 'Save for Current Project'))
+        if hasattr(self.context, 'main_window') and self.context.main_window:
+            self.save_project_button.setEnabled(bool(self.context.main_window.root_path))
+        self.save_button.setText(self.lang.get('save_quick_settings_btn', 'Save Global'))
 
 def get_quick_settings():
     return [

@@ -14,11 +14,11 @@
         <key name="language_label">Idioma:</key>
         <key name="reset_btn">Restablecer</key>
         <key name="apply_btn">Aplicar</key>
-        <key name="save_btn">Guardar</key>
+        <key name="save_btn">Guardar global</key>
         <key name="close_btn">Cerrar</key>
         <key name="window_title">ELAI-DevKit</key>
-        <key name="select_project_folder_btn">Seleccionar Carpeta del Proyecto...</key>
-        <key name="project_path_label_unselected">Carpeta del proyecto no seleccionada (@ROOT)</key>
+        <key name="select_project_folder_btn">Seleccionar carpeta del proyecto...</key>
+        <key name="project_path_label_unselected">Carpeta de proyecto no seleccionada (@ROOT)</key>
         <key name="project_path_label_selected">&lt;b&gt;@ROOT:&lt;/b&gt; {}</key>
         <key name="edit_ignore_list_btn">Listas de Ignorar</key>
         <key name="ignore_tab_global">Lista Global</key>
@@ -59,6 +59,23 @@
         <key name="restore_tab_btn">Restaurar</key>
         <key name="project_label">Proyecto:</key>
         <key name="example_patch_loaded">Parche de ejemplo cargado.</key>
+        <key name="ui_font_size">Tamaño de fuente global:</key>
+        <key name="save_project_btn">Guardar para el proyecto actual</key>
+        <key name="ignore_tab_project">Lista de Proyectos Actual</key>
+        <key name="bookmarks_title">Marcadores del proyecto</key>
+        <key name="bookmarks_add_btn">Agregar actual</key>
+        <key name="bookmarks_load_btn">Cargar seleccionado</key>
+        <key name="bookmarks_del_btn">Eliminar</key>
+        <key name="mode_project">Proyecto</key>
+        <key name="mode_workspace">Espacio de trabajo</key>
+        <key name="workspace_label">Espacio de trabajo: {}</key>
+        <key name="workspace_projects_dialog_title">Proyectos del Espacio de Trabajo</key>
+        <key name="rename_btn">Renombrar</key>
+        <key name="delete_btn">Eliminar</key>
+        <key name="mode_switch_warning_title">Modo cambiado</key>
+        <key name="mode_switch_to_workspace_msg">Has cambiado al modo Workspace, pero actualmente hay una carpeta de Proyecto seleccionada. Por favor, selecciona una carpeta de Workspace válida o vuelve al modo Proyecto.</key>
+        <key name="mode_switch_to_project_msg">Has cambiado del modo Workspace al modo Proyecto. La ruta del proyecto actual se establecerá en: {}. Puedes cambiar la carpeta del proyecto si es necesario.</key>
+        <key name="select_workspace_folder_btn">Seleccionar carpeta de espacio de trabajo...</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[Configuración] Configuración cargada.</key>
@@ -71,6 +88,8 @@
         <key name="console_error_pty_log">[Error] Fallo al iniciar sesión PTY: {}</key>
         <key name="console_terminated_log">[Consola] Shell terminado.</key>
         <key name="console_restarting_log">[Consola] Reiniciando shell...</key>
+        <key name="project_settings_saved_log">[Configuración] Configuración del proyecto guardada correctamente.</key>
+        <key name="quick_settings_project_saved_log">[Configuración] Configuración rápida del proyecto guardada.</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">Confirmar reinicio</key>
@@ -80,6 +99,12 @@
         <key name="ignore_settings_files_info">Nombres de archivos a ignorar (uno por línea). Afecta a backup y packer.</key>
         <key name="ignore_settings_tags_label">Instrucción:</key>
         <key name="ignore_settings_tags_info">Puedes usar etiquetas como [!backup], [!packer], [!git] para ignorar archivos selectivamente para módulos específicos. Sin etiquetas, el archivo se ignora en todos los módulos. Las etiquetas se pueden combinar - si se especifican varias etiquetas, el archivo se ignorará para todos los contextos especificados. Ejemplos: 'node_modules' - ignorar en todas partes; 'dist [!packer]' - ignorar solo para packer; 'build [!git] [!packer]' - ignorar para git y packer, pero incluir en backup.</key>
+        <key name="rename_project_title">Renombrar proyecto</key>
+        <key name="rename_project_prompt">Ingrese el nuevo nombre para el proyecto '{}':</key>
+        <key name="add_workspace_project_title">Agregar nuevo proyecto al espacio de trabajo</key>
+        <key name="add_workspace_project_prompt">Ingrese el nombre del nuevo proyecto en la carpeta del espacio de trabajo:</key>
+        <key name="delete_project_warning_title">Eliminar proyecto</key>
+        <key name="delete_project_warning_msg">¿Está seguro de que desea eliminar permanentemente el proyecto '{}'? ¡Esta acción no se puede deshacer!</key>
     </section>
     <section name="Tooltips">
         <key name="select_project_folder_tooltip">Abrir un diálogo para seleccionar la carpeta principal del proyecto.</key>
@@ -103,6 +128,10 @@
         <key name="settings_save_tooltip">Guardar todos los cambios aplicados en el archivo settings.toml.</key>
         <key name="settings_close_tooltip">Cerrar el panel de configuración y revertir cualquier cambio no aplicado.</key>
         <key name="doc_copied_tooltip">¡Copiado!</key>
+        <key name="workspace_add_project_tooltip">Agregar nuevo proyecto al espacio de trabajo</key>
+        <key name="workspace_edit_projects_tooltip">Editar proyectos del espacio de trabajo</key>
+        <key name="workspace_refresh_tooltip">Actualizar proyectos del espacio de trabajo</key>
+        <key name="select_workspace_folder_tooltip">Seleccione una carpeta de espacio de trabajo que contenga múltiples proyectos.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Independiente)</key>

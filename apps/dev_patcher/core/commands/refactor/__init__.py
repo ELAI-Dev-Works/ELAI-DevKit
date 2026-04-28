@@ -6,10 +6,7 @@ class Command(BaseCommand):
     """
     Performs smart code refactoring using AST analysis.
     """
-    PRIORITY = 10 # Execute after file creation (MANAGE) but before text edits (EDIT) might be safer, or after?
-    # Actually, Refactor should probably happen after MANAGE/DOWNLOAD but implies complex logic.
-    # Let's keep it consistent with EDIT-like priority or slightly earlier if it structural.
-    # Priority 5 is EDIT. Let's make REFACTOR 5 as well, handled by order in patch.
+    PRIORITY = 10 
 
     def build_backup(self, args: list, content: str, project_root: str, backup_builder):
         if not args: return
@@ -27,7 +24,6 @@ class Command(BaseCommand):
                     if f.strip():
                         backup_builder.use("replace", f.strip())
 
-
     def execute(self, args: list, content: str, fs_handler) -> Tuple[bool, str]:
         if not args:
             return False, "REFACTOR requires arguments (e.g., -rename, -inject, -imports)."
@@ -39,7 +35,6 @@ class Command(BaseCommand):
         action_name = action_arg[1:]
 
         try:
-            # Load specific action module (rename, inject, imports)
             action_module = self._load_action_module("refactor", action_name, __package__, fs_handler.root)
             if action_module:
                 return action_module.run(args, content, fs_handler)
@@ -48,3 +43,44 @@ class Command(BaseCommand):
         except Exception as e:
             import traceback
             return False, f"Error executing refactor action '{action_name}': {e}\n{traceback.format_exc()}"
+
+    def validate(self, full_block: str, command_name: str, args: list, content: str, lang) -> list:
+        issues =[]
+        header = f"<@|{command_name} {' '.join(args)}"
+        
+        if not args:
+            issues.append({
+                "original": full_block, "corrected": full_block,
+                "description": "REFACTOR requires an action flag (-rename, -inject, -imports).", "type": "syntax"
+            })
+            return issues
+            
+        action = args[0]
+        
+        if action == '-rename':
+            if 'to' not in args:
+                issues.append({
+                    "original": full_block, "corrected": full_block,
+                    "description": "-rename requires 'to' keyword.", "type": "syntax"
+                })
+            if '-project' not in args and "---files---" not in content:
+                corrected_content = f"---files---\n@ROOT/path/to/file.py\n---\n{content}"
+                issues.append({
+                    "original": full_block, "corrected": full_block.replace(content, corrected_content),
+                    "description": "Missing '---files---' block or '-project' flag.", "type": "syntax"
+                })
+                
+        elif action == '-inject':
+            if '-pos' not in args:
+                issues.append({
+                    "original": full_block, "corrected": full_block.replace(header, f"{header} -pos <end>"),
+                    "description": "-inject requires '-pos <...>' argument.", "type": "syntax"
+                })
+            if "---content---" not in content:
+                corrected_content = f"{content}\n---content---\n# injected code here"
+                issues.append({
+                    "original": full_block, "corrected": full_block.replace(content, corrected_content),
+                    "description": "-inject requires '---content---' block.", "type": "syntax"
+                })
+                
+        return issues

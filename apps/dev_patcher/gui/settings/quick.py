@@ -1,6 +1,7 @@
 import tomllib
 import os
 import subprocess
+from systems.gui.icons import svg_to_icon, get_svg_content, ICON_REFRESH
 from PySide6.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout, QGroupBox, QCheckBox,
     QFormLayout, QSpinBox, QLabel, QPushButton, QSpacerItem, QSizePolicy,
@@ -80,10 +81,16 @@ class DevPatcherQuickSettingsWidget(QWidget):
         qs_button_layout = QHBoxLayout()
         qs_button_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         self.qs_reset_button = QPushButton()
+        self.qs_apply_button = QPushButton()
+        self.qs_save_project_button = QPushButton()
         self.qs_save_button = QPushButton()
         self.qs_reset_button.clicked.connect(self.reset_quick_settings)
-        self.qs_save_button.clicked.connect(self.save_quick_settings)
+        self.qs_apply_button.clicked.connect(self.apply_quick_settings)
+        self.qs_save_project_button.clicked.connect(lambda: self.save_quick_settings(is_project=True))
+        self.qs_save_button.clicked.connect(lambda: self.save_quick_settings(is_project=False))
         qs_button_layout.addWidget(self.qs_reset_button)
+        qs_button_layout.addWidget(self.qs_apply_button)
+        qs_button_layout.addWidget(self.qs_save_project_button)
         qs_button_layout.addWidget(self.qs_save_button)
         layout.addLayout(qs_button_layout)
 
@@ -113,9 +120,9 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.init_git_btn = QPushButton()
 
         self.restore_group = QGroupBox()
-        self.restore_refresh_btn = QPushButton("↻")
+        self.restore_refresh_btn = QPushButton()
         self.restore_refresh_btn.setFixedSize(32, 32)
-        self.restore_refresh_btn.setStyleSheet("padding: 0px; font-size: 16px; font-weight: bold;")
+        self.restore_refresh_btn.setStyleSheet("padding: 5px;")
         self.restore_refresh_btn.setProperty("no_custom_tooltip", True)
         self.restore_combo = QComboBox()
         self.restore_mode_combo = QComboBox()
@@ -191,6 +198,7 @@ class DevPatcherQuickSettingsWidget(QWidget):
 
 
     def project_folder_changed(self, root_path):
+        self.qs_save_project_button.setEnabled(bool(root_path))
         self._update_git_ui_state()
         self._refresh_restore_list()
 
@@ -220,8 +228,8 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self._update_git_ui_state()
         self._refresh_restore_list()
 
-    def save_quick_settings(self):
-        settings_to_save = {
+    def _get_current_settings(self):
+        return {
             'Features': {
                 'fuzzy_matching': self.fuzzy_checkbox.isChecked(),
                 'scope_matching': self.scope_checkbox.isChecked(),
@@ -233,9 +241,20 @@ class DevPatcherQuickSettingsWidget(QWidget):
                 'commit_message': self.backup_commit_msg.text()
             }
         }
-        self.settings_manager.update_setting(['apps', 'dev_patcher', 'quick'], settings_to_save)
-        self.settings_manager.save_settings_file()
-        self.main_window.patcher_log_output.appendPlainText(self.lang.get('quick_settings_saved_log'))
+
+    def apply_quick_settings(self):
+        self.settings_manager.update_setting(['apps', 'dev_patcher', 'quick'], self._get_current_settings())
+        self.main_window.patcher_log_output.appendPlainText(self.lang.get('quick_settings_applied_log', '[Settings] Quick settings applied.'))
+        self._refresh_restore_list()
+
+    def save_quick_settings(self, is_project=False):
+        self.settings_manager.update_setting(['apps', 'dev_patcher', 'quick'], self._get_current_settings(), is_project)
+        if is_project:
+            self.settings_manager.save_project_settings()
+            self.main_window.patcher_log_output.appendPlainText(self.lang.get('quick_settings_project_saved_log', '[Settings] Project quick settings saved.'))
+        else:
+            self.settings_manager.save_settings_file()
+            self.main_window.patcher_log_output.appendPlainText(self.lang.get('quick_settings_saved_log'))
         self._refresh_restore_list()
 
     def reset_quick_settings(self):
@@ -289,6 +308,11 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.backup_method_combo.blockSignals(False)
 
         self.restore_group.setTitle(self.lang.get('restore_group_title', 'Restore Project'))
+
+        p = self.main_window.theme_manager.current_palette if hasattr(self.main_window, 'theme_manager') else {}
+        icon_color = p.get("icon_default", "#e0e0e0")
+        self.restore_refresh_btn.setIcon(svg_to_icon(get_svg_content(ICON_REFRESH), icon_color))
+
         self.restore_refresh_btn.setToolTip(self.lang.get('restore_refresh_tooltip', 'Refresh backup list'))
         self.restore_btn.setText(self.lang.get('restore_btn', 'Restore'))
         self.restore_all_btn.setText(self.lang.get('restore_all_btn', 'More...'))
@@ -305,7 +329,10 @@ class DevPatcherQuickSettingsWidget(QWidget):
 
 
         self.qs_reset_button.setText(self.lang.get('reset_quick_settings_btn'))
-        self.qs_save_button.setText(self.lang.get('save_quick_settings_btn'))
+        self.qs_apply_button.setText(self.lang.get('apply_quick_settings_btn', 'Apply Settings'))
+        self.qs_save_project_button.setText(self.lang.get('save_project_btn', 'Save for Current Project'))
+        self.qs_save_project_button.setEnabled(bool(self.main_window.root_path))
+        self.qs_save_button.setText(self.lang.get('save_quick_settings_btn', 'Save Global'))
 
 def get_quick_settings():
     return [

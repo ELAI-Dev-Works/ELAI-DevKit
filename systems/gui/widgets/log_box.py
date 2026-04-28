@@ -7,3 +7,4 @@ class LogBox(QPlainTextEdit):
         self.setReadOnly(True)
         self.setProperty("no_custom_tooltip", True)
         self.setPlaceholderText('execution_result')
+        self.setMinimumHeight(50)

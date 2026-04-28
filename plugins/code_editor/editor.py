@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QPlainTextEdit, QTextEdit, QPushButton, QFrame, QVBoxLayout, QCheckBox, QSpinBox, QHBoxLayout, QLabel, QWidget
 from PySide6.QtCore import Qt, QRect, QVariantAnimation, QEasingCurve, QSize, Signal, QPoint
-from PySide6.QtGui import QPainter, QColor, QPalette, QTextFormat, QFont
+from PySide6.QtGui import QPainter, QColor, QPalette, QTextFormat, QFont, QTextCursor
 from .number_line import LineNumberArea
-from assets.icons import svg_to_icon, get_svg_content, ICON_WRENCH
+from systems.gui.icons import svg_to_icon, get_svg_content, ICON_WRENCH
 
 class CodeEditor(QPlainTextEdit):
     """
@@ -13,6 +13,7 @@ class CodeEditor(QPlainTextEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.line_number_area = LineNumberArea(self)
+        self.diff_lines = {}  # Store diff markers (+, -, @, H) for line blocks
 
         # Animation configuration
         self.panel_closed_width = 30
@@ -78,9 +79,114 @@ class CodeEditor(QPlainTextEdit):
 
         self._apply_font()
         self.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
+        self.setMinimumHeight(50)
+
+        # Fix tab width visually (4 spaces equivalent)
+        metrics = self.fontMetrics()
+        self.setTabStopDistance(metrics.horizontalAdvance(' ') * 4)
 
         self.update_margins_and_geometry()
         self.highlight_current_line()
+
+    def keyPressEvent(self, event):
+        if not self.isReadOnly():
+            cursor = self.textCursor()
+
+            # 1. Fix Tab indentation (force 4 spaces)
+            if event.key() == Qt.Key_Tab and not cursor.hasSelection():
+                self.insertPlainText("    ")
+                return
+
+            # Smart Backspace for un-indenting
+            if event.key() == Qt.Key_Backspace and not cursor.hasSelection():
+                pos = cursor.positionInBlock()
+                text_before_cursor = cursor.block().text()[:pos]
+                # If cursor is inside indentation (text to the left is all whitespace)
+                if text_before_cursor.strip() == "":
+                    # If the text to the left ends with 4 spaces, delete a "tab"
+                    if text_before_cursor.endswith("    "):
+                        cursor.movePosition(QTextCursor.MoveOperation.Left, QTextCursor.MoveMode.KeepAnchor, 4)
+                        cursor.removeSelectedText()
+                        return  # Event handled
+
+            # 2. Fix Auto-indent on Enter
+            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+                cursor = self.textCursor()
+                current_line = cursor.block().text()
+                indentation = ""
+                for char in current_line:
+                    if char in (' ', '\t'):
+                        indentation += char
+                    else:
+                        break
+                super().keyPressEvent(event)
+                if indentation:
+                    self.insertPlainText(indentation)
+                return
+
+        super().keyPressEvent(event)
+
+    def set_diff_text(self, diff_text):
+        """Sets the content and parses it as a diff to highlight additions/removals."""
+        self.diff_lines = {}
+        self.custom_line_numbers = {} # block_num -> str(line_num)
+        self.clear()
+        self.setReadOnly(True)
+
+        lines = diff_text.splitlines()
+        clean_lines = []
+
+        import re
+        h_pattern = re.compile(r"^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@")
+
+        current_old = 1
+        current_new = 1
+        in_hunk = False
+
+        for line in lines:
+            line_idx = len(clean_lines)
+
+            # Ignore standard unified diff file headers
+            if line.startswith('+++') or line.startswith('---'):
+                continue
+
+            if line.startswith('@@'):
+                match = h_pattern.search(line)
+                if match:
+                    current_old = int(match.group(1))
+                    current_new = int(match.group(2))
+                    in_hunk = True
+                self.diff_lines[line_idx] = '@'
+                clean_lines.append(line)
+            elif in_hunk:
+                if line.startswith('+'):
+                    self.diff_lines[line_idx] = '+'
+                    self.custom_line_numbers[line_idx] = str(current_new)
+                    clean_lines.append(line[1:])
+                    current_new += 1
+                elif line.startswith('-'):
+                    self.diff_lines[line_idx] = '-'
+                    self.custom_line_numbers[line_idx] = str(current_old)
+                    clean_lines.append(line[1:])
+                    current_old += 1
+                elif line.startswith(' '):
+                    self.custom_line_numbers[line_idx] = str(current_new)
+                    clean_lines.append(line[1:])
+                    current_old += 1
+                    current_new += 1
+                elif line == '':
+                    # Handle empty lines that diff sometimes produces instead of a space
+                    self.custom_line_numbers[line_idx] = str(current_new)
+                    clean_lines.append("")
+                    current_old += 1
+                    current_new += 1
+                else:
+                    clean_lines.append(line)
+            else:
+                clean_lines.append(line)
+
+        self.setPlainText('\n'.join(clean_lines))
+        self.update_extra_selections()
 
     def update_theme_colors(self, palette):
         if hasattr(self, 'settings_btn'):
@@ -174,7 +280,11 @@ class CodeEditor(QPlainTextEdit):
         self.update_margins_and_geometry()
 
     def highlight_current_line(self):
-        extra_selections =[]
+        self.update_extra_selections()
+
+    def update_extra_selections(self):
+        extra_selections = []
+
         if not self.isReadOnly():
             selection = QTextEdit.ExtraSelection()
             line_color = QColor(128, 128, 128, 40)
@@ -183,6 +293,21 @@ class CodeEditor(QPlainTextEdit):
             selection.cursor = self.textCursor()
             selection.cursor.clearSelection()
             extra_selections.append(selection)
+
+        if hasattr(self, 'diff_lines') and self.diff_lines:
+            doc = self.document()
+            for block_num, marker in self.diff_lines.items():
+                if marker in ('+', '-'):
+                    selection = QTextEdit.ExtraSelection()
+                    # Soft green and red for backgrounds
+                    color = QColor(46, 204, 113, 40) if marker == '+' else QColor(231, 76, 60, 40)
+                    selection.format.setBackground(color)
+                    selection.format.setProperty(QTextFormat.FullWidthSelection, True)
+                    selection.cursor = self.textCursor()
+                    selection.cursor.setPosition(doc.findBlockByNumber(block_num).position())
+                    selection.cursor.clearSelection()
+                    extra_selections.append(selection)
+
         self.setExtraSelections(extra_selections)
 
     def lineNumberAreaPaintEvent(self, event):
@@ -201,13 +326,31 @@ class CodeEditor(QPlainTextEdit):
     
         while block.isValid() and top <= event.rect().bottom():
             if block.isVisible() and bottom >= event.rect().top():
-                number = str(block_number + 1)
-                painter.setPen(QColor("#858585"))
-                painter.drawText(0, top, self.line_number_area.width() - 40, round(self.blockBoundingRect(block).height()),
-                                 Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter, number)
-    
+                # Determine correct line number
+                if hasattr(self, 'custom_line_numbers') and block_number in self.custom_line_numbers:
+                    number = self.custom_line_numbers[block_number]
+                elif hasattr(self, 'diff_lines') and self.diff_lines and block_number in self.diff_lines and self.diff_lines[block_number] == '@':
+                    number = "" # Hide number for @@ headers
+                elif hasattr(self, 'diff_lines') and self.diff_lines:
+                    number = str(block_number + 1) # Fallback for diff context
+                else:
+                    number = str(block_number + 1)
+
+                if number:
+                    painter.setPen(QColor("#858585"))
+                    painter.drawText(0, top, self.line_number_area.width() - 40, round(self.blockBoundingRect(block).height()),
+                                     Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter, number)
+
                 text_stripped = block.text().strip()
+                is_diff_cmd = False
                 if text_stripped.startswith("<@|EDIT") or text_stripped.startswith("{!RUN}<@|EDIT"):
+                    is_diff_cmd = True
+                elif text_stripped.startswith("<@|REFACTOR") or text_stripped.startswith("{!RUN}<@|REFACTOR"):
+                    is_diff_cmd = True
+                elif (text_stripped.startswith("<@|MANAGE") or text_stripped.startswith("{!RUN}<@|MANAGE")) and "-write" in text_stripped:
+                    is_diff_cmd = True
+
+                if is_diff_cmd:
                     diff_rect = QRect(self.line_number_area.width() - 35, top + 2, 32, round(self.blockBoundingRect(block).height()) - 4)
                     painter.setPen(Qt.NoPen)
                     painter.setBrush(QColor("#0ea5e9"))
@@ -216,6 +359,18 @@ class CodeEditor(QPlainTextEdit):
                     painter.setFont(QFont("Segoe UI", 7, QFont.Bold))
                     painter.drawText(diff_rect, Qt.AlignmentFlag.AlignCenter, "DIFF")
                     painter.setFont(self.font()) # RESTORE
+
+                # Add DIFF markers (+ / -) next to line number
+                if hasattr(self, 'diff_lines') and block_number in self.diff_lines:
+                    marker = self.diff_lines[block_number]
+                    if marker in ('+', '-'):
+                        color = QColor("#a7ffa7") if marker == '+' else QColor("#ff9f9f")
+                        painter.setPen(color)
+                        painter.setFont(QFont("Consolas", 10, QFont.Bold))
+                        marker_rect = QRect(self.line_number_area.width() - 35, top, 15, round(self.blockBoundingRect(block).height()))
+                        painter.drawText(marker_rect, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, marker)
+                        painter.setFont(self.font()) # RESTORE
+
     
             block = block.next()
             top = bottom
@@ -227,5 +382,13 @@ class CodeEditor(QPlainTextEdit):
             cursor = self.cursorForPosition(QPoint(0, event.pos().y()))
             block = cursor.block()
             text_stripped = block.text().strip()
+            is_diff_cmd = False
             if text_stripped.startswith("<@|EDIT") or text_stripped.startswith("{!RUN}<@|EDIT"):
+                is_diff_cmd = True
+            elif text_stripped.startswith("<@|REFACTOR") or text_stripped.startswith("{!RUN}<@|REFACTOR"):
+                is_diff_cmd = True
+            elif (text_stripped.startswith("<@|MANAGE") or text_stripped.startswith("{!RUN}<@|MANAGE")) and "-write" in text_stripped:
+                is_diff_cmd = True
+
+            if is_diff_cmd:
                 self.diff_requested.emit(block.blockNumber())

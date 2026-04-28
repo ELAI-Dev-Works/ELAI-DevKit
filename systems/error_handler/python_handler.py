@@ -13,21 +13,20 @@ def build_error_report(exc_type, exc_value, exc_tb):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    version_file = os.path.join(root_dir, "version.txt")
+    launch_gui_file = os.path.join(root_dir, "core", "gui", "launch.py")
     app_version = "ELAI-DevKit Unknown Version"
 
-    if os.path.exists(version_file):
+    if os.path.exists(launch_gui_file):
         try:
-            with open(version_file, "r", encoding="utf-8") as vf:
-                full_version = vf.read().strip()
+            with open(launch_gui_file, "r", encoding="utf-8") as f:
+                content = f.read()
                 import re
-                match = re.search(r'(ELAI-DevKit v\d+ \(ELAI-DevKit\(Core\) v\d+\))', full_version)
+                match = re.search(r'version_label\s*=\s*QLabel\(\s*"(.*?)"\s*\)', content)
                 if match:
-                    app_version = match.group(1)
-                else:
-                    app_version = full_version.split('+')[0].strip()
-        except:
-            pass
+                    version_str = match.group(1)
+                    app_version = f"ELAI-DevKit {version_str}"
+        except Exception:
+            pass # Fallback to default if parsing fails
 
     tb = traceback.extract_tb(exc_tb)
     if tb:

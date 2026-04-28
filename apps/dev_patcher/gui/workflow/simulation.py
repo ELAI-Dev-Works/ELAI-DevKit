@@ -26,7 +26,8 @@ def run_simulation_only(manager):
 
     # Use combined ignore lists
     if is_self_update:
-        ignore_dirs, ignore_files, _ = mw.settings_manager.get_ignore_lists()
+        g_dirs, g_files, _, _, _ = mw.settings_manager.get_ignore_lists()
+        ignore_dirs, ignore_files = g_dirs, g_files
     else:
         ignore_dirs, ignore_files = mw.get_combined_ignore_lists()
 

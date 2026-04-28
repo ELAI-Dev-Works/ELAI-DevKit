@@ -20,7 +20,7 @@
         <key name="backup_method_all">모두 (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">커밋 메시지...</key>
         <key name="init_git_btn">저장소 초기화</key>
-        <key name="save_quick_settings_btn">설정 저장</key>
+        <key name="save_quick_settings_btn">전역 저장</key>
         <key name="execute_patch_btn">패치 적용</key>
         <key name="check_patch_btn">패치 확인</key>
         <key name="check_code_btn">코드 확인</key>
@@ -38,6 +38,11 @@
         <key name="restore_mode_changes">변경 사항만 (표준)</key>
         <key name="restore_mode_full">전체 교체 (레거시)</key>
         <key name="restore_btn">복원</key>
+        <key name="apply_quick_settings_btn">설정 적용</key>
+        <key name="test_file_select_title">실행 파일 선택</key>
+        <key name="test_file_select_label">테스트 실행할 파일을 선택하세요:</key>
+        <key name="test_console_title">테스트 실행 콘솔</key>
+        <key name="stop_test_run_btn">테스트 실행 중지</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[설정] 빠른 설정이 저장되었습니다.</key>
@@ -66,11 +71,10 @@
         <key name="patch_command_error_log">오류: {}</key>
         <key name="patch_command_success_log">성공: {}</key>
         <key name="command_executed_default_msg">명령이 실행되었습니다.</key>
-        <key name="test_run_dependency_error">테스트 실행을 위해서는 'Project Launcher' 확장 프로그램이 활성화되어야 합니다.</key>
         <key name="test_run_invalid_file_error">선택한 실행 파일이 유효하지 않거나 존재하지 않습니다.</key>
         <key name="test_run_start_log">--- 테스트 실행 시작 ---</key>
         <key name="test_run_finished_log">--- 테스트 실행 완료 ---</key>
-        <key name="test_run_simulating_log">[테스트 실행] 환경 준비를 위한 패치 시뮬레이션 중...</key>
+        <key name="test_run_simulating_log">[테스트 실행] 환경 준비를 위해 패치 시뮬레이션 중...</key>
         <key name="test_run_launching_log">[테스트 실행] 격리 모드에서 패치된 프로젝트 실행 중...</key>
         <key name="simulation_start_log">--- 고급 시뮬레이션 시작 ---</key>
         <key name="simulation_end_log">--- 고급 시뮬레이션 완료 ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_success">성공</key>
         <key name="simulation_fail">실패</key>
         <key name="example_patch_loaded">예제 패치가 로드되었습니다.</key>
+        <key name="quick_settings_applied_log">[설정] 빠른 설정이 적용되었습니다.</key>
+        <key name="test_run_env_required_error">프로젝트가 PROJECT 명령으로 초기화되거나 환경(.venv, node_modules)이 필요하지만 아직 초기화되지 않았습니다. 테스트 실행 전에 패치를 적용하여 환경을 먼저 초기화하십시오.</key>
     </section>
     <section name="Dialogs">
         <key name="patch_load_error_title">오류</key>
@@ -146,7 +152,7 @@
         <key name="restore_success_msg">복원이 성공적으로 완료되었습니다!</key>
         <key name="restore_error_msg">프로젝트 복원 실패: {}</key>
         <key name="ai_report_dialog_title">AI 수정 보고서</key>
-        <key name="ai_report_dialog_info">패치에서 문제가 있는 명령이 발견되었습니다. 해당 명령은 건너뛰며 패치는 안전하게 적용할 수 있습니다. AI를 위한 수정 보고서가 작성되었습니다. 새 프로젝트 컨텍스트와 함께 복사하여 AI에 전송하면 올바른 명령을 작성할 수 있습니다.</key>
+        <key name="ai_report_dialog_info">패치에서 문제가 있는 명령이 발견되었습니다. 해당 명령은 건너뛰며 패치를 안전하게 적용할 수 있습니다. AI를 위한 수정 보고서가 작성되었습니다. 새 프로젝트 컨텍스트와 함께 복사하여 AI에 전송하면 올바른 명령을 작성할 수 있습니다.</key>
         <key name="ai_report_task">지정된 문제만 수정하세요.</key>
         <key name="simulation_success_msg_new">시뮬레이션이 완료되었습니다. 오류가 발견되지 않았습니다. 모든 명령을 안전하게 실행할 수 있습니다.</key>
     </section>

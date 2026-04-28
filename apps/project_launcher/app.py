@@ -188,39 +188,51 @@ class ProjectLauncherApp(QObject):
     def _build_command(self, launch_file, args_text):
         """Helper to construct the command line string."""
         cmd_parts = []
-    
         if launch_file.endswith('.py'):
             venv_py = get_venv_python_path(self.root_path)
             if os.path.exists(venv_py):
-                cmd_parts.append(f'"{venv_py}"')
+                if is_windows():
+                    cmd_parts.append(f'& "{venv_py}"')
+                else:
+                    cmd_parts.append(f'"{venv_py}"')
             else:
                 cmd_parts.append("python3" if not is_windows() else "python")
             cmd_parts.append(f'"{launch_file}"')
         
-        elif launch_file.endswith(('.bat', '.cmd', '.ps1', '.exe', '.sh')):
+        elif launch_file.endswith(('.bat', '.cmd')):
             if is_windows():
-                cmd_parts.append(f'.\\"{launch_file}"')
+                cmd_parts.append(f'& ".\\{launch_file}"')
             else:
-                cmd_parts.append(f'./"{launch_file}"')
+                cmd_parts.append(f'cmd /c "{launch_file}"')
+        
+        elif launch_file.endswith('.sh'):
+            cmd_parts.append(f'bash "{launch_file}"')
+        
+        elif launch_file.endswith(('.ps1', '.exe')):
+            if is_windows():
+                cmd_parts.append(f'& ".\\{launch_file}"')
+            else:
+                cmd_parts.append(f'"./{launch_file}"')
         
         elif launch_file.endswith('.html'):
             if is_windows():
                 cmd_parts.append(f'Start-Process "{launch_file}"')
             else:
-                # For internal console on posix, we can't really "start" html nicely without opening browser
-                # But this is for PTY input command... echo URL is safer?
                 cmd_parts.append(f'echo "Please open {launch_file} manually"')
-    
+        
         elif launch_file.endswith('.js'):
             cmd_parts.append("node")
             cmd_parts.append(f'"{launch_file}"')
-    
+        
         elif launch_file.endswith('.ts'):
             cmd_parts.append("ts-node")
             cmd_parts.append(f'"{launch_file}"')
-    
+        
         else:
-            cmd_parts.append(f'.\\"{launch_file}"')
+            if is_windows():
+                cmd_parts.append(f'& ".\\{launch_file}"')
+            else:
+                cmd_parts.append(f'"./{launch_file}"')
     
         if args_text:
             cmd_parts.append(args_text)

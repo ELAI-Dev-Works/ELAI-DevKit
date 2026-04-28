@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QWidget, QLabel, QVBoxLayout, QFrame, QApplicatio
                                QPushButton, QCheckBox, QLineEdit, QAbstractButton,
                                QSpinBox, QDoubleSpinBox)
 from PySide6.QtGui import QCursor
-from assets.icons import svg_to_icon, get_svg_content, ICON_TOOLTIP
+from systems.gui.icons import svg_to_icon, get_svg_content, ICON_TOOLTIP
 
 def _addGUITooltip_method(self, tooltip_text):
     """

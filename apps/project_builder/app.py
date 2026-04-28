@@ -72,6 +72,11 @@ class ProjectBuilderApp(QObject):
     def project_folder_changed(self, root_path):
         self.root_path = root_path
         if self.widget:
+
+            if not self.root_path:
+                self.widget._update_ui_state()
+                return
+
             self.widget.log_box.appendPlainText(self.lang.get('pb_log_scanning'))
             detection = ProjectDetector.detect(self.root_path)
             self.current_arch = detection['architecture']

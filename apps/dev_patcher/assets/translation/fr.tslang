@@ -20,7 +20,7 @@
         <key name="backup_method_all">Tout (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">Message de commit...</key>
         <key name="init_git_btn">Initialiser le dépôt</key>
-        <key name="save_quick_settings_btn">Enregistrer les paramètres</key>
+        <key name="save_quick_settings_btn">Enregistrer globalement</key>
         <key name="execute_patch_btn">Appliquer le patch</key>
         <key name="check_patch_btn">Vérifier le patch</key>
         <key name="check_code_btn">Vérifier le code</key>
@@ -38,6 +38,11 @@
         <key name="restore_mode_changes">Modifications uniquement (Standard)</key>
         <key name="restore_mode_full">Remplacement complet (Ancien)</key>
         <key name="restore_btn">Restaurer</key>
+        <key name="apply_quick_settings_btn">Appliquer les paramètres</key>
+        <key name="test_file_select_title">Sélectionner le fichier de lancement</key>
+        <key name="test_file_select_label">Choisissez un fichier pour le test d'exécution :</key>
+        <key name="test_console_title">Console d'Exécution de Tests</key>
+        <key name="stop_test_run_btn">Arrêter l'Exécution de Tests</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Paramètres] Paramètres rapides enregistrés.</key>
@@ -66,12 +71,11 @@
         <key name="patch_command_error_log">ERREUR : {}</key>
         <key name="patch_command_success_log">SUCCÈS : {}</key>
         <key name="command_executed_default_msg">Commande exécutée.</key>
-        <key name="test_run_dependency_error">Test Run nécessite l'activation de l'extension 'Project Launcher'.</key>
         <key name="test_run_invalid_file_error">Le fichier de lancement sélectionné est invalide ou n'existe pas.</key>
-        <key name="test_run_start_log">--- DÉMARRAGE DU TEST RUN ---</key>
-        <key name="test_run_finished_log">--- TEST RUN TERMINÉ ---</key>
-        <key name="test_run_simulating_log">[Test Run] Simulation du patch pour préparer l'environnement...</key>
-        <key name="test_run_launching_log">[Test Run] Lancement du projet patché en mode isolé...</key>
+        <key name="test_run_start_log">--- DÉMARRAGE DE L'EXÉCUTION DES TESTS ---</key>
+        <key name="test_run_finished_log">--- EXÉCUTION DES TESTS TERMINÉE ---</key>
+        <key name="test_run_simulating_log">[Exécution de Test] Simulation du correctif pour préparer l'environnement...</key>
+        <key name="test_run_launching_log">[Exécution de Test] Lancement du projet corrigé en mode isolé...</key>
         <key name="simulation_start_log">--- DÉMARRAGE DE LA SIMULATION AVANCÉE ---</key>
         <key name="simulation_end_log">--- SIMULATION AVANCÉE TERMINÉE ---</key>
         <key name="code_check_start_log">--- DÉMARRAGE DE LA VÉRIFICATION DU CODE ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_final_warn">[FINAL] ATTENTION ! Conflits ou erreurs détectés. Le patch pourrait ne pas s'appliquer complètement.</key>
         <key name="simulation_success">SUCCÈS</key>
         <key name="simulation_fail">ÉCHEC</key>
+        <key name="quick_settings_applied_log">[Paramètres] Paramètres rapides appliqués.</key>
+        <key name="test_run_env_required_error">Le projet s'initialise avec la commande PROJECT ou nécessite un environnement (.venv, node_modules) qui n'est pas encore initialisé. Veuillez appliquer le correctif pour initialiser l'environnement avant d'exécuter un test.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Autonome)</key>
@@ -148,7 +154,7 @@
         <key name="restore_confirm_msg">Êtes-vous sûr de vouloir restaurer le projet depuis cette sauvegarde/commit ? Les modifications non enregistrées seront perdues.</key>
         <key name="restore_success_msg">Restauration terminée avec succès !</key>
         <key name="restore_error_msg">Échec de la restauration du projet : {}</key>
-        <key name="ai_report_dialog_title">Rapport de Correction IA</key>
+        <key name="ai_report_dialog_title">Rapport de correction IA</key>
         <key name="ai_report_dialog_info">Des commandes problématiques ont été trouvées dans le patch. Elles seront ignorées et le patch peut être appliqué en toute sécurité. Un rapport de correction pour l'IA a été compilé. Copiez-le avec le nouveau contexte du projet et envoyez-le à l'IA afin qu'elle puisse écrire la commande correcte.</key>
         <key name="ai_report_task">Corrigez uniquement le(s) problème(s) spécifié(s).</key>
         <key name="simulation_success_msg_new">La simulation est terminée. Aucune erreur trouvée. Toutes les commandes peuvent être exécutées en toute sécurité.</key>

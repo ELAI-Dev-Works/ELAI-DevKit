@@ -81,6 +81,13 @@ class SettingsPanel(QFrame):
         self.always_show_tooltips_checkbox.setStyleSheet("border: none; background: transparent;")
         form_layout.addRow(self.always_show_tooltips_checkbox)
 
+        from PySide6.QtWidgets import QSpinBox
+        self.font_size_spinbox = QSpinBox()
+        self.font_size_spinbox.setRange(8, 24)
+        self.font_size_spinbox.setSuffix(" pt")
+        self.font_size_label = QLabel()
+        form_layout.addRow(self.font_size_label, self.font_size_spinbox)
+
         layout.addWidget(self.ui_group)
         layout.addStretch()
         return widget
@@ -94,13 +101,19 @@ class SettingsPanel(QFrame):
 
         self.apply_button = QPushButton()
         self.apply_button.clicked.connect(self.apply_settings)
+
+        self.save_project_button = QPushButton()
+        self.save_project_button.clicked.connect(lambda: self.save_settings(is_project=True))
+
         self.save_button = QPushButton()
-        self.save_button.clicked.connect(self.save_settings)
+        self.save_button.clicked.connect(lambda: self.save_settings(is_project=False))
+
         self.close_button = QPushButton()
         self.close_button.clicked.connect(self.close_and_revert)
         self.close_button.setDefault(True)
 
         button_layout.addWidget(self.apply_button)
+        button_layout.addWidget(self.save_project_button)
         button_layout.addWidget(self.save_button)
         button_layout.addWidget(self.close_button)
         return button_layout
@@ -113,6 +126,8 @@ class SettingsPanel(QFrame):
         self.ui_group.setTitle(lang.get('settings_ui_group_title'))
         self.always_show_tooltips_checkbox.setText(lang.get('ui_always_show_tooltips'))
         self.always_show_tooltips_checkbox.setToolTip(lang.get('ui_always_show_tooltips_tooltip'))
+        if hasattr(self, 'font_size_label'):
+            self.font_size_label.setText(lang.get('ui_font_size', 'Global Font Size:'))
 
         self.general_group.setTitle(lang.get('settings_general_group_title'))
         self.lang_label_ref.setText(lang.get('language_label'))
@@ -121,6 +136,10 @@ class SettingsPanel(QFrame):
 
         self.reset_button.setText(lang.get('reset_btn')).addGUITooltip(lang.get('settings_reset_tooltip'))
         self.apply_button.setText(lang.get('apply_btn')).addGUITooltip(lang.get('settings_apply_tooltip'))
+
+        self.save_project_button.setText(lang.get('save_project_btn', 'Save for Current Project'))
+        self.save_project_button.setEnabled(bool(self.main_window.root_path))
+
         self.save_button.setText(lang.get('save_btn')).addGUITooltip(lang.get('settings_save_tooltip'))
         self.close_button.setText(lang.get('close_btn')).addGUITooltip(lang.get('settings_close_tooltip'))
 
@@ -149,6 +168,7 @@ class SettingsPanel(QFrame):
         if 'ui' not in self.state_on_open:
             self.state_on_open['ui'] = {}
         self.state_on_open['ui']['always_show_tooltips'] = self.always_show_tooltips_checkbox.isChecked() if hasattr(self, 'always_show_tooltips_checkbox') else False
+        self.state_on_open['ui']['font_size'] = self.font_size_spinbox.value() if hasattr(self, 'font_size_spinbox') else 10
 
         self.populate_languages(self.state_on_open.get('language', 'en'))
 
@@ -166,6 +186,8 @@ class SettingsPanel(QFrame):
 
         ui_settings = self.state_on_open.get('ui', {})
         self.always_show_tooltips_checkbox.setChecked(ui_settings.get('always_show_tooltips', False))
+        if hasattr(self, 'font_size_spinbox'):
+            self.font_size_spinbox.setValue(ui_settings.get('font_size', 10))
 
     def preview_language_change(self):
         if self.lang_combo.count() > 0 and self.lang_combo.currentText():
@@ -196,22 +218,32 @@ class SettingsPanel(QFrame):
         if 'ui' not in self.state_on_open:
             self.state_on_open['ui'] = {}
         self.state_on_open['ui']['always_show_tooltips'] = self.always_show_tooltips_checkbox.isChecked()
+        self.state_on_open['ui']['font_size'] = self.font_size_spinbox.value()
         self.main_window.apply_main_settings(self.state_on_open)
 
-    def save_settings(self):
+    def save_settings(self, is_project=False):
         self.apply_settings()
         sm = self.main_window.settings_manager
         core_settings = self.state_on_open.copy()
 
         # Preserve existing extension settings since they are now managed in ExtensionsWindow
-        existing_core = sm.load_settings_file().get('core', {})
+        if is_project:
+            existing_core = sm.load_project_settings().get('core', {})
+        else:
+            existing_core = sm.load_settings_file().get('core', {})
+
         if 'extensions' in existing_core:
             core_settings['extensions'] = existing_core['extensions']
 
-        sm.update_setting(['core'], core_settings)
-        sm.save_settings_file()
-        if hasattr(self.main_window, 'patcher_log_output'):
-            self.main_window.patcher_log_output.appendPlainText(self.lang.get('settings_saved_log'))
+        sm.update_setting(['core'], core_settings, is_project)
+        if is_project:
+            sm.save_project_settings()
+            if hasattr(self.main_window, 'patcher_log_output'):
+                self.main_window.patcher_log_output.appendPlainText(self.lang.get('project_settings_saved_log', '[Settings] Project settings saved successfully.'))
+        else:
+            sm.save_settings_file()
+            if hasattr(self.main_window, 'patcher_log_output'):
+                self.main_window.patcher_log_output.appendPlainText(self.lang.get('settings_saved_log'))
 
     def close_and_revert(self):
         if not self.state_on_open:
@@ -256,3 +288,5 @@ class SettingsPanel(QFrame):
 
         ui_defaults = core_defaults.get('ui', {})
         self.always_show_tooltips_checkbox.setChecked(ui_defaults.get('always_show_tooltips', False))
+        if hasattr(self, 'font_size_spinbox'):
+            self.font_size_spinbox.setValue(ui_defaults.get('font_size', 10))

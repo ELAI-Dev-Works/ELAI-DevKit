@@ -14,7 +14,7 @@
         <key name="language_label">언어:</key>
         <key name="reset_btn">초기화</key>
         <key name="apply_btn">적용</key>
-        <key name="save_btn">저장</key>
+        <key name="save_btn">전역 저장</key>
         <key name="close_btn">닫기</key>
         <key name="window_title">ELAI-DevKit</key>
         <key name="select_project_folder_btn">프로젝트 폴더 선택...</key>
@@ -38,8 +38,8 @@
         <key name="launcher_btn_docs_desc">가이드 및 참조 보기</key>
         <key name="launcher_btn_settings">설정</key>
         <key name="launcher_btn_settings_desc">전역 환경설정 구성</key>
-        <key name="launcher_btn_ext">확장</key>
-        <key name="launcher_btn_ext_desc">확장 관리 및 구성</key>
+        <key name="launcher_btn_ext">확장 프로그램</key>
+        <key name="launcher_btn_ext_desc">확장 프로그램 관리 및 구성</key>
         <key name="btn_back_to_launcher">시작으로 돌아가기</key>
         <key name="docs_nav_title">주제</key>
         <key name="console_start_btn">셸 시작</key>
@@ -59,18 +59,37 @@
         <key name="restore_tab_btn">복원</key>
         <key name="project_label">프로젝트:</key>
         <key name="example_patch_loaded">예제 패치가 로드되었습니다.</key>
+        <key name="ui_font_size">전역 글꼴 크기:</key>
+        <key name="save_project_btn">현재 프로젝트에 저장</key>
+        <key name="ignore_tab_project">현재 프로젝트 목록</key>
+        <key name="bookmarks_title">프로젝트 북마크</key>
+        <key name="bookmarks_add_btn">현재 추가</key>
+        <key name="bookmarks_load_btn">선택 항목 불러오기</key>
+        <key name="bookmarks_del_btn">삭제</key>
+        <key name="mode_project">프로젝트</key>
+        <key name="mode_workspace">작업 공간</key>
+        <key name="workspace_label">작업 공간: {}</key>
+        <key name="workspace_projects_dialog_title">워크스페이스 프로젝트</key>
+        <key name="rename_btn">이름 바꾸기</key>
+        <key name="delete_btn">삭제</key>
+        <key name="mode_switch_warning_title">모드 전환됨</key>
+        <key name="mode_switch_to_workspace_msg">워크스페이스 모드로 전환했지만 현재 프로젝트 폴더가 선택되어 있습니다. 유효한 워크스페이스 폴더를 선택하거나 프로젝트 모드로 다시 전환하세요.</key>
+        <key name="mode_switch_to_project_msg">워크스페이스 모드에서 프로젝트 모드로 전환했습니다. 현재 프로젝트 경로는 {}(으)로 설정됩니다. 필요한 경우 프로젝트 폴더를 변경할 수 있습니다.</key>
+        <key name="select_workspace_folder_btn">작업 영역 폴더 선택...</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[설정] 구성이 로드되었습니다.</key>
         <key name="restart_signal_sent_log">재시작 신호 전송됨...</key>
         <key name="project_folder_selected_log">프로젝트 폴더 설정됨: {}</key>
         <key name="log_cleared">========================================</key>
-        <key name="project_folder_missing_error">오류: 프로젝트 폴더(@ROOT)가 선택되지 않았습니다!</key>
-        <key name="settings_saved_log">[확인] 설정이 성공적으로 저장되었습니다.</key>
+        <key name="project_folder_missing_error">오류: 프로젝트 폴더 (@ROOT)가 선택되지 않았습니다!</key>
+        <key name="settings_saved_log">[OK] 설정이 성공적으로 저장되었습니다.</key>
         <key name="console_started_log">[콘솔] 셸 시작됨: {}</key>
         <key name="console_error_pty_log">[오류] PTY 세션 시작 실패: {}</key>
         <key name="console_terminated_log">[콘솔] 셸이 종료되었습니다.</key>
         <key name="console_restarting_log">[콘솔] 셸 재시작 중...</key>
+        <key name="project_settings_saved_log">[설정] 프로젝트 설정이 성공적으로 저장되었습니다.</key>
+        <key name="quick_settings_project_saved_log">[설정] 프로젝트 빠른 설정이 저장되었습니다.</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">재시작 확인</key>
@@ -80,9 +99,15 @@
         <key name="ignore_settings_files_info">무시할 파일명 (한 줄에 하나씩). 백업 및 패커에 영향을 줍니다.</key>
         <key name="ignore_settings_tags_label">설명:</key>
         <key name="ignore_settings_tags_info">[!backup], [!packer], [!git]과 같은 태그를 사용하여 특정 모듈에 대해 선택적으로 파일을 무시할 수 있습니다. 태그가 없으면 파일은 모든 모듈에서 무시됩니다. 태그는 결합할 수 있습니다 - 여러 태그가 지정되면 파일은 지정된 모든 컨텍스트에서 무시됩니다. 예: 'node_modules' - 모든 곳에서 무시; 'dist [!packer]' - 패커에서만 무시; 'build [!git] [!packer]' - git과 패커에서 무시하지만 백업에는 포함.</key>
+        <key name="rename_project_title">프로젝트 이름 변경</key>
+        <key name="rename_project_prompt">프로젝트 '{}'의 새 이름을 입력하세요:</key>
+        <key name="add_workspace_project_title">새 워크스페이스 프로젝트 추가</key>
+        <key name="add_workspace_project_prompt">작업 공간 폴더에 새 프로젝트 이름을 입력하세요:</key>
+        <key name="delete_project_warning_title">프로젝트 삭제</key>
+        <key name="delete_project_warning_msg">프로젝트 '{}'을(를) 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다!</key>
     </section>
     <section name="Tooltips">
-        <key name="select_project_folder_tooltip">메인 프로젝트 폴더를 선택하는 대화상자를 엽니다.</key>
+        <key name="select_project_folder_tooltip">메인 프로젝트 폴더를 선택하는 대화 상자를 엽니다.</key>
         <key name="edit_ignore_list_tooltip">백업 및 패커에서 무시할 파일 및 폴더 목록을 편집합니다.</key>
         <key name="edit_ignore_list_disabled_tooltip">이 버튼을 활성화하려면 먼저 프로젝트 폴더를 선택하세요.</key>
         <key name="settings_tooltip">메인 애플리케이션 설정 패널을 엽니다.</key>
@@ -99,10 +124,14 @@
         <key name="docs_find_next_tooltip">검색 텍스트의 다음 항목을 찾습니다.</key>
         <key name="docs_find_prev_tooltip">검색 텍스트의 이전 항목을 찾습니다.</key>
         <key name="settings_reset_tooltip">이 페이지의 모든 설정을 기본값으로 재설정합니다 (저장되지 않음).</key>
-        <key name="settings_apply_tooltip">현재 세션에 대한 설정을 적용합니다. 저장하지 않으면 재시작 시 변경 사항이 손실됩니다.</key>
+        <key name="settings_apply_tooltip">이 세션에 현재 설정을 적용합니다. 저장하지 않으면 재시작 시 변경 사항이 손실됩니다.</key>
         <key name="settings_save_tooltip">적용된 모든 변경 사항을 settings.toml 파일에 저장합니다.</key>
         <key name="settings_close_tooltip">설정 패널을 닫고 적용되지 않은 변경 사항을 되돌립니다.</key>
         <key name="doc_copied_tooltip">복사됨!</key>
+        <key name="workspace_add_project_tooltip">작업 공간에 새 프로젝트 추가</key>
+        <key name="workspace_edit_projects_tooltip">작업 공간 프로젝트 편집</key>
+        <key name="workspace_refresh_tooltip">작업 공간 프로젝트 새로고침</key>
+        <key name="select_workspace_folder_tooltip">여러 프로젝트가 포함된 작업 공간 폴더를 선택하세요.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (독립)</key>

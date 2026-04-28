@@ -20,7 +20,7 @@
         <key name="backup_method_all">Все (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">Сообщение коммита...</key>
         <key name="init_git_btn">Инициализировать репозиторий</key>
-        <key name="save_quick_settings_btn">Сохранить настройки</key>
+        <key name="save_quick_settings_btn">Сохранить глобально</key>
         <key name="execute_patch_btn">Применить патч</key>
         <key name="check_patch_btn">Проверить патч</key>
         <key name="check_code_btn">Проверить код</key>
@@ -38,6 +38,11 @@
         <key name="restore_mode_changes">Только изменения (стандартный)</key>
         <key name="restore_mode_full">Полная замена (устаревший)</key>
         <key name="restore_btn">Восстановить</key>
+        <key name="apply_quick_settings_btn">Применить настройки</key>
+        <key name="test_file_select_title">Выбрать файл запуска</key>
+        <key name="test_file_select_label">Выберите файл для тестового запуска:</key>
+        <key name="test_console_title">Консоль Запуска Тестов</key>
+        <key name="stop_test_run_btn">Остановить Запуск Тестов</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Настройки] Быстрые настройки сохранены.</key>
@@ -66,10 +71,9 @@
         <key name="patch_command_error_log">ОШИБКА: {}</key>
         <key name="patch_command_success_log">УСПЕШНО: {}</key>
         <key name="command_executed_default_msg">Команда выполнена.</key>
-        <key name="test_run_dependency_error">Тестовый запуск требует включения расширения 'Project Launcher'.</key>
         <key name="test_run_invalid_file_error">Выбранный файл запуска недействителен или не существует.</key>
-        <key name="test_run_start_log">--- НАЧАЛО ТЕСТОВОГО ЗАПУСКА ---</key>
-        <key name="test_run_finished_log">--- ТЕСТОВЫЙ ЗАПУСК ЗАВЕРШЕН ---</key>
+        <key name="test_run_start_log">--- ЗАПУСК ТЕСТОВ ---</key>
+        <key name="test_run_finished_log">--- ТЕСТЫ ЗАВЕРШЕНЫ ---</key>
         <key name="test_run_simulating_log">[Тестовый запуск] Симуляция патча для подготовки окружения...</key>
         <key name="test_run_launching_log">[Тестовый запуск] Запуск пропатченного проекта в изолированном режиме...</key>
         <key name="simulation_start_log">--- НАЧАЛО РАСШИРЕННОЙ СИМУЛЯЦИИ ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_final_warn">[ИТОГ] ВНИМАНИЕ! Обнаружены конфликты или ошибки. Патч может примениться не полностью.</key>
         <key name="simulation_success">УСПЕХ</key>
         <key name="simulation_fail">ОШИБКА</key>
+        <key name="quick_settings_applied_log">[Настройки] Быстрые настройки применены.</key>
+        <key name="test_run_env_required_error">Проект инициализируется командой PROJECT или требует окружения (.venv, node_modules), которое еще не инициализировано. Пожалуйста, примените патч для инициализации окружения перед запуском тестового прогона.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (автономный)</key>

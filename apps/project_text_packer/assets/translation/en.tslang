@@ -4,6 +4,10 @@
         <key name="project_text_packer_tab">Project Text Packer</key>
         <key name="project_text_packer_quick_settings_title">Project Packer Options</key>
         <key name="packer_output_dir_label">Output Directory:</key>
+
+        <key name="packer_category_label">Category:</key>
+        <key name="catalogs_title">Catalog Categories</key>
+
         <key name="packer_select_output_dir_btn">Select...</key>
         <key name="packer_start_btn">Pack Project</key>
         <key name="packer_extensions_label">Supported file extensions:</key>
@@ -17,9 +21,11 @@
         <key name="patch_load_error_title">Error</key>
         <key name="project_folder_missing_error">ERROR: Project folder (@ROOT) is not selected!</key>
         <key name="quick_settings_saved_log">[Settings] Quick settings saved.</key>
+        <key name="quick_settings_applied_log">[Settings] Quick settings applied.</key>
         <key name="quick_settings_reset_log">[Settings] Quick settings have been reset to default (not saved).</key>
         <key name="reset_quick_settings_btn">Reset to Default</key>
-        <key name="save_quick_settings_btn">Save Settings</key>
+        <key name="apply_quick_settings_btn">Apply Settings</key>
+        <key name="save_quick_settings_btn">Save Global</key>
     </section>
     <section name="Logs">
         <key name="packer_log_placeholder">Project Text Packer logs will appear here...</key>

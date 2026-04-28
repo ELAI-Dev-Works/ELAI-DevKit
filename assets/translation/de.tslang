@@ -14,7 +14,7 @@
         <key name="language_label">Sprache:</key>
         <key name="reset_btn">Zurücksetzen</key>
         <key name="apply_btn">Anwenden</key>
-        <key name="save_btn">Speichern</key>
+        <key name="save_btn">Global speichern</key>
         <key name="close_btn">Schließen</key>
         <key name="window_title">ELAI-DevKit</key>
         <key name="select_project_folder_btn">Projektordner auswählen...</key>
@@ -59,6 +59,23 @@
         <key name="restore_tab_btn">Wiederherstellen</key>
         <key name="project_label">Projekt:</key>
         <key name="example_patch_loaded">Beispiel-Patch geladen.</key>
+        <key name="ui_font_size">Globale Schriftgröße:</key>
+        <key name="save_project_btn">Für aktuelles Projekt speichern</key>
+        <key name="ignore_tab_project">Aktuelle Projektliste</key>
+        <key name="bookmarks_title">Projekt-Lesezeichen</key>
+        <key name="bookmarks_add_btn">Aktuelle hinzufügen</key>
+        <key name="bookmarks_load_btn">Ausgewählte laden</key>
+        <key name="bookmarks_del_btn">Löschen</key>
+        <key name="mode_project">Projekt</key>
+        <key name="mode_workspace">Arbeitsbereich</key>
+        <key name="workspace_label">Arbeitsbereich: {}</key>
+        <key name="workspace_projects_dialog_title">Workspace-Projekte</key>
+        <key name="rename_btn">Umbenennen</key>
+        <key name="delete_btn">Löschen</key>
+        <key name="mode_switch_warning_title">Modus gewechselt</key>
+        <key name="mode_switch_to_workspace_msg">Sie haben in den Workspace-Modus gewechselt, aber es ist derzeit ein Projektordner ausgewählt. Bitte wählen Sie einen gültigen Workspace-Ordner aus oder wechseln Sie zurück in den Projektmodus.</key>
+        <key name="mode_switch_to_project_msg">Sie haben vom Workspace- in den Projektmodus gewechselt. Der aktuelle Projektpfad wird auf {} gesetzt. Sie können den Projektordner bei Bedarf ändern.</key>
+        <key name="select_workspace_folder_btn">Arbeitsbereichsordner auswählen...</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[Einstellungen] Konfiguration geladen.</key>
@@ -71,6 +88,8 @@
         <key name="console_error_pty_log">[Fehler] PTY-Sitzung konnte nicht gestartet werden: {}</key>
         <key name="console_terminated_log">[Konsole] Shell beendet.</key>
         <key name="console_restarting_log">[Konsole] Shell wird neu gestartet...</key>
+        <key name="project_settings_saved_log">[Einstellungen] Projekteinstellungen erfolgreich gespeichert.</key>
+        <key name="quick_settings_project_saved_log">[Einstellungen] Projekt-Schnelleinstellungen gespeichert.</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">Neustart bestätigen</key>
@@ -80,6 +99,12 @@
         <key name="ignore_settings_files_info">Zu ignorierende Dateinamen (einer pro Zeile). Betrifft Backup und Packer.</key>
         <key name="ignore_settings_tags_label">Anweisung:</key>
         <key name="ignore_settings_tags_info">Sie können Tags wie [!backup], [!packer], [!git] verwenden, um Dateien selektiv für bestimmte Module zu ignorieren. Ohne Tags wird die Datei von allen Modulen ignoriert. Tags können kombiniert werden - wenn mehrere Tags angegeben sind, wird die Datei für alle angegebenen Kontexte ignoriert. Beispiele: 'node_modules' - überall ignorieren; 'dist [!packer]' - nur für Packer ignorieren; 'build [!git] [!packer]' - für git und Packer ignorieren, aber in Backup einschließen.</key>
+        <key name="rename_project_title">Projekt umbenennen</key>
+        <key name="rename_project_prompt">Neuen Namen für Projekt '{}' eingeben:</key>
+        <key name="add_workspace_project_title">Neues Workspace-Projekt hinzufügen</key>
+        <key name="add_workspace_project_prompt">Namen für neues Projekt im Arbeitsbereich eingeben:</key>
+        <key name="delete_project_warning_title">Projekt löschen</key>
+        <key name="delete_project_warning_msg">Möchten Sie das Projekt '{}' wirklich dauerhaft löschen? Diese Aktion kann nicht rückgängig gemacht werden!</key>
     </section>
     <section name="Tooltips">
         <key name="select_project_folder_tooltip">Dialog öffnen, um den Hauptprojektordner auszuwählen.</key>
@@ -99,10 +124,14 @@
         <key name="docs_find_next_tooltip">Nächstes Vorkommen des Suchtextes finden.</key>
         <key name="docs_find_prev_tooltip">Vorheriges Vorkommen des Suchtextes finden.</key>
         <key name="settings_reset_tooltip">Alle Einstellungen auf dieser Seite auf ihre Standardwerte zurücksetzen (wird nicht gespeichert).</key>
-        <key name="settings_apply_tooltip">Aktuelle Einstellungen für diese Sitzung anwenden. Änderungen gehen beim Neustart verloren, sofern nicht gespeichert.</key>
+        <key name="settings_apply_tooltip">Aktuelle Einstellungen für diese Sitzung anwenden. Änderungen gehen beim Neustart verloren, wenn sie nicht gespeichert werden.</key>
         <key name="settings_save_tooltip">Alle angewendeten Änderungen in der Datei settings.toml speichern.</key>
         <key name="settings_close_tooltip">Einstellungsfenster schließen und nicht angewendete Änderungen verwerfen.</key>
         <key name="doc_copied_tooltip">Kopiert!</key>
+        <key name="workspace_add_project_tooltip">Neues Projekt zum Arbeitsbereich hinzufügen</key>
+        <key name="workspace_edit_projects_tooltip">Workspace-Projekte bearbeiten</key>
+        <key name="workspace_refresh_tooltip">Workspace-Projekte aktualisieren</key>
+        <key name="select_workspace_folder_tooltip">Wählen Sie einen Arbeitsbereichsordner mit mehreren Projekten aus.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Standalone)</key>

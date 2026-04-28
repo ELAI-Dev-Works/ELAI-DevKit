@@ -7,6 +7,7 @@
         <key name="settings_ui_group_title">UI Settings</key>
         <key name="ui_always_show_tooltips">Always show tooltip icons</key>
         <key name="ui_always_show_tooltips_tooltip">If disabled, tooltip icons will only appear when hovering over the element.</key>
+        <key name="ui_font_size">Global Font Size:</key>
         <key name="settings_extensions_settings_tab">Extension Settings</key>
         <key name="settings_extensions_manager_tab">Extensions Manager</key>
         <key name="theme_label">Theme:</key>
@@ -14,7 +15,8 @@
         <key name="language_label">Language:</key>
         <key name="reset_btn">Reset</key>
         <key name="apply_btn">Apply</key>
-        <key name="save_btn">Save</key>
+        <key name="save_btn">Save Global</key>
+        <key name="save_project_btn">Save for Current Project</key>
         <key name="close_btn">Close</key>
         <key name="window_title">ELAI-DevKit</key>
         <key name="select_project_folder_btn">Select Project Folder...</key>
@@ -22,6 +24,7 @@
         <key name="project_path_label_selected">&lt;b&gt;@ROOT:&lt;/b&gt; {}</key>
         <key name="edit_ignore_list_btn">Ignore Lists</key>
         <key name="ignore_tab_global">Global List</key>
+        <key name="ignore_tab_project">Current Project List</key>
         <key name="ignore_tab_temp">Temporary List (Session)</key>
         <key name="ignore_use_gitignore">Use project .gitignore for backup and packer</key>
         <key name="settings_btn">Settings</key>
@@ -56,9 +59,27 @@
         <key name="patcher_log_placeholder">Patcher execution results will be here...</key>
         <key name="detach_tab_tooltip">Detach Tab</key>
         <key name="tab_detached_msg">This tab is opened in a separate window.</key>
+
+        <key name="bookmarks_title">Project Bookmarks</key>
+        <key name="bookmarks_add_btn">Add Current</key>
+        <key name="bookmarks_load_btn">Load Selected</key>
+        <key name="bookmarks_del_btn">Delete</key>
+        <key name="mode_project">Project</key>
+        <key name="mode_workspace">Workspace</key>
+        <key name="workspace_label">Workspace: {}</key>
+
         <key name="restore_tab_btn">Restore</key>
         <key name="project_label">Project:</key>
         <key name="example_patch_loaded">Example patch loaded.</key>
+
+        <key name="workspace_projects_dialog_title">Workspace Projects</key>
+        <key name="rename_btn">Rename</key>
+        <key name="delete_btn">Delete</key>
+        <key name="mode_switch_warning_title">Mode Switched</key>
+        <key name="mode_switch_to_workspace_msg">You switched to Workspace mode, but a Project folder is currently selected. Please select a valid Workspace folder, or switch back to Project mode.</key>
+        <key name="mode_switch_to_project_msg">You switched from Workspace to Project mode. The current project path will be set to: {}. You can change the project folder if needed.</key>
+        <key name="select_workspace_folder_btn">Select Workspace Folder...</key>
+
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[Settings] Configuration loaded.</key>
@@ -67,6 +88,8 @@
         <key name="log_cleared">========================================</key>
         <key name="project_folder_missing_error">ERROR: Project folder (@ROOT) is not selected!</key>
         <key name="settings_saved_log">[OK] Settings saved successfully.</key>
+        <key name="project_settings_saved_log">[Settings] Project settings saved successfully.</key>
+        <key name="quick_settings_project_saved_log">[Settings] Project quick settings saved.</key>
         <key name="console_started_log">[Console] Shell started in: {}</key>
         <key name="console_error_pty_log">[Error] Failed to start PTY session: {}</key>
         <key name="console_terminated_log">[Console] Shell terminated.</key>
@@ -80,6 +103,14 @@
         <key name="ignore_settings_files_info">Filenames to ignore (one per line). Affects backup and packer.</key>
         <key name="ignore_settings_tags_label">Instruction:</key>
         <key name="ignore_settings_tags_info">You can use tags like [!backup], [!packer], [!git] to selectively ignore files for specific modules. Without tags, the file is ignored by all modules. Tags can be combined - if multiple tags are specified, the file will be ignored for all specified contexts. Examples: 'node_modules' - ignore everywhere; 'dist [!packer]' - ignore only for packer; 'build [!git] [!packer]' - ignore for git and packer, but include in backup.</key>
+
+        <key name="delete_project_warning_title">Delete Project</key>
+        <key name="delete_project_warning_msg">Are you sure you want to permanently delete the project '{}'? This action cannot be undone!</key>
+        <key name="rename_project_title">Rename Project</key>
+        <key name="rename_project_prompt">Enter new name for project '{}':</key>
+        <key name="add_workspace_project_title">Add new workspace project</key>
+        <key name="add_workspace_project_prompt">Enter name for new project in workspace folder:</key>
+
     </section>
     <section name="Tooltips">
         <key name="select_project_folder_tooltip">Open a dialog to select the main project folder.</key>
@@ -103,6 +134,12 @@
         <key name="settings_save_tooltip">Save all applied changes to the settings.toml file.</key>
         <key name="settings_close_tooltip">Close the settings panel and revert any unapplied changes.</key>
         <key name="doc_copied_tooltip">Copied!</key>
+
+        <key name="workspace_add_project_tooltip">Add new project to workspace</key>
+        <key name="workspace_edit_projects_tooltip">Edit workspace projects</key>
+        <key name="workspace_refresh_tooltip">Refresh workspace projects</key>
+        <key name="select_workspace_folder_tooltip">Select a workspace folder containing multiple projects.</key>
+
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Standalone)</key>

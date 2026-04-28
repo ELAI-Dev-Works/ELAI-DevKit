@@ -11,15 +11,15 @@
         <key name="packer_one_file_checkbox">1つのファイルに結合</key>
         <key name="packer_timestamp_checkbox">日時を追加</key>
         <key name="packer_split_checkbox">分割する</key>
-        
         <key name="packer_split_size_label">パーツのサイズ制限：</key>
-        
         <key name="patch_load_error_title">エラー</key>
         <key name="project_folder_missing_error">エラー: プロジェクトフォルダ (@ROOT) が選択されていません！</key>
         <key name="quick_settings_saved_log">[設定] クイック設定を保存しました。</key>
         <key name="quick_settings_reset_log">[設定] クイック設定がデフォルトにリセットされました（保存されていません）。</key>
         <key name="reset_quick_settings_btn">デフォルトに戻す</key>
         <key name="save_quick_settings_btn">設定を保存</key>
+        <key name="packer_category_label">カテゴリ：</key>
+        <key name="catalogs_title">カタログカテゴリ</key>
     </section>
     <section name="Logs">
         <key name="packer_log_placeholder">Project Text Packerのログがここに表示されます...</key>
@@ -45,9 +45,7 @@
         <key name="packer_one_file_tooltip">ディレクトリツリーとファイルの内容を1つの.txtファイルに統合します。</key>
         <key name="packer_timestamp_tooltip">ファイルの先頭にタイムスタンプを追加します。</key>
         <key name="packer_split_tooltip">サイズが999KBを超える場合、出力を自動的に複数のファイルに分割します。</key>
-        
         <key name="packer_split_size_tooltip">単一ファイルの最大サイズ（メガバイト単位）。</key>
-        
         <key name="packer_select_output_dir_tooltip">パックされたテキストファイルを保存するディレクトリを選択してください。</key>
         <key name="packer_start_tooltip">プロジェクトファイルのスキャン、ビルド、パッキングのプロセスを開始します。</key>
     </section>

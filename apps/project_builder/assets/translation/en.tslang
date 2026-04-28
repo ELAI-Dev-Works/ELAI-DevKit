@@ -21,6 +21,11 @@
         <key name="pb_qs_noconsole">Windowed Mode (Hide console)</key>
         <key name="pb_qs_target_os">Target OS:</key>
     </section>
+
+        <key name="reset_quick_settings_btn">Reset to Default</key>
+        <key name="apply_quick_settings_btn">Apply Settings</key>
+        <key name="save_quick_settings_btn">Save Global</key>
+
     <section name="Logs">
         <key name="pb_log_scanning">Scanning project directory...</key>
         <key name="pb_log_detect">Detected architecture: {}</key>

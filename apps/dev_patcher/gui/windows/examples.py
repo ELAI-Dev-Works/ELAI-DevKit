@@ -16,7 +16,11 @@ class ExamplesDialog(QDialog):
         self.examples_path = examples_path
         self.selected_content = None
         self.resize(600, 450)
-        
+
+        from systems.gui.utils.windows import center_window
+        if parent:
+            center_window(self, parent.main_window if hasattr(parent, 'main_window') else parent)
+
         layout = QVBoxLayout(self)
         
         info_label = QLabel(self.lang.get('examples_dialog_info') if self.lang else "Select an example to load:")

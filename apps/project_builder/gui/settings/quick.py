@@ -45,8 +45,17 @@ class ProjectBuilderQuickSettingsWidget(QWidget):
 
         button_layout = QHBoxLayout()
         button_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
-        self.save_button = QPushButton("Save Settings")
-        self.save_button.clicked.connect(self.save_quick_settings)
+        self.reset_button = QPushButton()
+        self.apply_button = QPushButton()
+        self.save_project_button = QPushButton()
+        self.save_button = QPushButton()
+        self.reset_button.clicked.connect(self.reset_quick_settings)
+        self.apply_button.clicked.connect(self.apply_quick_settings)
+        self.save_project_button.clicked.connect(lambda: self.save_quick_settings(is_project=True))
+        self.save_button.clicked.connect(lambda: self.save_quick_settings(is_project=False))
+        button_layout.addWidget(self.reset_button)
+        button_layout.addWidget(self.apply_button)
+        button_layout.addWidget(self.save_project_button)
         button_layout.addWidget(self.save_button)
         layout.addLayout(button_layout)
 
@@ -57,18 +66,45 @@ class ProjectBuilderQuickSettingsWidget(QWidget):
         self.noconsole_check.setChecked(opts.get('noconsole', False))
         self.os_combo.setCurrentText(opts.get('target_os', 'windows'))
 
-    def save_quick_settings(self):
-        settings_to_save = {
+    def reset_quick_settings(self):
+        opts = self.defaults.get('Options', {})
+        self.onefile_check.setChecked(opts.get('onefile', True))
+        self.noconsole_check.setChecked(opts.get('noconsole', False))
+        self.os_combo.setCurrentText(opts.get('target_os', 'windows'))
+
+    def _get_current_settings(self):
+        return {
             'Options': {
                 'onefile': self.onefile_check.isChecked(),
                 'noconsole': self.noconsole_check.isChecked(),
                 'target_os': self.os_combo.currentText()
             }
         }
-        self.settings_manager.update_setting(['apps', 'project_builder', 'quick'], settings_to_save)
-        self.settings_manager.save_settings_file()
+
+    def apply_quick_settings(self):
+        self.settings_manager.update_setting(['apps', 'project_builder', 'quick'], self._get_current_settings())
+
+    def project_folder_changed(self, root_path):
+        self.save_project_button.setEnabled(bool(root_path))
+
+    def save_quick_settings(self, is_project=False):
+        self.settings_manager.update_setting(['apps', 'project_builder', 'quick'], self._get_current_settings(), is_project)
+        if is_project:
+            self.settings_manager.save_project_settings()
+            if hasattr(self.context, 'main_window') and self.context.main_window:
+                self.context.main_window.patcher_log_output.appendPlainText(self.lang.get('quick_settings_project_saved_log', '[Settings] Project quick settings saved.'))
+        else:
+            self.settings_manager.save_settings_file()
+            if hasattr(self.context, 'main_window') and self.context.main_window:
+                self.context.main_window.patcher_log_output.appendPlainText(self.lang.get('quick_settings_saved_log', '[Settings] Quick settings saved.'))
 
     def retranslate_ui(self):
+        self.reset_button.setText(self.lang.get('reset_quick_settings_btn', 'Reset to Default'))
+        self.apply_button.setText(self.lang.get('apply_quick_settings_btn', 'Apply Settings'))
+        self.save_project_button.setText(self.lang.get('save_project_btn', 'Save for Current Project'))
+        if hasattr(self.context, 'main_window') and self.context.main_window:
+            self.save_project_button.setEnabled(bool(self.context.main_window.root_path))
+        self.save_button.setText(self.lang.get('save_quick_settings_btn', 'Save Global'))
         self.options_group.setTitle(self.lang.get('project_builder_quick_settings_title'))
         self.onefile_check.setText(self.lang.get('pb_qs_onefile'))
         self.noconsole_check.setText(self.lang.get('pb_qs_noconsole'))

@@ -156,12 +156,94 @@ class PatchWorkflowManager(QObject):
         command = commands[0]
         cmd_name, args, content = command
 
-        if cmd_name.upper() != "EDIT":
-            QMessageBox.warning(self.widget, "Error", "Selected command is not an EDIT command.")
+        supported_commands =["EDIT", "MANAGE", "REFACTOR"]
+        if cmd_name.upper() not in supported_commands:
+            QMessageBox.warning(self.widget, "Error", f"Selected command '{cmd_name}' is not supported for DIFF preview.")
+            return
+
+        if cmd_name.upper() == "MANAGE" and (not args or args[0] != "-write"):
+            QMessageBox.warning(self.widget, "Error", "Only MANAGE -write is supported for DIFF preview.")
             return
 
         if not target_path:
             QMessageBox.warning(self.widget, "Error", mw.lang.get('project_folder_missing_error'))
+            return
+
+        import os
+
+        if cmd_name.upper() == "MANAGE":
+            file_path = ' '.join(args[1:]).replace('@ROOT/', '').replace('@ROOT\\', '').replace('@ROOT', '').strip("'\"")
+            full_path = os.path.join(target_path, file_path)
+            original_content = ""
+            if os.path.exists(full_path):
+                try:
+                    with open(full_path, 'r', encoding='utf-8', errors='ignore') as f:
+                        original_content = f.read()
+                except Exception as e:
+                    QMessageBox.warning(self.widget, "Error", f"Failed to read file: {e}")
+                    return
+
+            new_content = content
+            from apps.dev_patcher.gui.windows.diff_viewer import DiffViewerDialog
+            dialog = DiffViewerDialog(self.widget, file_path, original_content, new_content)
+            dialog.exec()
+            return
+
+        if cmd_name.upper() == "REFACTOR":
+            from apps.dev_patcher.core.patch_checking import simulate_patch_and_get_vfs
+            from apps.dev_patcher.core.fs_handler import _LAZY_LOAD_MARKER
+            ignore_dirs, _ = mw.get_combined_ignore_lists()
+
+            try:
+                vfs = simulate_patch_and_get_vfs([command], target_path, experimental_flags, ignore_dirs)
+            except Exception as e:
+                QMessageBox.warning(self.widget, "Error", f"Failed to simulate REFACTOR command: {e}")
+                return
+
+            modified_files =[]
+            for f_path, f_content in vfs.files.items():
+                if f_content is not _LAZY_LOAD_MARKER:
+                    rel_path = os.path.relpath(f_path, vfs.root).replace('\\', '/')
+                    disk_path = os.path.join(target_path, rel_path)
+
+                    original_content_bytes = None
+                    if os.path.exists(disk_path):
+                        try:
+                            with open(disk_path, 'rb') as f:
+                                original_content_bytes = f.read()
+                        except: pass
+
+                    f_content_bytes = f_content if isinstance(f_content, bytes) else f_content.encode('utf-8', errors='ignore')
+
+                    if original_content_bytes is None or f_content_bytes != original_content_bytes:
+                        modified_files.append((f_path, f_content))
+
+            if not modified_files:
+                QMessageBox.information(self.widget, "Info", "No files were modified by this REFACTOR command.")
+                return
+
+            first_mod_path, new_content = modified_files[0]
+
+            if isinstance(new_content, bytes):
+                new_content = new_content.decode('utf-8', errors='ignore')
+
+            rel_path = os.path.relpath(first_mod_path, vfs.root).replace('\\', '/')
+            full_path = os.path.join(target_path, rel_path)
+
+            original_content = ""
+            if os.path.exists(full_path):
+                try:
+                    with open(full_path, 'r', encoding='utf-8', errors='ignore') as f:
+                        original_content = f.read()
+                except Exception as e:
+                    pass
+
+            if len(modified_files) > 1:
+                QMessageBox.information(self.widget, "Multiple Files Modified", f"This REFACTOR command modified {len(modified_files)} files. Showing diff for the first file: {rel_path}")
+
+            from apps.dev_patcher.gui.windows.diff_viewer import DiffViewerDialog
+            dialog = DiffViewerDialog(self.widget, rel_path, original_content, new_content)
+            dialog.exec()
             return
 
         from apps.dev_patcher.core.patcher import _normalize_edit_args
@@ -172,7 +254,6 @@ class PatchWorkflowManager(QObject):
 
         file_path = norm_args[1].replace('@ROOT/', '').replace('@ROOT\\', '').replace('@ROOT', '').strip("'\"")
 
-        import os
         full_path = os.path.join(target_path, file_path)
         if os.path.exists(full_path):
             try:

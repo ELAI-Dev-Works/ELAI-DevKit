@@ -20,7 +20,7 @@
         <key name="backup_method_all">Alle (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">Commit-Nachricht...</key>
         <key name="init_git_btn">Repository initialisieren</key>
-        <key name="save_quick_settings_btn">Einstellungen speichern</key>
+        <key name="save_quick_settings_btn">Global speichern</key>
         <key name="execute_patch_btn">Patch anwenden</key>
         <key name="check_patch_btn">Patch prüfen</key>
         <key name="check_code_btn">Code prüfen</key>
@@ -38,6 +38,11 @@
         <key name="restore_mode_changes">Nur Änderungen (Standard)</key>
         <key name="restore_mode_full">Vollständig ersetzen (Legacy)</key>
         <key name="restore_btn">Wiederherstellen</key>
+        <key name="apply_quick_settings_btn">Einstellungen anwenden</key>
+        <key name="test_file_select_title">Startdatei auswählen</key>
+        <key name="test_file_select_label">Wählen Sie eine Datei für den Testlauf:</key>
+        <key name="test_console_title">Testlauf-Konsole</key>
+        <key name="stop_test_run_btn">Testlauf stoppen</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Einstellungen] Schnelleinstellungen gespeichert.</key>
@@ -66,10 +71,9 @@
         <key name="patch_command_error_log">FEHLER: {}</key>
         <key name="patch_command_success_log">ERFOLG: {}</key>
         <key name="command_executed_default_msg">Befehl ausgeführt.</key>
-        <key name="test_run_dependency_error">Testlauf erfordert, dass die Erweiterung 'Project Launcher' aktiviert ist.</key>
-        <key name="test_run_invalid_file_error">Die ausgewählte Launch-Datei ist ungültig oder existiert nicht.</key>
+        <key name="test_run_invalid_file_error">Die ausgewählte Startdatei ist ungültig oder existiert nicht.</key>
         <key name="test_run_start_log">--- TESTLAUF GESTARTET ---</key>
-        <key name="test_run_finished_log">--- TESTLAUF BEENDET ---</key>
+        <key name="test_run_finished_log">--- TESTLAUF ABGESCHLOSSEN ---</key>
         <key name="test_run_simulating_log">[Testlauf] Simuliere Patch zur Vorbereitung der Umgebung...</key>
         <key name="test_run_launching_log">[Testlauf] Starte gepatchtes Projekt im isolierten Modus...</key>
         <key name="simulation_start_log">--- ERWEITERTE SIMULATION GESTARTET ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_final_warn">[ABSCHLUSS] WARNUNG! Konflikte oder Fehler erkannt. Der Patch lässt sich möglicherweise nicht vollständig anwenden.</key>
         <key name="simulation_success">ERFOLG</key>
         <key name="simulation_fail">FEHLER</key>
+        <key name="quick_settings_applied_log">[Einstellungen] Schnelleinstellungen angewendet.</key>
+        <key name="test_run_env_required_error">Das Projekt wird mit dem PROJECT-Befehl initialisiert oder benötigt eine Umgebung (.venv, node_modules), die jedoch noch nicht initialisiert wurde. Bitte wenden Sie den Patch an, um die Umgebung zu initialisieren, bevor Sie einen Testlauf durchführen.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Standalone)</key>
@@ -149,7 +155,7 @@
         <key name="restore_success_msg">Wiederherstellung erfolgreich abgeschlossen!</key>
         <key name="restore_error_msg">Projekt konnte nicht wiederhergestellt werden: {}</key>
         <key name="ai_report_dialog_title">KI-Korrekturbericht</key>
-        <key name="ai_report_dialog_info">Im Patch wurden problematische Befehle gefunden. Diese werden übersprungen, und der Patch kann sicher angewendet werden. Ein Korrekturbericht für die KI wurde erstellt. Kopieren Sie ihn zusammen mit dem neuen Projektkontext und senden Sie ihn an die KI, damit sie den korrekten Befehl schreiben kann.</key>
+        <key name="ai_report_dialog_info">Im Patch wurden problematische Befehle gefunden. Sie werden übersprungen, und der Patch kann sicher angewendet werden. Ein Korrekturbericht für die KI wurde erstellt. Kopieren Sie ihn zusammen mit dem neuen Projektkontext und senden Sie ihn an die KI, damit sie den korrekten Befehl schreiben kann.</key>
         <key name="ai_report_task">Beheben Sie nur das/die angegebene(n) Problem(e).</key>
         <key name="simulation_success_msg_new">Die Simulation ist abgeschlossen. Keine Fehler gefunden. Alle Befehle können sicher ausgeführt werden.</key>
     </section>

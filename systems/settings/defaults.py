@@ -12,7 +12,7 @@ theme = "sleek"
 
 [core.ui]
 always_show_tooltips = false
-
+font_size = 10
 
 [core.extensions]
 dev_patcher_enabled = true

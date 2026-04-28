@@ -30,3 +30,17 @@ class Command(BaseCommand):
         except Exception as e:
             import traceback
             return False, f"Error while running GIT command: {e}\n{traceback.format_exc()}"
+
+
+    def validate(self, full_block: str, command_name: str, args: list, content: str, lang) -> list:
+        issues =[]
+        if not args:
+            header = f"<@|{command_name}"
+            issues.append({
+                "original": full_block,
+                "corrected": full_block.replace(header, f"{header} status"),
+                "description": "GIT command requires arguments (e.g. clone, init, pull).",
+                "type": "syntax"
+            })
+        return issues
+

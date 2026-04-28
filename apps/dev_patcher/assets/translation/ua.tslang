@@ -20,7 +20,7 @@
         <key name="backup_method_all">Все (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">Повідомлення коміту...</key>
         <key name="init_git_btn">Ініціалізувати репозиторій</key>
-        <key name="save_quick_settings_btn">Зберегти налаштування</key>
+        <key name="save_quick_settings_btn">Зберегти глобально</key>
         <key name="execute_patch_btn">Застосувати патч</key>
         <key name="check_patch_btn">Перевірити патч</key>
         <key name="check_code_btn">Перевірити код</key>
@@ -38,6 +38,11 @@
         <key name="restore_mode_changes">Тільки зміни (стандартний)</key>
         <key name="restore_mode_full">Повна заміна (застарілий)</key>
         <key name="restore_btn">Відновити</key>
+        <key name="apply_quick_settings_btn">Застосувати налаштування</key>
+        <key name="test_file_select_title">Вибрати файл запуску</key>
+        <key name="test_file_select_label">Виберіть файл для тестового запуску:</key>
+        <key name="test_console_title">Консоль Запуску Тестів</key>
+        <key name="stop_test_run_btn">Зупинити Запуск Тестів</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Налаштування] Швидкі налаштування збережено.</key>
@@ -66,10 +71,9 @@
         <key name="patch_command_error_log">ПОМИЛКА: {}</key>
         <key name="patch_command_success_log">УСПІШНО: {}</key>
         <key name="command_executed_default_msg">Команду виконано.</key>
-        <key name="test_run_dependency_error">Тестовий запуск вимагає увімкнення розширення 'Project Launcher'.</key>
-        <key name="test_run_invalid_file_error">Вибраний файл запуску недійсний або не існує.</key>
-        <key name="test_run_start_log">--- ПОЧАТОК ТЕСТОВОГО ЗАПУСКУ ---</key>
-        <key name="test_run_finished_log">--- ТЕСТОВИЙ ЗАПУСК ЗАВЕРШЕНО ---</key>
+        <key name="test_run_invalid_file_error">Обраний файл запуску недійсний або не існує.</key>
+        <key name="test_run_start_log">--- ЗАПУСК ТЕСТІВ ---</key>
+        <key name="test_run_finished_log">--- ТЕСТИ ЗАВЕРШЕНО ---</key>
         <key name="test_run_simulating_log">[Тестовий запуск] Симуляція патча для підготовки середовища...</key>
         <key name="test_run_launching_log">[Тестовий запуск] Запуск пропатченого проєкту в ізольованому режимі...</key>
         <key name="simulation_start_log">--- ПОЧАТОК РОЗШИРЕНОЇ СИМУЛЯЦІЇ ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_final_warn">[ФІНАЛ] УВАГА! Виявлено конфлікти або помилки. Патч може застосуватися не повністю.</key>
         <key name="simulation_success">УСПІХ</key>
         <key name="simulation_fail">ПОМИЛКА</key>
+        <key name="quick_settings_applied_log">[Налаштування] Швидкі налаштування застосовано.</key>
+        <key name="test_run_env_required_error">Проект ініціалізується командою PROJECT або потребує середовища (.venv, node_modules), яке ще не ініціалізовано. Будь ласка, застосуйте патч для ініціалізації середовища перед запуском тестового прогону.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Автономний)</key>
@@ -149,7 +155,7 @@
         <key name="restore_success_msg">Відновлення успішно завершено!</key>
         <key name="restore_error_msg">Не вдалося відновити проєкт: {}</key>
         <key name="ai_report_dialog_title">Звіт про виправлення ШІ</key>
-        <key name="ai_report_dialog_info">У патчі знайдено проблемні команди. Вони будуть пропущені, і патч можна безпечно застосувати. Складено звіт про виправлення для ШІ. Скопіюйте його разом із новим контекстом проєкту та надішліть ШІ, щоб він міг написати правильну команду.</key>
+        <key name="ai_report_dialog_info">У патчі знайдено проблемні команди. Вони будуть пропущені, і патч можна безпечно застосувати. Складено звіт про виправлення для ШІ. Скопіюйте його разом з новим контекстом проекту та надішліть ШІ, щоб він міг написати правильну команду.</key>
         <key name="ai_report_task">Виправте лише вказану(-і) проблему(-и).</key>
         <key name="simulation_success_msg_new">Симуляція завершена. Помилок не знайдено. Усі команди можна безпечно виконати.</key>
     </section>

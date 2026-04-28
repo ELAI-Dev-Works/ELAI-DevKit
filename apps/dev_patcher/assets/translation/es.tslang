@@ -20,7 +20,7 @@
         <key name="backup_method_all">Todos (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">Mensaje de commit...</key>
         <key name="init_git_btn">Inicializar Repositorio</key>
-        <key name="save_quick_settings_btn">Guardar Configuración</key>
+        <key name="save_quick_settings_btn">Guardar globalmente</key>
         <key name="execute_patch_btn">Aplicar Parche</key>
         <key name="check_patch_btn">Verificar Parche</key>
         <key name="check_code_btn">Verificar Código</key>
@@ -38,9 +38,14 @@
         <key name="restore_mode_changes">Solo Cambios (Estándar)</key>
         <key name="restore_mode_full">Reemplazo Completo (Heredado)</key>
         <key name="restore_btn">Restaurar</key>
+        <key name="apply_quick_settings_btn">Aplicar configuración</key>
+        <key name="test_file_select_title">Seleccionar archivo de inicio</key>
+        <key name="test_file_select_label">Elija un archivo para ejecutar la prueba:</key>
+        <key name="test_console_title">Consola de Ejecución de Pruebas</key>
+        <key name="stop_test_run_btn">Detener Ejecución de Pruebas</key>
     </section>
     <section name="Logs">
-        <key name="quick_settings_saved_log">[Configuración] Configuración rápida guardada.</key>
+        <key name="quick_settings_saved_log">[Configuración] Ajustes rápidos guardados.</key>
         <key name="quick_settings_reset_log">[Configuración] La configuración rápida se ha restablecido a los valores predeterminados (no guardada).</key>
         <key name="patch_loaded_log">Parche cargado desde archivo: {}</key>
         <key name="patch_empty_error">ERROR: La ventana de parche está vacía.</key>
@@ -64,12 +69,11 @@
         <key name="patch_command_error_log">ERROR: {}</key>
         <key name="patch_command_success_log">ÉXITO: {}</key>
         <key name="command_executed_default_msg">Comando ejecutado.</key>
-        <key name="test_run_dependency_error">La Ejecución de Prueba requiere que la extensión 'Project Launcher' esté habilitada.</key>
-        <key name="test_run_invalid_file_error">El archivo de lanzamiento seleccionado es inválido o no existe.</key>
-        <key name="test_run_start_log">--- INICIANDO EJECUCIÓN DE PRUEBA ---</key>
-        <key name="test_run_finished_log">--- EJECUCIÓN DE PRUEBA FINALIZADA ---</key>
+        <key name="test_run_invalid_file_error">El archivo de inicio seleccionado no es válido o no existe.</key>
+        <key name="test_run_start_log">--- INICIANDO EJECUCIÓN DE PRUEBAS ---</key>
+        <key name="test_run_finished_log">--- EJECUCIÓN DE PRUEBAS FINALIZADA ---</key>
         <key name="test_run_simulating_log">[Ejecución de Prueba] Simulando parche para preparar el entorno...</key>
-        <key name="test_run_launching_log">[Ejecución de Prueba] Lanzando proyecto parcheado en modo aislado...</key>
+        <key name="test_run_launching_log">[Ejecución de Prueba] Iniciando proyecto parcheado en modo aislado...</key>
         <key name="simulation_start_log">--- INICIANDO SIMULACIÓN AVANZADA ---</key>
         <key name="simulation_end_log">--- SIMULACIÓN AVANZADA FINALIZADA ---</key>
         <key name="code_check_start_log">--- INICIANDO VERIFICACIÓN DE CÓDIGO ---</key>
@@ -109,6 +113,8 @@
         <key name="simulation_fail">FALLO</key>
         <key name="update_complete_title">Actualización Completa</key>
         <key name="update_complete_msg">La aplicación se ha actualizado exitosamente. Haz clic en Aceptar para reiniciar.</key>
+        <key name="quick_settings_applied_log">[Configuración] Configuración rápida aplicada.</key>
+        <key name="test_run_env_required_error">El proyecto se inicializa con el comando PROJECT o requiere un entorno (.venv, node_modules) que aún no está inicializado. Por favor, aplique el parche para inicializar el entorno antes de ejecutar una prueba.</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher (Independiente)</key>
@@ -148,7 +154,7 @@
         <key name="restore_confirm_msg">¿Estás seguro de que quieres restaurar el proyecto desde esta copia de seguridad/commit? Los cambios no guardados se perderán.</key>
         <key name="restore_success_msg">¡Restauración completada exitosamente!</key>
         <key name="restore_error_msg">Error al restaurar el proyecto: {}</key>
-        <key name="ai_report_dialog_title">Informe de Corrección de IA</key>
+        <key name="ai_report_dialog_title">Informe de corrección de IA</key>
         <key name="ai_report_dialog_info">Se encontraron comandos problemáticos en el parche. Se omitirán y el parche se puede aplicar de forma segura. Se ha compilado un informe de corrección para la IA. Cópielo junto con el nuevo contexto del proyecto y envíelo a la IA para que pueda escribir el comando correcto.</key>
         <key name="ai_report_task">Corrija solo el/los problema(s) especificado(s).</key>
         <key name="simulation_success_msg_new">La simulación está completa. No se encontraron errores. Todos los comandos se pueden ejecutar de forma segura.</key>

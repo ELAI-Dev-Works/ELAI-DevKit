@@ -230,6 +230,12 @@ class ProjectTextPackerApp:
             QMessageBox.warning(self.widget, self.lang.get('patch_load_error_title'), self.lang.get('packer_output_dir_not_selected_error'))
             return
 
+        category_path = self.widget.category_combo.currentData()
+        if category_path:
+            output_dir = os.path.normpath(os.path.join(output_dir, category_path))
+
+        os.makedirs(output_dir, exist_ok=True)
+
         self.project_name = os.path.basename(os.path.normpath(self.root_path))
         self.output_dir = output_dir # Store for worker
 
@@ -259,7 +265,7 @@ class ProjectTextPackerApp:
             ignore_dirs, ignore_files = self.context.main_window.get_combined_ignore_lists()
         else:
             # Fallback for standalone mode if context structure differs
-            g_dirs, g_files, _ = self.settings_manager.get_ignore_lists()
+            g_dirs, g_files, _, _, _ = self.settings_manager.get_ignore_lists()
             ignore_dirs, ignore_files = g_dirs, g_files
 
         self.ignore_handler = IgnoreHandler(ignore_dirs, ignore_files, context='packer')

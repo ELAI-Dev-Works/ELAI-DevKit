@@ -30,6 +30,12 @@ class IgnoreSettingsWindow(QDialog):
         self.temp_dirs_edit, self.temp_files_edit = self._create_editor_layout(self.temp_tab)
         self.tabs.addTab(self.temp_tab, self.lang.get('ignore_tab_temp'))
 
+        # --- Tab 3: Current Project ---
+        self.project_tab = QWidget()
+        self.project_dirs_edit, self.project_files_edit = self._create_editor_layout(self.project_tab)
+        self.tabs.addTab(self.project_tab, self.lang.get('ignore_tab_project', 'Current Project List'))
+        self.project_tab.setEnabled(bool(self.main_window.root_path))
+
         # --- Bottom Options ---
         self.gitignore_checkbox = QCheckBox(self.lang.get('ignore_use_gitignore'))
         self.gitignore_checkbox.addGUITooltip(self.lang.get('ignore_use_gitignore_tooltip'))
@@ -74,22 +80,25 @@ class IgnoreSettingsWindow(QDialog):
         return dirs_edit, files_edit
 
     def _load_data(self):
-        # Global
-        g_dirs, g_files, use_git = self.settings_manager.get_ignore_lists()
+        # Global & Project
+        g_dirs, g_files, use_git, p_dirs, p_files = self.settings_manager.get_ignore_lists()
         self.global_dirs_edit.setPlainText('\n'.join(g_dirs))
         self.global_files_edit.setPlainText('\n'.join(g_files))
         self.gitignore_checkbox.setChecked(use_git)
 
+        self.project_dirs_edit.setPlainText('\n'.join(p_dirs))
+        self.project_files_edit.setPlainText('\n'.join(p_files))
+
         # Temporary (from MainWindow)
-        t_dirs = getattr(self.main_window, 'temp_ignore_dirs', [])
-        t_files = getattr(self.main_window, 'temp_ignore_files', [])
+        t_dirs = getattr(self.main_window, 'temp_ignore_dirs',[])
+        t_files = getattr(self.main_window, 'temp_ignore_files',[])
         self.temp_dirs_edit.setPlainText('\n'.join(t_dirs))
         self.temp_files_edit.setPlainText('\n'.join(t_files))
 
     def _save_and_accept(self):
         # 1. Save Global
-        g_dirs = [l.strip() for l in self.global_dirs_edit.toPlainText().splitlines() if l.strip()]
-        g_files = [l.strip() for l in self.global_files_edit.toPlainText().splitlines() if l.strip()]
+        g_dirs =[l.strip() for l in self.global_dirs_edit.toPlainText().splitlines() if l.strip()]
+        g_files =[l.strip() for l in self.global_files_edit.toPlainText().splitlines() if l.strip()]
 
         settings_to_save = {
             'dirs': g_dirs,
@@ -99,7 +108,15 @@ class IgnoreSettingsWindow(QDialog):
         self.settings_manager.update_setting(['core', 'ignore'], settings_to_save)
         self.settings_manager.save_settings_file()
 
-        # 2. Save Temporary (to MainWindow memory)
+        # 2. Save Project
+        if self.main_window.root_path:
+            p_dirs =[l.strip() for l in self.project_dirs_edit.toPlainText().splitlines() if l.strip()]
+            p_files =[l.strip() for l in self.project_files_edit.toPlainText().splitlines() if l.strip()]
+            p_settings = {'dirs': p_dirs, 'files': p_files}
+            self.settings_manager.update_setting(['core', 'project_ignore'], p_settings, is_project=True)
+            self.settings_manager.save_project_settings()
+
+        # 3. Save Temporary (to MainWindow memory)
         t_dirs = [l.strip() for l in self.temp_dirs_edit.toPlainText().splitlines() if l.strip()]
         t_files = [l.strip() for l in self.temp_files_edit.toPlainText().splitlines() if l.strip()]
 
