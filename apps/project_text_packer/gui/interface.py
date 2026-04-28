@@ -1,7 +1,7 @@
 import os
 from PySide6.QtCore import Qt
 import json
-from systems.gui.icons import svg_to_icon, get_svg_content, ICON_CATEGORIES
+from systems.gui.icons import IconManager
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QFileDialog, QMessageBox, QFrame, QFormLayout,
@@ -96,7 +96,7 @@ class ProjectTextPackerInterface(QWidget):
 
         p = self.main_window.theme_manager.current_palette if hasattr(self.main_window, 'theme_manager') else {}
         icon_color = p.get("icon_default", "#e0e0e0")
-        self.edit_categories_btn.setIcon(svg_to_icon(get_svg_content(ICON_CATEGORIES), icon_color))
+        self.edit_categories_btn.setIcon(IconManager.get_icon("project_text_packer.categories", icon_color))
 
         self.select_output_button.setText(self.lang.get('packer_select_output_dir_btn')).addGUITooltip(self.lang.get('packer_select_output_dir_tooltip'))
         self.start_button.setText(self.lang.get('packer_start_btn')).addGUITooltip(self.lang.get('packer_start_tooltip'))

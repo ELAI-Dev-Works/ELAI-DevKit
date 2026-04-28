@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QWidget, QLabel, QVBoxLayout, QFrame, QApplicatio
                                QPushButton, QCheckBox, QLineEdit, QAbstractButton,
                                QSpinBox, QDoubleSpinBox)
 from PySide6.QtGui import QCursor
-from systems.gui.icons import svg_to_icon, get_svg_content, ICON_TOOLTIP
+from systems.gui.icons import IconManager
 
 def _addGUITooltip_method(self, tooltip_text):
     """
@@ -29,7 +29,7 @@ def _addGUITooltip_method(self, tooltip_text):
         if "padding-right:" not in new_style:
             new_style += " padding-right: 22px;"
             style_needs_update = True
-    elif isinstance(self, (QLineEdit, QSpinBox, QDoubleSpinBox)):
+    elif isinstance(self, (QLineEdit, QSpinBox, QDoubleSpinBox, QLabel)):
         if "padding-right:" not in new_style:
             new_style += " padding-right: 22px;"
             style_needs_update = True
@@ -100,7 +100,7 @@ class TooltipIcon(QLabel):
         self.popup = CustomTooltipWindow()
         self.raise_()
         try:
-            pixmap = svg_to_icon(get_svg_content(ICON_TOOLTIP), color).pixmap(16, 16)
+            pixmap = IconManager.get_icon("core.tooltip", color).pixmap(16, 16)
             self.setPixmap(pixmap)
         except:
             self.setText("?")
@@ -155,8 +155,8 @@ class TooltipEnhancer(QObject):
             # Place INSIDE spin boxes, but away from the arrows
             x_local = rect.width() - icon_size - 20
             y_local = (rect.height() - icon_size) // 2
-        elif isinstance(widget, (QCheckBox, QLineEdit)):
-            # Place INSIDE for checkboxes and line edits
+        elif isinstance(widget, (QCheckBox, QLineEdit, QLabel)):
+            # Place INSIDE for checkboxes, line edits, and labels
             x_local = rect.width() - icon_size - 3
             y_local = (rect.height() - icon_size) // 2
         elif widget.metaObject().className() == 'LauncherButton':
@@ -180,7 +180,7 @@ class TooltipEnhancer(QObject):
         for icon in self.tracked_widgets.values():
             if icon:
                 try:
-                    pixmap = svg_to_icon(get_svg_content(ICON_TOOLTIP), self.icon_color).pixmap(16, 16)
+                    pixmap = IconManager.get_icon("core.tooltip", self.icon_color).pixmap(16, 16)
                     icon.setPixmap(pixmap)
                     icon.popup._update_style(bg_color, text_color, self.icon_color)
                 except:

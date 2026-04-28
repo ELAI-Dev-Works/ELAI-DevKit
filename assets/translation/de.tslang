@@ -76,6 +76,10 @@
         <key name="mode_switch_to_workspace_msg">Sie haben in den Workspace-Modus gewechselt, aber es ist derzeit ein Projektordner ausgewählt. Bitte wählen Sie einen gültigen Workspace-Ordner aus oder wechseln Sie zurück in den Projektmodus.</key>
         <key name="mode_switch_to_project_msg">Sie haben vom Workspace- in den Projektmodus gewechselt. Der aktuelle Projektpfad wird auf {} gesetzt. Sie können den Projektordner bei Bedarf ändern.</key>
         <key name="select_workspace_folder_btn">Arbeitsbereichsordner auswählen...</key>
+        <key name="mode_label">Modus:</key>
+        <key name="mode_label_tooltip">Zwischen Projekt- und Arbeitsbereich-Modus wechseln.</key>
+        <key name="project_list_label_tooltip">Wählen Sie ein Projekt aus dem aktuellen Arbeitsbereich aus.</key>
+        <key name="project_list_label">Projektliste:</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[Einstellungen] Konfiguration geladen.</key>
@@ -90,6 +94,7 @@
         <key name="console_restarting_log">[Konsole] Shell wird neu gestartet...</key>
         <key name="project_settings_saved_log">[Einstellungen] Projekteinstellungen erfolgreich gespeichert.</key>
         <key name="quick_settings_project_saved_log">[Einstellungen] Projekt-Schnelleinstellungen gespeichert.</key>
+        <key name="project_target_name">Projekt</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">Neustart bestätigen</key>

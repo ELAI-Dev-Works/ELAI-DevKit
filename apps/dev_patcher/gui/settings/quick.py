@@ -1,13 +1,14 @@
 import tomllib
 import os
 import subprocess
-from systems.gui.icons import svg_to_icon, get_svg_content, ICON_REFRESH
+from systems.gui.icons import IconManager
 from PySide6.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout, QGroupBox, QCheckBox,
     QFormLayout, QSpinBox, QLabel, QPushButton, QSpacerItem, QSizePolicy,
-    QComboBox, QLineEdit, QMessageBox
+    QComboBox, QLineEdit, QMessageBox, QDialog, QTextEdit, QDialogButtonBox
 )
 from apps.dev_patcher.core.restore import get_available_backups, restore_backup
+from apps.dev_patcher.core.backup import create_backup as core_create_backup, create_git_backup
 from apps.dev_patcher.gui.windows.restore_backup import RestoreBackupDialog
 
 default_settings = """
@@ -50,6 +51,7 @@ class DevPatcherQuickSettingsWidget(QWidget):
         backup_layout.addWidget(self.backup_method_label)
         backup_layout.addWidget(self.backup_method_combo)
         backup_layout.addWidget(self.backup_commit_msg)
+        backup_layout.addWidget(self.backup_msg_maximize_btn)
         backup_layout.addWidget(self.init_git_btn)
         backup_layout.addStretch()
         layout.addLayout(backup_layout)
@@ -66,6 +68,7 @@ class DevPatcherQuickSettingsWidget(QWidget):
         restore_layout = QVBoxLayout(self.restore_group)
         restore_h_layout = QHBoxLayout()
         restore_h_layout.addWidget(self.restore_refresh_btn)
+        restore_h_layout.addWidget(self.manual_backup_btn)
         restore_h_layout.addWidget(self.restore_combo, 1)
         restore_h_layout.addWidget(self.restore_mode_combo)
         restore_h_layout.addWidget(self.restore_btn)
@@ -74,6 +77,8 @@ class DevPatcherQuickSettingsWidget(QWidget):
         layout.addWidget(self.restore_group)
 
         self.restore_refresh_btn.clicked.connect(self._refresh_restore_list)
+        self.manual_backup_btn.clicked.connect(self._manual_backup)
+        self.backup_msg_maximize_btn.clicked.connect(self._maximize_commit_msg)
         self.restore_btn.clicked.connect(self._on_restore_clicked)
         self.restore_all_btn.clicked.connect(self._open_restore_modal)
 
@@ -119,7 +124,13 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.backup_commit_msg = QLineEdit()
         self.init_git_btn = QPushButton()
 
+        self.backup_msg_maximize_btn = QPushButton()
+        self.backup_msg_maximize_btn.setFixedSize(24, 24)
+        self.backup_msg_maximize_btn.setStyleSheet("padding: 2px;")
+        self.backup_msg_maximize_btn.setProperty("no_custom_tooltip", True)
+
         self.restore_group = QGroupBox()
+        self.manual_backup_btn = QPushButton()
         self.restore_refresh_btn = QPushButton()
         self.restore_refresh_btn.setFixedSize(32, 32)
         self.restore_refresh_btn.setStyleSheet("padding: 5px;")
@@ -132,19 +143,23 @@ class DevPatcherQuickSettingsWidget(QWidget):
 
     def _update_git_ui_state(self):
         method = self.backup_method_combo.currentData()
-        if method in ['git', 'all']:
+        if method in['git', 'all']:
             if self.main_window.root_path:
                 if os.path.exists(os.path.join(self.main_window.root_path, '.git')):
                     self.backup_commit_msg.setVisible(True)
+                    self.backup_msg_maximize_btn.setVisible(True)
                     self.init_git_btn.setVisible(False)
                 else:
                     self.backup_commit_msg.setVisible(False)
+                    self.backup_msg_maximize_btn.setVisible(False)
                     self.init_git_btn.setVisible(True)
             else:
                 self.backup_commit_msg.setVisible(True)
+                self.backup_msg_maximize_btn.setVisible(True)
                 self.init_git_btn.setVisible(False)
         else:
             self.backup_commit_msg.setVisible(False)
+            self.backup_msg_maximize_btn.setVisible(False)
             self.init_git_btn.setVisible(False)
 
     def _init_git_repo(self):
@@ -155,6 +170,68 @@ class DevPatcherQuickSettingsWidget(QWidget):
                 self.main_window.patcher_log_output.appendPlainText(self.lang.get('git_init_success_log'))
             except Exception as e:
                 QMessageBox.critical(self, self.lang.get('patch_load_error_title'), self.lang.get('git_init_failed_msg').format(e))
+
+
+    def _manual_backup(self):
+        if not self.main_window.root_path:
+            QMessageBox.warning(self, self.lang.get('patch_load_error_title', 'Error'), self.lang.get('project_folder_missing_error', 'Project folder not selected.'))
+            return
+
+        method = self.backup_method_combo.currentData()
+        if method in['none', None]:
+            QMessageBox.information(self, "Backup", "Backup method is set to None.")
+            return
+
+        ignore_dirs, ignore_files = [],[]
+        if hasattr(self.main_window, 'get_combined_ignore_lists'):
+            ignore_dirs, ignore_files = self.main_window.get_combined_ignore_lists()
+
+        commit_msg = self.backup_commit_msg.text() or "Manual backup"
+        target_name = self.lang.get('project_target_name', 'project')
+
+        success_any = False
+        if method in ['zip', 'all']:
+            self.main_window.patcher_log_output.appendPlainText(self.lang.get('backup_creation_log', 'Creating backup of the {}...').format(target_name))
+            succ, msg = core_create_backup(self.main_window.root_path, ignore_dirs, ignore_files)
+            if succ:
+                self.main_window.patcher_log_output.appendPlainText(self.lang.get('backup_success_log', 'Backup successfully created: {}').format(msg))
+                success_any = True
+            else:
+                QMessageBox.critical(self, self.lang.get('patch_load_error_title', 'Error'), self.lang.get('backup_failed_error_msg', 'Failed to create backup of the {}: {}').format(target_name, msg))
+
+        if method in ['git', 'all']:
+            self.main_window.patcher_log_output.appendPlainText(self.lang.get('backup_git_creation_log', 'Creating git commit for {}...').format(target_name))
+            succ, msg = create_git_backup(self.main_window.root_path, commit_msg, ignore_dirs, ignore_files)
+            if succ:
+                self.main_window.patcher_log_output.appendPlainText(self.lang.get('backup_git_success_log', 'Git commit successfully created: {}').format(msg))
+                success_any = True
+            else:
+                QMessageBox.critical(self, self.lang.get('patch_load_error_title', 'Error'), self.lang.get('backup_git_failed_error_msg', 'Failed to create git commit for {}: {}').format(target_name, msg))
+
+        if success_any:
+            self._refresh_restore_list()
+
+    def _maximize_commit_msg(self):
+        from systems.gui.utils.windows import center_window
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self.lang.get('commit_msg_dialog_title', 'Commit Message'))
+        dialog.resize(400, 300)
+        layout = QVBoxLayout(dialog)
+
+        text_edit = QTextEdit()
+        text_edit.setPlainText(self.backup_commit_msg.text())
+        layout.addWidget(text_edit)
+
+        btn_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        btn_box.accepted.connect(dialog.accept)
+        btn_box.rejected.connect(dialog.reject)
+        layout.addWidget(btn_box)
+
+        center_window(dialog, self.main_window)
+
+        if dialog.exec():
+            text = text_edit.toPlainText().replace('\n', ' ').strip()
+            self.backup_commit_msg.setText(text)
 
     def _refresh_restore_list(self):
         self.restore_combo.clear()
@@ -292,6 +369,13 @@ class DevPatcherQuickSettingsWidget(QWidget):
         self.backup_commit_msg.setPlaceholderText(self.lang.get('backup_commit_msg_placeholder'))
         self.init_git_btn.setText(self.lang.get('init_git_btn'))
 
+        self.manual_backup_btn.setText(self.lang.get('manual_backup_btn', 'Manual')).addGUITooltip(self.lang.get('manual_backup_tooltip', 'Manually trigger a backup based on current settings.'))
+        self.backup_msg_maximize_btn.setToolTip(self.lang.get('commit_msg_maximize_tooltip', 'Edit long commit message'))
+
+        p = self.main_window.theme_manager.current_palette if hasattr(self.main_window, 'theme_manager') else {}
+        icon_color = p.get("icon_default", "#e0e0e0")
+        self.backup_msg_maximize_btn.setIcon(IconManager.get_icon("core.maximize", icon_color))
+
         # Update backup method combo texts while preserving selection
         current_data = self.backup_method_combo.currentData()
         self.backup_method_combo.blockSignals(True)
@@ -311,7 +395,7 @@ class DevPatcherQuickSettingsWidget(QWidget):
 
         p = self.main_window.theme_manager.current_palette if hasattr(self.main_window, 'theme_manager') else {}
         icon_color = p.get("icon_default", "#e0e0e0")
-        self.restore_refresh_btn.setIcon(svg_to_icon(get_svg_content(ICON_REFRESH), icon_color))
+        self.restore_refresh_btn.setIcon(IconManager.get_icon("dev_patcher.refresh", icon_color))
 
         self.restore_refresh_btn.setToolTip(self.lang.get('restore_refresh_tooltip', 'Refresh backup list'))
         self.restore_btn.setText(self.lang.get('restore_btn', 'Restore'))

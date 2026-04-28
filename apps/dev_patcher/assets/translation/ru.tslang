@@ -43,6 +43,9 @@
         <key name="test_file_select_label">Выберите файл для тестового запуска:</key>
         <key name="test_console_title">Консоль Запуска Тестов</key>
         <key name="stop_test_run_btn">Остановить Запуск Тестов</key>
+        <key name="manual_backup_btn">Вручную</key>
+        <key name="commit_msg_dialog_title">Сообщение коммита</key>
+        <key name="project_target_name">проект</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Настройки] Быстрые настройки сохранены.</key>
@@ -172,5 +175,7 @@
         <key name="scope_matching_tooltip">Ограничивает поиск блока ---old--- в пределах более крупного блока ---scope---, решая проблему дубликатов.</key>
         <key name="similarity_threshold_tooltip">Устанавливает минимальный требуемый процент сходства (1-100) для успешного нечёткого совпадения.</key>
         <key name="restore_refresh_tooltip">Обновить список доступных резервных копий.</key>
+        <key name="manual_backup_tooltip">Запустить резервное копирование вручную на основе текущих настроек.</key>
+        <key name="commit_msg_maximize_tooltip">Редактировать длинное сообщение коммита</key>
     </section>
 </tslang>

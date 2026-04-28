@@ -76,6 +76,10 @@
         <key name="mode_switch_to_workspace_msg">您已切换到工作区模式,但当前选择的是项目文件夹。请选择有效的工作区文件夹,或切换回项目模式。</key>
         <key name="mode_switch_to_project_msg">您已从工作区模式切换到项目模式。当前项目路径将设置为:{}。如有需要,您可以更改项目文件夹。</key>
         <key name="select_workspace_folder_btn">选择工作区文件夹...</key>
+        <key name="mode_label">模式：</key>
+        <key name="mode_label_tooltip">在项目模式和工作区模式之间切换。</key>
+        <key name="project_list_label_tooltip">从当前工作区中选择一个项目。</key>
+        <key name="project_list_label">项目列表:</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[设置] 配置已加载。</key>
@@ -90,6 +94,7 @@
         <key name="console_restarting_log">[控制台] 正在重启 Shell...</key>
         <key name="project_settings_saved_log">[设置] 项目设置已成功保存。</key>
         <key name="quick_settings_project_saved_log">[设置] 项目快速设置已保存。</key>
+        <key name="project_target_name">项目</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">确认重启</key>

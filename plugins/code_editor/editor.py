@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QPlainTextEdit, QTextEdit, QPushButton, QFrame, QV
 from PySide6.QtCore import Qt, QRect, QVariantAnimation, QEasingCurve, QSize, Signal, QPoint
 from PySide6.QtGui import QPainter, QColor, QPalette, QTextFormat, QFont, QTextCursor
 from .number_line import LineNumberArea
-from systems.gui.icons import svg_to_icon, get_svg_content, ICON_WRENCH
+from systems.gui.icons import IconManager
 
 class CodeEditor(QPlainTextEdit):
     """
@@ -38,7 +38,7 @@ class CodeEditor(QPlainTextEdit):
         # Settings Toggle Button (Inside panel, always visible)
         self.settings_btn = QPushButton(self.settings_panel)
         self.settings_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.settings_btn.setIcon(svg_to_icon(get_svg_content(ICON_WRENCH), "#858585"))
+        self.settings_btn.setIcon(IconManager.get_icon("core.wrench", "#858585"))
         self.settings_btn.setIconSize(QSize(18, 18))
         self.settings_btn.setStyleSheet("""
             QPushButton { border: none; background: transparent; border-radius: 4px; margin: 4px; }
@@ -191,7 +191,7 @@ class CodeEditor(QPlainTextEdit):
     def update_theme_colors(self, palette):
         if hasattr(self, 'settings_btn'):
             icon_color = palette.get("icon_dim", "#858585")
-            self.settings_btn.setIcon(svg_to_icon(get_svg_content(ICON_WRENCH), icon_color))
+            self.settings_btn.setIcon(IconManager.get_icon("core.wrench", icon_color))
 
     def toggle_settings_panel(self):
         self.is_panel_open = not self.is_panel_open

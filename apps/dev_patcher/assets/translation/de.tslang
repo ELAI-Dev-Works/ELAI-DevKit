@@ -43,6 +43,9 @@
         <key name="test_file_select_label">Wählen Sie eine Datei für den Testlauf:</key>
         <key name="test_console_title">Testlauf-Konsole</key>
         <key name="stop_test_run_btn">Testlauf stoppen</key>
+        <key name="manual_backup_btn">Manuell</key>
+        <key name="commit_msg_dialog_title">Commit-Nachricht</key>
+        <key name="project_target_name">Projekt</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Einstellungen] Schnelleinstellungen gespeichert.</key>
@@ -172,5 +175,7 @@
         <key name="scope_matching_tooltip">Beschränkt die Suche nach dem ---old--- Block innerhalb eines größeren ---scope--- Blocks und löst das Problem mit Duplikaten.</key>
         <key name="similarity_threshold_tooltip">Legt den minimal erforderlichen Ähnlichkeitsprozentsatz (1-100) fest, damit eine unscharfe Übereinstimmung als erfolgreich gilt.</key>
         <key name="restore_refresh_tooltip">Liste der verfügbaren Sicherungen aktualisieren.</key>
+        <key name="manual_backup_tooltip">Backup basierend auf aktuellen Einstellungen manuell auslösen.</key>
+        <key name="commit_msg_maximize_tooltip">Lange Commit-Nachricht bearbeiten</key>
     </section>
 </tslang>

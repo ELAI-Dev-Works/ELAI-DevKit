@@ -67,6 +67,12 @@
         <key name="mode_project">Project</key>
         <key name="mode_workspace">Workspace</key>
         <key name="workspace_label">Workspace: {}</key>
+        <key name="mode_label">Mode:</key>
+        
+        <key name="mode_label_tooltip">Switch between Project and Workspace modes.</key>
+        <key name="project_list_label_tooltip">Select a project from the current workspace.</key>
+        
+        <key name="project_list_label">Project List:</key>
 
         <key name="restore_tab_btn">Restore</key>
         <key name="project_label">Project:</key>
@@ -90,6 +96,7 @@
         <key name="settings_saved_log">[OK] Settings saved successfully.</key>
         <key name="project_settings_saved_log">[Settings] Project settings saved successfully.</key>
         <key name="quick_settings_project_saved_log">[Settings] Project quick settings saved.</key>
+        <key name="project_target_name">project</key>
         <key name="console_started_log">[Console] Shell started in: {}</key>
         <key name="console_error_pty_log">[Error] Failed to start PTY session: {}</key>
         <key name="console_terminated_log">[Console] Shell terminated.</key>

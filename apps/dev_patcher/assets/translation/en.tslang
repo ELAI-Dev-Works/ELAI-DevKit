@@ -20,7 +20,9 @@
         <key name="backup_method_all">All (.zip + Git)</key>
         <key name="backup_commit_msg_placeholder">Commit message...</key>
         <key name="init_git_btn">Initialize Repository</key>
-        <key name="save_quick_settings_btn">Save Settings</key>
+        <key name="manual_backup_btn">Manual</key>
+        <key name="commit_msg_dialog_title">Commit Message</key>
+        <key name="project_target_name">project</key>
         <key name="save_quick_settings_btn">Save Global</key>
         <key name="apply_quick_settings_btn">Apply Settings</key>
         <key name="execute_patch_btn">Apply Patch</key>
@@ -173,5 +175,9 @@
         <key name="scope_matching_tooltip">Restricts the search for the ---old--- block within a larger ---scope--- block, solving the duplicate issue.</key>
         <key name="similarity_threshold_tooltip">Sets the minimum required similarity percentage (1-100) for a fuzzy match to be considered successful.</key>
         <key name="restore_refresh_tooltip">Refresh the list of available backups.</key>
+
+        <key name="manual_backup_tooltip">Manually trigger a backup based on current settings.</key>
+        <key name="commit_msg_maximize_tooltip">Edit long commit message</key>
+
     </section>
 </tslang>

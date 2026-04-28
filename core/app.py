@@ -1,7 +1,7 @@
 import sys
 import os
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, Qt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -9,16 +9,23 @@ from core.gui.main import MainWindow
 from core.gui.launch import LaunchWindow
 from systems.error_handler import setup_error_handling
 from systems.gui.utils.tooltip_enhancer import setup_tooltip_enhancer
-from systems.gui.icons import svg_to_icon, get_svg_content, ICON_LOGO
+from systems.gui.icons import IconManager
 
 def main():
     """
     Main function to run the GUI application or command-line handlers.
     """
+
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+    os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
+    QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+
     app = QApplication(sys.argv)
     setup_error_handling()
     setup_tooltip_enhancer(app)
-    app.setWindowIcon(svg_to_icon(get_svg_content(ICON_LOGO)))
+    app_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    IconManager.init_paths(app_root)
+    app.setWindowIcon(IconManager.get_icon("core.ELAI-DevKit_logo"))
 
     # 1. Start with LaunchWindow (it initializes the context)
     launcher = LaunchWindow()

@@ -220,30 +220,31 @@ class ProjectTextPackerApp:
         if hasattr(self.context, 'main_window') and self.context.main_window:
              self.root_path = self.context.main_window.root_path
 
-        output_dir = self.widget.output_dir_input.currentText().strip()
+        base_output_dir = self.widget.output_dir_input.currentText().strip()
 
         if not self.root_path:
             QMessageBox.warning(self.widget, self.lang.get('patch_load_error_title'), self.lang.get('project_folder_missing_error'))
             return
 
-        if not output_dir:
+        if not base_output_dir:
             QMessageBox.warning(self.widget, self.lang.get('patch_load_error_title'), self.lang.get('packer_output_dir_not_selected_error'))
             return
 
+        # Save the selected base path to history before modification
+        self.widget.save_recent_path(base_output_dir)
+
+        final_output_dir = base_output_dir
         category_path = self.widget.category_combo.currentData()
         if category_path:
-            output_dir = os.path.normpath(os.path.join(output_dir, category_path))
+            final_output_dir = os.path.normpath(os.path.join(base_output_dir, category_path))
 
-        os.makedirs(output_dir, exist_ok=True)
+        os.makedirs(final_output_dir, exist_ok=True)
 
         self.project_name = os.path.basename(os.path.normpath(self.root_path))
-        self.output_dir = output_dir # Store for worker
-
-        # Save path to history
-        self.widget.save_recent_path(self.output_dir)
+        self.output_dir = final_output_dir # Store the final, combined path for the worker
 
         # Basic overwrite check (rough)
-        base_path = os.path.join(output_dir, f"{self.project_name}_project_pack")
+        base_path = os.path.join(self.output_dir, f"{self.project_name}_project_pack")
         if os.path.exists(f"{base_path}.txt") or os.path.exists(f"{base_path}_part1.txt"):
             reply = QMessageBox.question(
                 self.widget, self.lang.get('packer_overwrite_title'), self.lang.get('packer_overwrite_message'),

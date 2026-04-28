@@ -90,7 +90,20 @@ class TranslationValidator:
             pass
 
     def check_duplicates(self):
-        print("  Checking for garbage/duplicate keys (present in other langs but not in en.tslang for the same uid and section)...")
+        print("  Checking for garbage/duplicate keys...")
+
+        # Check for duplicates within each en.tslang file
+        for uid, langs_data in self.tslang_keys.items():
+            en_sections = langs_data.get('en', {})
+            for section, keys_dict in en_sections.items():
+                key_counts = {}
+                for key in keys_dict.keys():
+                    if key not in key_counts:
+                        key_counts[key] = 0
+                    key_counts[key] += 1
+                for key, count in key_counts.items():
+                    if count > 1:
+                        self.garbage_keys_report.add(f"DUPLICATE in en.tslang: [{uid}] [{section}] {key}")
 
         for uid, langs_data in self.tslang_keys.items():
             en_sections = langs_data.get('en', {})
@@ -106,7 +119,7 @@ class TranslationValidator:
             print("    [PASS] No garbage/duplicate keys found.")
         else:
             self.has_failed = True
-            print(f"    [FAIL] {len(self.garbage_keys_report)} garbage/duplicate keys found in non-English files.")
+            print(f"    [FAIL] {len(self.garbage_keys_report)} garbage/duplicate keys found.")
 
     def check_missing_keys(self):
         print("  Checking for keys used in code but not defined in en.tslang...")

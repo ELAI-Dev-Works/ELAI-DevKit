@@ -76,6 +76,10 @@
         <key name="mode_switch_to_workspace_msg">Has cambiado al modo Workspace, pero actualmente hay una carpeta de Proyecto seleccionada. Por favor, selecciona una carpeta de Workspace válida o vuelve al modo Proyecto.</key>
         <key name="mode_switch_to_project_msg">Has cambiado del modo Workspace al modo Proyecto. La ruta del proyecto actual se establecerá en: {}. Puedes cambiar la carpeta del proyecto si es necesario.</key>
         <key name="select_workspace_folder_btn">Seleccionar carpeta de espacio de trabajo...</key>
+        <key name="mode_label">Modo:</key>
+        <key name="mode_label_tooltip">Cambiar entre los modos Proyecto y Espacio de trabajo.</key>
+        <key name="project_list_label_tooltip">Seleccione un proyecto del espacio de trabajo actual.</key>
+        <key name="project_list_label">Lista de proyectos:</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[Configuración] Configuración cargada.</key>
@@ -90,6 +94,7 @@
         <key name="console_restarting_log">[Consola] Reiniciando shell...</key>
         <key name="project_settings_saved_log">[Configuración] Configuración del proyecto guardada correctamente.</key>
         <key name="quick_settings_project_saved_log">[Configuración] Configuración rápida del proyecto guardada.</key>
+        <key name="project_target_name">proyecto</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">Confirmar reinicio</key>

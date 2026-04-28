@@ -2,8 +2,8 @@ from PySide6.QtWidgets import (
     QMainWindow, QPushButton, QVBoxLayout, QHBoxLayout,
     QWidget, QApplication, QFileDialog, QLabel,
         QMessageBox,
-        QFrame, QStackedLayout, QTabWidget, QTabBar, QSizePolicy
-    )
+            QFrame, QStackedLayout, QTabWidget, QTabBar, QSizePolicy, QGridLayout
+        )
 from PySide6.QtCore import Qt
 import os
 
@@ -19,8 +19,10 @@ from systems.gui.themes.manager import ThemeManager
 from systems.settings.gui.main import SettingsPanel
 from systems.gui.widgets.quick_settings_panel import QuickSettingsPanel
 from systems.project.bookmarks import BookmarksDialog
-from PySide6.QtWidgets import QComboBox
-from systems.gui.icons import ICON_HOME, ICON_MAIN_SETTINGS, ICON_EXTENSIONS, ICON_DETACH, ICON_BOOKMARKS, ICON_RESTART, ICON_PLUS, ICON_EDIT, ICON_REFRESH, svg_to_icon, get_svg_content
+from PySide6.QtWidgets import QComboBox, QStylePainter, QStyleOptionComboBox, QStyle
+from PySide6.QtWidgets import QToolTip
+from PySide6.QtGui import QCursor
+from systems.gui.icons import IconManager
 
 # Special code that will signal launch.py that a restart is needed
 RESTART_CODE = 100
@@ -42,6 +44,112 @@ class DetachedTabWindow(QMainWindow):
             self.main_window.attach_tab(self.name)
         event.accept()
 
+
+
+class PathDisplayWidget(QFrame):
+    def __init__(self, main_window, parent=None):
+        super().__init__(parent)
+        self.main_window = main_window
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        self.setMinimumWidth(100)
+
+        self._layout = QHBoxLayout(self)
+        self._layout.setContentsMargins(0, 0, 0, 0)
+        self._layout.setSpacing(5)
+
+        self.full_label = QLabel()
+        self.full_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.full_label.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+        self.full_label.setMinimumWidth(1)
+
+        self.root_btn = QPushButton("@ROOT")
+        self.root_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.root_btn.setProperty("no_custom_tooltip", True)
+        self.root_btn.clicked.connect(self._copy_root)
+
+        self._btn_style = (
+            "QPushButton {{ border: 1px solid #555; background: transparent; "
+            "border-radius: 4px; padding: 2px 6px; font-weight: bold; color: {color}; }}\n"
+            "QPushButton:hover {{ background: rgba(128, 128, 128, 0.2); }}"
+        )
+
+        self._layout.addWidget(self.full_label, 1)
+        self._layout.addWidget(self.root_btn)
+
+        self._full_text = ""
+        self.root_btn.hide()
+
+    def setText(self, text):
+        self._full_text = text
+        self._check_fit()
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._check_fit()
+
+    def _check_fit(self):
+        r_path = getattr(self.main_window, 'root_path', '')
+        ws_path = getattr(self.main_window, 'workspace_path', '')
+
+        has_path = bool(r_path) or bool(ws_path)
+
+        if not has_path:
+            self.full_label.setText(self._full_text)
+            self.full_label.setToolTip("")
+            self.root_btn.hide()
+            return
+
+        self.root_btn.show()
+
+        path_to_show = r_path if r_path else ws_path
+        self.root_btn.setToolTip(path_to_show)
+
+        fm = self.full_label.fontMetrics()
+        available_width = self.width() - self.root_btn.width() - self._layout.spacing() - 5
+
+        import re
+        plain_text = re.sub(r'<[^>]+>', '', self._full_text)
+
+        if fm.horizontalAdvance(plain_text) > available_width and available_width > 0:
+            elided = fm.elidedText(plain_text, Qt.TextElideMode.ElideRight, available_width)
+            self.full_label.setText(elided)
+            self.full_label.setToolTip(plain_text)
+        else:
+            self.full_label.setText(self._full_text)
+            self.full_label.setToolTip("")
+
+    def _copy_root(self):
+        path = getattr(self.main_window, 'root_path', '') or getattr(self.main_window, 'workspace_path', '')
+        if path:
+            QApplication.clipboard().setText(path)
+            msg = self.main_window.lang.get('doc_copied_tooltip', 'Copied!')
+            QToolTip.showText(QCursor.pos(), f"{msg}\n{path}", self.root_btn)
+
+    def setStyleSheet(self, style):
+        color = "#29b8db"
+        import re
+        m = re.search(r'color:\s*(#[0-9a-fA-F]+)', style)
+        if m:
+            color = m.group(1)
+
+        btn_style = self._btn_style.format(color=color)
+        self.root_btn.setStyleSheet(btn_style)
+        self.full_label.setStyleSheet(style)
+
+
+class WorkspaceProjectComboBox(QComboBox):
+    def paintEvent(self, event):
+        painter = QStylePainter(self)
+        opt = QStyleOptionComboBox()
+        self.initStyleOption(opt)
+
+        text = opt.currentText
+        max_len = 16
+        if len(text) > max_len:
+            opt.currentText = text[:max_len-3] + "..."
+
+        painter.drawComplexControl(QStyle.ComplexControl.CC_ComboBox, opt)
+        painter.drawControl(QStyle.ControlElement.CE_ComboBoxLabel, opt)
 
 class MainWindow(QMainWindow):
     def __init__(self, run_gui=True, context=None, on_home=None):
@@ -156,32 +264,73 @@ class MainWindow(QMainWindow):
         self.stacked_layout.setCurrentIndex(0)
     
     def _create_top_bar(self):
-        """Creates the top bar with project selection and global buttons."""
+        """Creates the top bar with project selection and global buttons structured in distinct blocks."""
         top_bar_layout = QHBoxLayout()
-        project_panel = QFrame()
-        project_panel.setFrameShape(QFrame.Shape.StyledPanel)
-        project_layout = QHBoxLayout(project_panel)
+        top_bar_layout.setContentsMargins(0, 0, 0, 5)
+        top_bar_layout.setSpacing(10)
+
+        block_style = """
+            QFrame#TopBarBlock {
+                border: 1px solid rgba(128, 128, 128, 0.3);
+                border-radius: 6px;
+                background-color: rgba(128, 128, 128, 0.05);
+            }
+        """
+
+        # --- LEFT BLOCK ---
+        left_block = QFrame()
+        left_block.setObjectName("TopBarBlock")
+        left_block.setStyleSheet(block_style)
+        left_layout = QVBoxLayout(left_block)
+        left_layout.setContentsMargins(6, 6, 6, 6)
+        left_layout.setSpacing(6)
 
         self.bookmarks_button = QPushButton()
-        self.bookmarks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.bookmarks_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.bookmarks_button.clicked.connect(self.open_bookmarks)
-        self.bookmarks_button.setProperty("no_custom_tooltip", True)
 
+        self.edit_ignore_list_button = QPushButton()
+        self.edit_ignore_list_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.edit_ignore_list_button.clicked.connect(self.open_ignore_settings)
+        self.edit_ignore_list_button.setEnabled(False)
+
+        left_layout.addWidget(self.bookmarks_button)
+        left_layout.addWidget(self.edit_ignore_list_button)
+
+        # --- CENTER BLOCK ---
+        center_block = QFrame()
+        center_block.setObjectName("TopBarBlock")
+        center_block.setStyleSheet(block_style)
+        center_layout = QVBoxLayout(center_block)
+        center_layout.setContentsMargins(6, 6, 6, 6)
+        center_layout.setSpacing(6)
+
+        center_row1 = QHBoxLayout()
+
+        mode_vlayout = QVBoxLayout()
+        mode_vlayout.setSpacing(2)
+        self.mode_label = QLabel(self.lang.get('mode_label', 'Mode:'))
+        self.mode_label.setStyleSheet("color: #888; font-size: 10px; font-weight: bold;")
         self.mode_combo = QComboBox()
         self.mode_combo.addItems(["Project", "Workspace"])
         self.mode_combo.currentTextChanged.connect(self.on_mode_changed)
-
-        self.select_folder_button = QPushButton()
-        self.select_folder_button.clicked.connect(self.select_project_folder)
+        mode_vlayout.addWidget(self.mode_label)
+        mode_vlayout.addWidget(self.mode_combo)
+        mode_vlayout.setAlignment(Qt.AlignmentFlag.AlignBottom)
 
         self.workspace_controls_widget = QWidget()
         ws_layout = QHBoxLayout(self.workspace_controls_widget)
         ws_layout.setContentsMargins(0, 0, 0, 0)
+        ws_layout.setSpacing(6)
 
-        self.workspace_project_combo = QComboBox()
-        self.workspace_project_combo.setEditable(True)
+        ws_combo_vlayout = QVBoxLayout()
+        ws_combo_vlayout.setSpacing(2)
+        self.ws_project_list_label = QLabel(self.lang.get('project_list_label', 'Project List:'))
+        self.ws_project_list_label.setStyleSheet("color: #888; font-size: 10px; font-weight: bold;")
+        self.workspace_project_combo = WorkspaceProjectComboBox()
         self.workspace_project_combo.currentTextChanged.connect(self.on_workspace_project_changed)
-        self.workspace_project_combo.lineEdit().returnPressed.connect(self._create_workspace_project)
+        ws_combo_vlayout.addWidget(self.ws_project_list_label)
+        ws_combo_vlayout.addWidget(self.workspace_project_combo)
 
         self.ws_add_btn = QPushButton()
         self.ws_add_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -198,53 +347,76 @@ class MainWindow(QMainWindow):
         self.ws_refresh_btn.setProperty("no_custom_tooltip", True)
         self.ws_refresh_btn.clicked.connect(self._scan_workspace)
 
-        ws_layout.addWidget(self.workspace_project_combo, stretch=1)
-        ws_layout.addWidget(self.ws_add_btn)
-        ws_layout.addWidget(self.ws_edit_btn)
-        ws_layout.addWidget(self.ws_refresh_btn)
+        ws_layout.addLayout(ws_combo_vlayout, stretch=1)
+        ws_layout.addWidget(self.ws_add_btn, alignment=Qt.AlignmentFlag.AlignBottom)
+        ws_layout.addWidget(self.ws_edit_btn, alignment=Qt.AlignmentFlag.AlignBottom)
+        ws_layout.addWidget(self.ws_refresh_btn, alignment=Qt.AlignmentFlag.AlignBottom)
 
         self.workspace_controls_widget.setVisible(False)
 
-        self.path_label = QLabel()
+        center_row1.addLayout(mode_vlayout)
+        center_row1.addWidget(self.workspace_controls_widget, stretch=1)
+        center_row1.addStretch()
 
-        self.edit_ignore_list_button = QPushButton()
-        self.edit_ignore_list_button.clicked.connect(self.open_ignore_settings)
-        self.edit_ignore_list_button.setEnabled(False)
+        center_row2 = QHBoxLayout()
+        self.select_folder_button = QPushButton()
+        self.select_folder_button.clicked.connect(self.select_project_folder)
 
-        project_layout.addWidget(self.bookmarks_button)
-        project_layout.addWidget(self.mode_combo)
-        project_layout.addWidget(self.select_folder_button)
-        project_layout.addWidget(self.workspace_controls_widget, stretch=1)
-        project_layout.addWidget(self.path_label, stretch=2)
-        project_layout.addWidget(self.edit_ignore_list_button)
+        self.path_label = PathDisplayWidget(self)
 
-        top_bar_layout.addWidget(project_panel, stretch=1)
-    
-        self.ext_button = QPushButton()
-        self.ext_button.setIcon(svg_to_icon(get_svg_content(ICON_EXTENSIONS)))
-        self.ext_button.clicked.connect(self.open_extensions)
-        self.ext_button.addGUITooltip(self.lang.get('launcher_ext_tooltip'))
+        center_row2.addWidget(self.select_folder_button)
+        center_row2.addWidget(self.path_label, stretch=1)
 
-        self.settings_button = QPushButton()
-        self.settings_button.setIcon(svg_to_icon(get_svg_content(ICON_MAIN_SETTINGS)))
-        self.settings_button.clicked.connect(self.toggle_settings_panel)
-        self.restart_button = QPushButton()
-        self.restart_button.clicked.connect(self.restart_application)
-        self.settings_button.addGUITooltip(self.lang.get('settings_tooltip'))
-        self.restart_button.addGUITooltip(self.lang.get('restart_tooltip'))
-    
-        # Home Button (if launched via Launcher)
+        center_layout.addLayout(center_row1)
+        center_layout.addLayout(center_row2)
+
+        # --- RIGHT BLOCK ---
+        right_block = QFrame()
+        right_block.setObjectName("TopBarBlock")
+        right_block.setStyleSheet(block_style)
+        right_layout = QGridLayout(right_block)
+        right_layout.setContentsMargins(6, 6, 6, 6)
+        right_layout.setSpacing(6)
+
         if self.on_home_callback:
             self.home_button = QPushButton()
-            self.home_button.setIcon(svg_to_icon(get_svg_content(ICON_HOME), "#cccccc"))
-            self.home_button.setProperty("no_custom_tooltip", True)
+            self.home_button.setIcon(IconManager.get_icon("core.home", "#cccccc"))
             self.home_button.setToolTip(self.lang.get('home_tooltip'))
             self.home_button.clicked.connect(self.go_home)
-            top_bar_layout.addWidget(self.home_button)
-    
-        top_bar_layout.addWidget(self.ext_button)
-        top_bar_layout.addWidget(self.settings_button)
-        top_bar_layout.addWidget(self.restart_button)
+            self.home_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            right_layout.addWidget(self.home_button, 0, 0)
+
+        self.restart_button = QPushButton()
+        self.restart_button.clicked.connect(self.restart_application)
+        self.restart_button.addGUITooltip(self.lang.get('restart_tooltip'))
+        self.restart_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+
+        if self.on_home_callback:
+            right_layout.addWidget(self.restart_button, 0, 1)
+        else:
+            right_layout.addWidget(self.restart_button, 0, 0, 1, 2)
+
+        self.ext_button = QPushButton()
+        self.ext_button.setIcon(IconManager.get_icon("core.extensions"))
+        self.ext_button.clicked.connect(self.open_extensions)
+        self.ext_button.addGUITooltip(self.lang.get('launcher_ext_tooltip'))
+        self.ext_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        right_layout.addWidget(self.ext_button, 1, 0)
+
+        self.settings_button = QPushButton()
+        self.settings_button.setIcon(IconManager.get_icon("core.main_settings"))
+        self.settings_button.clicked.connect(self.toggle_settings_panel)
+        self.settings_button.addGUITooltip(self.lang.get('settings_tooltip'))
+        self.settings_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        right_layout.addWidget(self.settings_button, 1, 1)
+
+        right_layout.setColumnStretch(0, 1)
+        right_layout.setColumnStretch(1, 1)
+
+        top_bar_layout.addWidget(left_block)
+        top_bar_layout.addWidget(center_block, stretch=1)
+        top_bar_layout.addWidget(right_block)
+
         return top_bar_layout
         
     def go_home(self):
@@ -257,27 +429,6 @@ class MainWindow(QMainWindow):
         dialog = ExtensionsWindow(self)
         dialog.exec()
 
-    def _create_workspace_project(self):
-        if self.current_mode != 'Workspace' or not self.workspace_path:
-            return
-        new_project_name = self.workspace_project_combo.currentText().strip()
-        if not new_project_name:
-            return
-
-        new_path = os.path.join(self.workspace_path, new_project_name)
-        if not os.path.exists(new_path):
-            try:
-                os.makedirs(new_path, exist_ok=True)
-                self._scan_workspace()
-                idx = self.workspace_project_combo.findText(new_project_name)
-                if idx >= 0:
-                    self.workspace_project_combo.setCurrentIndex(idx)
-            except Exception as e:
-                QMessageBox.warning(self, "Error", f"Could not create project folder: {e}")
-        else:
-            idx = self.workspace_project_combo.findText(new_project_name)
-            if idx >= 0:
-                self.workspace_project_combo.setCurrentIndex(idx)
 
     def _add_workspace_project(self):
         if self.current_mode != 'Workspace' or not self.workspace_path:
@@ -413,7 +564,7 @@ class MainWindow(QMainWindow):
     
     def _add_detach_button(self, index, name):
         btn = QPushButton()
-        btn.setIcon(svg_to_icon(get_svg_content(ICON_DETACH), "#888"))
+        btn.setIcon(IconManager.get_icon("core.detach", "#888"))
         btn.setProperty("no_custom_tooltip", True)
         btn.setToolTip(self.lang.get('detach_tab_tooltip'))
         btn.setFixedSize(24, 24)
@@ -574,14 +725,18 @@ class MainWindow(QMainWindow):
 
         self.mode_combo.setItemText(0, self.lang.get('mode_project', 'Project'))
         self.mode_combo.setItemText(1, self.lang.get('mode_workspace', 'Workspace'))
-        self.bookmarks_button.setToolTip(self.lang.get('bookmarks_title', 'Project Bookmarks'))
+        if hasattr(self, 'mode_label'):
+            self.mode_label.setText(self.lang.get('mode_label', 'Mode:')).addGUITooltip(self.lang.get('mode_label_tooltip', 'Switch between Project and Workspace modes.'))
+        if hasattr(self, 'ws_project_list_label'):
+            self.ws_project_list_label.setText(self.lang.get('project_list_label', 'Project List:')).addGUITooltip(self.lang.get('project_list_label_tooltip', 'Select a project from the current workspace.'))
+        self.bookmarks_button.addGUITooltip(self.lang.get('bookmarks_title', 'Project Bookmarks'))
 
         self.ws_add_btn.setToolTip(self.lang.get('workspace_add_project_tooltip', 'Add new project to workspace'))
         self.ws_edit_btn.setToolTip(self.lang.get('workspace_edit_projects_tooltip', 'Edit workspace projects'))
         self.ws_refresh_btn.setToolTip(self.lang.get('workspace_refresh_tooltip', 'Refresh workspace projects'))
-        self.ws_add_btn.setIcon(svg_to_icon(get_svg_content(ICON_PLUS), icon_def))
-        self.ws_edit_btn.setIcon(svg_to_icon(get_svg_content(ICON_EDIT), icon_def))
-        self.ws_refresh_btn.setIcon(svg_to_icon(get_svg_content(ICON_REFRESH), icon_def))
+        self.ws_add_btn.setIcon(IconManager.get_icon("core.plus", icon_def))
+        self.ws_edit_btn.setIcon(IconManager.get_icon("core.edit", icon_def))
+        self.ws_refresh_btn.setIcon(IconManager.get_icon("dev_patcher.refresh", icon_def))
 
         self.edit_ignore_list_button.setText(self.lang.get('edit_ignore_list_btn'))
         if self.edit_ignore_list_button.isEnabled():
@@ -606,7 +761,7 @@ class MainWindow(QMainWindow):
             # Update detach button tooltip and icon color
             btn = self.tab_widget.tabBar().tabButton(i, QTabBar.ButtonPosition.RightSide)
             if btn:
-                btn.setIcon(svg_to_icon(get_svg_content(ICON_DETACH), icon_dim))
+                btn.setIcon(IconManager.get_icon("core.detach", icon_dim))
                 btn.setToolTip(self.lang.get('detach_tab_tooltip'))
 
         if hasattr(self, 'detached_tabs'):
@@ -626,20 +781,20 @@ class MainWindow(QMainWindow):
                 if restore_btn:
                     restore_btn.setText(self.lang.get('restore_tab_btn'))
 
-        self.bookmarks_button.setIcon(svg_to_icon(get_svg_content(ICON_BOOKMARKS), icon_def))
-        self.ext_button.setIcon(svg_to_icon(get_svg_content(ICON_EXTENSIONS), icon_def))
+        self.bookmarks_button.setIcon(IconManager.get_icon("core.bookmarks", icon_def))
+        self.ext_button.setIcon(IconManager.get_icon("core.extensions", icon_def))
         self.ext_button.setText(self.lang.get('launcher_btn_ext')).addGUITooltip(self.lang.get('launcher_ext_tooltip'))
 
-        self.settings_button.setIcon(svg_to_icon(get_svg_content(ICON_MAIN_SETTINGS), icon_def))
+        self.settings_button.setIcon(IconManager.get_icon("core.main_settings", icon_def))
         self.settings_button.setText(self.lang.get('settings_btn')).addGUITooltip(self.lang.get('settings_tooltip'))
 
-        self.restart_button.setIcon(svg_to_icon(get_svg_content(ICON_RESTART), icon_def))
+        self.restart_button.setIcon(IconManager.get_icon("core.restart", icon_def))
         self.restart_button.setText(self.lang.get('restart_btn')).addGUITooltip(self.lang.get('restart_tooltip'))
         self.edit_ignore_list_button.setText(self.lang.get('edit_ignore_list_btn'))
 
         if hasattr(self, 'home_button'):
-            self.home_button.setIcon(svg_to_icon(get_svg_content(ICON_HOME), icon_dim))
-            self.home_button.setToolTip(self.lang.get('home_tooltip'))
+            self.home_button.setIcon(IconManager.get_icon("core.home", icon_dim))
+            self.home_button.addGUITooltip(self.lang.get('home_tooltip'))
 
         self.patcher_log_output.setPlaceholderText(self.lang.get('patcher_log_placeholder'))
         self.patcher_log_output.setToolTip(self.lang.get('patcher_log_placeholder'))
@@ -651,6 +806,21 @@ class MainWindow(QMainWindow):
         
         if hasattr(self, 'settings_panel'):
             self.settings_panel.retranslate_ui()
+
+        # Equalize button widths in the right block
+        buttons = [self.restart_button, self.ext_button, self.settings_button]
+        if hasattr(self, 'home_button'):
+            buttons.append(self.home_button)
+
+        max_width = 0
+        for btn in buttons:
+            # Force a polish to get an updated sizeHint after text/icon changes
+            btn.style().polish(btn)
+            max_width = max(max_width, btn.sizeHint().width())
+
+        for btn in buttons:
+            btn.setMinimumWidth(max_width)
+
 
     def load_all_settings(self):
         # The new system loads all settings at once.
@@ -804,9 +974,20 @@ class MainWindow(QMainWindow):
         self.workspace_project_combo.blockSignals(True)
         self.workspace_project_combo.clear()
         if self.workspace_path and os.path.isdir(self.workspace_path):
-            dirs =[d for d in os.listdir(self.workspace_path) 
+            dirs =[d for d in os.listdir(self.workspace_path)
                     if os.path.isdir(os.path.join(self.workspace_path, d)) and not d.startswith('.')]
-            self.workspace_project_combo.addItems(sorted(dirs))
+            sorted_dirs = sorted(dirs)
+            self.workspace_project_combo.addItems(sorted_dirs)
+
+            max_width = 0
+            fm = self.workspace_project_combo.fontMetrics()
+            for d in sorted_dirs:
+                width = fm.horizontalAdvance(d)
+                if width > max_width: max_width = width
+
+            # Add padding to prevent horizontal scrollbar where unnecessary 
+            self.workspace_project_combo.view().setMinimumWidth(max_width + 40)
+
         self.workspace_project_combo.blockSignals(False)
 
     def open_bookmarks(self):

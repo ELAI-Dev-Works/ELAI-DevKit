@@ -43,6 +43,9 @@
         <key name="test_file_select_label">テスト実行するファイルを選択してください:</key>
         <key name="test_console_title">テスト実行コンソール</key>
         <key name="stop_test_run_btn">テスト実行を停止</key>
+        <key name="manual_backup_btn">手動</key>
+        <key name="commit_msg_dialog_title">コミットメッセージ</key>
+        <key name="project_target_name">プロジェクト</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[設定] クイック設定を保存しました。</key>
@@ -169,6 +172,8 @@
         <key name="scope_matching_tooltip">より大きな---scope---ブロック内で---old---ブロックの検索を制限し、重複の問題を解決します。</key>
         <key name="similarity_threshold_tooltip">ファジーマッチが成功とみなされるために必要な最小類似度パーセンテージ(1-100)を設定します。</key>
         <key name="restore_refresh_tooltip">利用可能なバックアップのリストを更新します。</key>
+        <key name="manual_backup_tooltip">現在の設定に基づいてバックアップを手動で実行します。</key>
+        <key name="commit_msg_maximize_tooltip">長いコミットメッセージを編集</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">Dev Patcher（スタンドアロン）</key>

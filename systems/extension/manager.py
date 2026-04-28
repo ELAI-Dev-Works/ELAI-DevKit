@@ -4,6 +4,7 @@ from .dependency_manager import DependencyManager
 from .component_loader import ComponentLoader
 from .architectures.v1 import V1Architecture
 from .architectures.v2 import V2Architecture
+from systems.gui.icons import IconManager
 
 class ExtensionManager:
     def __init__(self, main_window):
@@ -13,6 +14,10 @@ class ExtensionManager:
         self.custom_extensions_path = os.path.join(self.app_root_path, "extensions", "custom_apps")
 
         self.extensions = {}
+
+        # Connect IconManager
+        IconManager.init_paths(self.app_root_path, self)
+
 
         # Sub-managers
         self.dep_manager = None # Initialized after discovery

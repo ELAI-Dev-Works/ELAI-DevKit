@@ -65,19 +65,35 @@ def process_file(file_path: str, duplicate_keys: dict):
     """
     Parses a .tslang file, removes duplicate keys matching its UID and Section, and saves it back.
     """
-    if os.path.basename(file_path) == 'en.tslang':
-        return
-
     try:
         tree = ET.parse(file_path)
         root = tree.getroot()
         uid = root.get('uid')
+        lang = root.get('lang')
+
+        keys_removed_count = 0
+
+        # Check for intra-file duplicates if it's an English file
+        if lang == 'en':
+            seen_keys = set()
+            for section in root.findall('.//section'):
+                for key_element in list(section.findall('key')):
+                    key_name = key_element.get('name')
+                    if (section.get('name'), key_name) in seen_keys:
+                        section.remove(key_element)
+                        keys_removed_count += 1
+                    else:
+                        seen_keys.add((section.get('name'), key_name))
 
         if not uid or uid not in duplicate_keys:
+            if keys_removed_count > 0:
+                if hasattr(ET, "indent"):
+                    ET.indent(tree, space="    ")
+                tree.write(file_path, encoding='utf-8', xml_declaration=True)
+                print(f"    - Cleaned {os.path.basename(file_path)}: Removed {keys_removed_count} intra-file duplicate keys.")
             return
 
         keys_to_remove_dict = duplicate_keys[uid]
-        keys_removed_count = 0
 
         # --- Process keys within <section> tags ---
         for section in root.findall('section'):
@@ -88,7 +104,7 @@ def process_file(file_path: str, duplicate_keys: dict):
                 for key_element in keys_to_remove_elements:
                     section.remove(key_element)
                     keys_removed_count += 1
-            
+
             # If section becomes empty after removals, remove it
             if not section.findall('key'):
                 root.remove(section)

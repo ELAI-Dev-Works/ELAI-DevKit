@@ -43,6 +43,9 @@
         <key name="test_file_select_label">Choisissez un fichier pour le test d'exécution :</key>
         <key name="test_console_title">Console d'Exécution de Tests</key>
         <key name="stop_test_run_btn">Arrêter l'Exécution de Tests</key>
+        <key name="manual_backup_btn">Manuel</key>
+        <key name="commit_msg_dialog_title">Message de Commit</key>
+        <key name="project_target_name">projet</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Paramètres] Paramètres rapides enregistrés.</key>
@@ -172,5 +175,7 @@
         <key name="scope_matching_tooltip">Restreint la recherche du bloc ---old--- dans un bloc ---scope--- plus large, résolvant le problème des doublons.</key>
         <key name="similarity_threshold_tooltip">Définit le pourcentage de similarité minimum requis (1-100) pour qu'une correspondance approximative soit considérée comme réussie.</key>
         <key name="restore_refresh_tooltip">Actualiser la liste des sauvegardes disponibles.</key>
+        <key name="manual_backup_tooltip">Déclencher manuellement une sauvegarde selon les paramètres actuels.</key>
+        <key name="commit_msg_maximize_tooltip">Modifier un long message de commit</key>
     </section>
 </tslang>

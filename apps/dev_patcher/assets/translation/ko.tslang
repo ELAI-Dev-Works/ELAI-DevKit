@@ -43,6 +43,9 @@
         <key name="test_file_select_label">테스트 실행할 파일을 선택하세요:</key>
         <key name="test_console_title">테스트 실행 콘솔</key>
         <key name="stop_test_run_btn">테스트 실행 중지</key>
+        <key name="manual_backup_btn">수동</key>
+        <key name="commit_msg_dialog_title">커밋 메시지</key>
+        <key name="project_target_name">프로젝트</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[설정] 빠른 설정이 저장되었습니다.</key>
@@ -169,6 +172,8 @@
         <key name="scope_matching_tooltip">더 큰 ---scope--- 블록 내에서 ---old--- 블록 검색을 제한하여 중복 문제를 해결합니다.</key>
         <key name="similarity_threshold_tooltip">퍼지 매치가 성공으로 간주되기 위한 최소 유사도 백분율(1-100)을 설정합니다.</key>
         <key name="restore_refresh_tooltip">사용 가능한 백업 목록을 새로 고칩니다.</key>
+        <key name="manual_backup_tooltip">현재 설정을 기반으로 백업을 수동으로 실행합니다.</key>
+        <key name="commit_msg_maximize_tooltip">긴 커밋 메시지 편집</key>
     </section>
     <section name="Standalone">
         <key name="dev_patcher_standalone_title">개발 패처 (독립 실행형)</key>

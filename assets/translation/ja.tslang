@@ -76,6 +76,10 @@
         <key name="mode_switch_to_workspace_msg">ワークスペースモードに切り替えましたが、現在プロジェクトフォルダが選択されています。有効なワークスペースフォルダを選択するか、プロジェクトモードに戻してください。</key>
         <key name="mode_switch_to_project_msg">ワークスペースモードからプロジェクトモードに切り替えました。現在のプロジェクトパスは {} に設定されます。必要に応じてプロジェクトフォルダを変更できます。</key>
         <key name="select_workspace_folder_btn">ワークスペースフォルダーを選択...</key>
+        <key name="mode_label">モード:</key>
+        <key name="mode_label_tooltip">プロジェクトモードとワークスペースモードを切り替えます。</key>
+        <key name="project_list_label_tooltip">現在のワークスペースからプロジェクトを選択してください。</key>
+        <key name="project_list_label">プロジェクトリスト:</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[設定] 構成が読み込まれました。</key>
@@ -90,6 +94,7 @@
         <key name="console_restarting_log">[コンソール] シェルを再起動しています...</key>
         <key name="project_settings_saved_log">[設定] プロジェクト設定が正常に保存されました。</key>
         <key name="quick_settings_project_saved_log">[設定] プロジェクトのクイック設定を保存しました。</key>
+        <key name="project_target_name">プロジェクト</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">再起動の確認</key>

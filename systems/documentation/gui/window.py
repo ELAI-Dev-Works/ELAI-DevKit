@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt, QSize, QUrl
 from PySide6.QtGui import QCursor
 
 from systems.documentation.manager import DocManager
-from systems.gui.icons import ICON_HOME, svg_to_icon, get_svg_content
+from systems.gui.icons import IconManager
 from systems.gui.utils.markdown_styler import MarkdownStyler
 
 
@@ -51,7 +51,7 @@ class DocumentationWindow(QMainWindow):
             # Dynamic icon color
             p = self.context.theme_manager.current_palette
             icon_color = p.get("icon_default", "#eee")
-            back_btn.setIcon(svg_to_icon(get_svg_content(ICON_HOME), icon_color))
+            back_btn.setIcon(IconManager.get_icon("core.home", icon_color))
             back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
             back_btn.clicked.connect(self.go_home)
             back_btn.setStyleSheet("""

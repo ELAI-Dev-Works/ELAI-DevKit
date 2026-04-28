@@ -1,87 +1,156 @@
 import os
-from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtGui import QIcon, QPixmap, QPainter
 from PySide6.QtSvg import QSvgRenderer
-from PySide6.QtCore import QSize, Qt
-from PySide6.QtGui import QPainter
+from PySide6.QtCore import Qt, QSize
 
-# --- Icon File Names ---
-ICON_CODE = "code.svg"
-ICON_LOGO = "ELAI-DevKit_logo.svg"
-ICON_DETACH = "detach.svg"
-ICON_BOOK = "book.svg"
-ICON_WRENCH = "wrench.svg"
-ICON_TOOLTIP = "tooltip.svg"
-ICON_MAIN_SETTINGS = "main_settings.svg"
-ICON_QUICK_SETTINGS = "quick_settings.svg"
-ICON_EXTENSIONS = "extensions.svg"
-ICON_HOME = "home.svg"
-ICON_BACK = "back.svg"
+class IconManager:
+    """
+    Dynamic Icon Manager compatible with the Extension System.
+    Uses 'uid.icon_name' syntax (e.g., 'core.home', 'dev_patcher.refresh').
+    """
+    _app_root = None
+    _extension_manager = None
+    _cache_svg = {}
+    _cache_icon = {}
+    _cache_pixmap = {}
 
-# --- New Icons ---
-ICON_BOOKMARKS = "bookmarks.svg"
-ICON_RESTART = "restart.svg"
-ICON_REFRESH = "refresh.svg"
-ICON_CATEGORIES = "categories.svg"
-ICON_PLUS = "plus.svg"
-ICON_EDIT = "edit.svg"
+    @classmethod
+    def clear_cache(cls):
+        """Clears the icon cache to free memory or force reload."""
+        cls._cache_svg.clear()
+        cls._cache_icon.clear()
+        cls._cache_pixmap.clear()
 
-_cache = {}
+    @classmethod
+    def init_paths(cls, app_root, extension_manager=None):
+        cls._app_root = app_root
+        cls._extension_manager = extension_manager
 
-def _find_icon_path(icon_name: str) -> str:
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    
-    # Paths to search
-    search_paths =[
-        os.path.join(base_dir, 'assets', 'icons')
-    ]
-    
-    apps_dir = os.path.join(base_dir, 'apps')
-    if os.path.exists(apps_dir):
-        for app in os.listdir(apps_dir):
-            search_paths.append(os.path.join(apps_dir, app, 'assets', 'icons'))
-            
-    ext_dir = os.path.join(base_dir, 'extensions', 'custom_apps')
-    if os.path.exists(ext_dir):
-        for ext in os.listdir(ext_dir):
-            search_paths.append(os.path.join(ext_dir, ext, 'assets', 'icons'))
-            
-    for path in search_paths:
-        full_path = os.path.join(path, icon_name)
-        if os.path.exists(full_path):
-            return full_path
-            
-    return None
+    @classmethod
+    def _resolve_path(cls, icon_ref: str) -> str:
+        """Resolves 'uid.filename' or 'uid:filename' to an absolute path."""
+        if '.' in icon_ref:
+            uid, icon_name = icon_ref.split('.', 1)
+        elif ':' in icon_ref:
+            uid, icon_name = icon_ref.split(':', 1)
+        else:
+            uid = 'core'
+            icon_name = icon_ref
 
-def get_svg_content(icon_name: str) -> str:
-    """Loads SVG content from a file and caches it."""
-    if icon_name in _cache:
-        return _cache[icon_name]
+        if not icon_name.endswith('.svg'):
+            icon_name += '.svg'
 
-    icon_path = _find_icon_path(icon_name)
-    if icon_path:
-        try:
-            with open(icon_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-                _cache[icon_name] = content
-                return content
-        except Exception as e:
-            print(f"Warning: Error reading icon file {icon_path}: {e}")
+        # 1. Check Core
+        if uid == 'core' and cls._app_root:
+            return os.path.join(cls._app_root, 'assets', 'icons', icon_name)
 
-    print(f"Warning: Icon file not found: {icon_name}")
-    # Return a placeholder SVG to avoid crashes
-    return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M0 0h24v24H0z" fill="red"/></svg>'
+        # 2. Check Extension Manager
+        if cls._extension_manager and uid in cls._extension_manager.extensions:
+            ext_path = cls._extension_manager.extensions[uid]['path']
+            return os.path.join(ext_path, 'assets', 'icons', icon_name)
 
-def svg_to_icon(svg_str: str, color="#ffffff") -> QIcon:
-    """Helper to convert SVG string to QIcon with a specific color."""
-    colored_svg = svg_str.replace("currentColor", color).encode('utf-8')
+        # 3. Fallback manual search if manager isn't ready or UID not loaded
+        if cls._app_root:
+            app_path = os.path.join(cls._app_root, 'apps', uid, 'assets', 'icons', icon_name)
+            if os.path.exists(app_path): return app_path
 
-    renderer = QSvgRenderer(colored_svg)
-    pixmap = QPixmap(renderer.defaultSize())
-    pixmap.fill(Qt.transparent)
+            ext_path = os.path.join(cls._app_root, 'extensions', 'custom_apps', uid, 'assets', 'icons', icon_name)
+            if os.path.exists(ext_path): return ext_path
 
-    painter = QPainter(pixmap)
-    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-    renderer.render(painter)
-    painter.end()
+            ext_cmd_path = os.path.join(cls._app_root, 'extensions', 'custom_commands', uid, 'assets', 'icons', icon_name)
+            if os.path.exists(ext_cmd_path): return ext_cmd_path
 
-    return QIcon(pixmap)
+        return None
+
+    @classmethod
+    def get_svg(cls, icon_ref: str) -> str:
+        if icon_ref in cls._cache_svg:
+            return cls._cache_svg[icon_ref]
+
+        path = cls._resolve_path(icon_ref)
+        if path and os.path.exists(path):
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    cls._cache_svg[icon_ref] = content
+                    return content
+            except Exception as e:
+                print(f"IconManager Warning: Error reading icon {path}: {e}")
+
+        print(f"IconManager Warning: Icon not found for ref '{icon_ref}'")
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M0 0h24v24H0z" fill="red"/></svg>'
+
+    @classmethod
+    def get_pixmap(cls, icon_ref: str, color: str = "#ffffff", size: int = None) -> QPixmap:
+        """
+        Returns a QPixmap with the specific color and size.
+        """
+        cache_key = f"pixmap_{icon_ref}_{color}_{size}"
+        if cache_key in cls._cache_pixmap:
+            return cls._cache_pixmap[cache_key]
+
+        svg_str = cls.get_svg(icon_ref)
+        colored_svg = svg_str.replace("currentColor", color).encode('utf-8')
+
+        renderer = QSvgRenderer(colored_svg)
+
+        if size:
+            render_size = QSize(size, size)
+        else:
+            # Default to high resolution for clear QIcon downscaling
+            render_size = QSize(128, 128)
+
+        pixmap = QPixmap(render_size)
+        pixmap.fill(Qt.transparent)
+
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        renderer.render(painter)
+        painter.end()
+
+        cls._cache_pixmap[cache_key] = pixmap
+        return pixmap
+
+    @classmethod
+    def get_icon(cls, icon_ref: str, color="#ffffff", size: int = None) -> QIcon:
+        """
+        Returns a standard QIcon of the requested color.
+        """
+        cache_key = f"icon_{icon_ref}_{color}_{size}"
+        if cache_key in cls._cache_icon:
+            return cls._cache_icon[cache_key]
+
+        pixmap = cls.get_pixmap(icon_ref, color, size)
+        icon = QIcon(pixmap)
+        cls._cache_icon[cache_key] = icon
+        return icon
+
+    @classmethod
+    def get_stateful_icon(cls, icon_ref: str, normal_color: str, active_color: str = None, disabled_color: str = None, size: int = None) -> QIcon:
+        """
+        Returns a QIcon with different colors for different states (Normal, Active, Disabled).
+        Great for QPushButtons to handle hover/pressed states automatically.
+        """
+        cache_key = f"stateful_{icon_ref}_{normal_color}_{active_color}_{disabled_color}_{size}"
+        if cache_key in cls._cache_icon:
+            return cls._cache_icon[cache_key]
+
+        icon = QIcon()
+
+        # Normal State
+        norm_pix = cls.get_pixmap(icon_ref, color=normal_color, size=size)
+        icon.addPixmap(norm_pix, QIcon.Mode.Normal, QIcon.State.Off)
+
+        # Active (Hover / Pressed) State
+        if active_color:
+            act_pix = cls.get_pixmap(icon_ref, color=active_color, size=size)
+            icon.addPixmap(act_pix, QIcon.Mode.Active, QIcon.State.Off)
+            icon.addPixmap(act_pix, QIcon.Mode.Selected, QIcon.State.Off)
+
+        # Disabled State
+        if disabled_color:
+            dis_pix = cls.get_pixmap(icon_ref, color=disabled_color, size=size)
+            icon.addPixmap(dis_pix, QIcon.Mode.Disabled, QIcon.State.Off)
+
+        cls._cache_icon[cache_key] = icon
+        return icon

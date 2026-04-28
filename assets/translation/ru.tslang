@@ -76,6 +76,10 @@
         <key name="mode_switch_to_workspace_msg">Вы переключились в режим Workspace, но в данный момент выбрана папка проекта. Пожалуйста, выберите действительную папку Workspace или вернитесь в режим проекта.</key>
         <key name="mode_switch_to_project_msg">Вы переключились из режима Workspace в режим проекта. Текущий путь проекта будет установлен на: {}. При необходимости вы можете изменить папку проекта.</key>
         <key name="select_workspace_folder_btn">Выбрать папку рабочей области...</key>
+        <key name="mode_label">Режим:</key>
+        <key name="mode_label_tooltip">Переключение между режимами Проект и Рабочая область.</key>
+        <key name="project_list_label_tooltip">Выберите проект из текущей рабочей области.</key>
+        <key name="project_list_label">Список проектов:</key>
     </section>
     <section name="Logs">
         <key name="settings_loaded_log">[Настройки] Конфигурация загружена.</key>
@@ -90,6 +94,7 @@
         <key name="console_restarting_log">[Консоль] Перезапуск оболочки...</key>
         <key name="project_settings_saved_log">[Настройки] Настройки проекта успешно сохранены.</key>
         <key name="quick_settings_project_saved_log">[Настройки] Быстрые настройки проекта сохранены.</key>
+        <key name="project_target_name">проект</key>
     </section>
     <section name="Dialogs">
         <key name="restart_dialog_title">Подтверждение перезапуска</key>

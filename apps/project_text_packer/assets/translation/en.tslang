@@ -21,10 +21,8 @@
         <key name="patch_load_error_title">Error</key>
         <key name="project_folder_missing_error">ERROR: Project folder (@ROOT) is not selected!</key>
         <key name="quick_settings_saved_log">[Settings] Quick settings saved.</key>
-        <key name="quick_settings_applied_log">[Settings] Quick settings applied.</key>
         <key name="quick_settings_reset_log">[Settings] Quick settings have been reset to default (not saved).</key>
         <key name="reset_quick_settings_btn">Reset to Default</key>
-        <key name="apply_quick_settings_btn">Apply Settings</key>
         <key name="save_quick_settings_btn">Save Global</key>
     </section>
     <section name="Logs">

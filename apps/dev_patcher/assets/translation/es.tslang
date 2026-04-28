@@ -43,6 +43,9 @@
         <key name="test_file_select_label">Elija un archivo para ejecutar la prueba:</key>
         <key name="test_console_title">Consola de Ejecución de Pruebas</key>
         <key name="stop_test_run_btn">Detener Ejecución de Pruebas</key>
+        <key name="manual_backup_btn">Manual</key>
+        <key name="commit_msg_dialog_title">Mensaje de Commit</key>
+        <key name="project_target_name">proyecto</key>
     </section>
     <section name="Logs">
         <key name="quick_settings_saved_log">[Configuración] Ajustes rápidos guardados.</key>
@@ -172,5 +175,7 @@
         <key name="scope_matching_tooltip">Restringe la búsqueda del bloque ---old--- dentro de un bloque ---scope--- más grande, resolviendo el problema de duplicados.</key>
         <key name="similarity_threshold_tooltip">Establece el porcentaje mínimo de similitud requerido (1-100) para que una coincidencia difusa se considere exitosa.</key>
         <key name="restore_refresh_tooltip">Actualizar la lista de copias de seguridad disponibles.</key>
+        <key name="manual_backup_tooltip">Activar manualmente una copia de seguridad según la configuración actual.</key>
+        <key name="commit_msg_maximize_tooltip">Editar mensaje de commit largo</key>
     </section>
 </tslang>
