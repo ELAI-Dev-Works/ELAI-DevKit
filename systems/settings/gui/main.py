@@ -232,8 +232,10 @@ class SettingsPanel(QFrame):
         else:
             existing_core = sm.load_settings_file().get('core', {})
 
-        if 'extensions' in existing_core:
-            core_settings['extensions'] = existing_core['extensions']
+        # Preserve all existing core settings that are not managed by this panel
+        for key in existing_core:
+            if key not in core_settings:
+                core_settings[key] = existing_core[key]
 
         sm.update_setting(['core'], core_settings, is_project)
         if is_project:
