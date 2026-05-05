@@ -8,9 +8,8 @@ class PythonBuilder(BaseBuilder):
     def build(self) -> bool:
         self.log("[Python] Starting PyInstaller build process...")
 
-        main_path = os.path.join(self.root_path, self.main_file)
-        if not os.path.exists(main_path):
-            self.log(f"[Error] Main file not found: {main_path}")
+        if not self.fs.exists(self.main_file):
+            self.log(f"[Error] Main file not found: {self.main_file}")
             return False
 
         devkit_py = sys.executable

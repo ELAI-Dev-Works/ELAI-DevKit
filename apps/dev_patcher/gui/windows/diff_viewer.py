@@ -19,6 +19,7 @@ class DiffViewerDialog(QDialog):
         layout.addWidget(info_label)
 
         self.diff_view = CodeEditor()
+        self.diff_view.settings_panel.maximize_btn.hide()
         # CodeEditor handles styles and fonts correctly via theme
         layout.addWidget(self.diff_view)
 

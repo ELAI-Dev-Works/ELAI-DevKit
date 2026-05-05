@@ -1,20 +1,39 @@
-from .fs_handler import VirtualFileSystem
+from systems.fs.vfs_core import AdvancedVFS
+from systems.project.ignore_handler import IgnoreHandler
 from .patcher import run_patch, _get_command_group_key
 from .command_planner import plan_execution_order
 from itertools import groupby
+import os
+import uuid
 
-def simulate_patch_and_get_vfs(commands: list, root_path: str, experimental_flags=None, ignore_dirs: list = None):
+def _create_vfs_for_simulation(root_path: str, ignore_dirs: list = None, memory=None) -> AdvancedVFS:
+    vfs = AdvancedVFS(root_path)
+    if memory:
+        vfs.memory = memory
+
+    ign_dirs = ignore_dirs or[]
+    if '.git' not in ign_dirs: ign_dirs.append('.git')
+    if '.temp_project' not in ign_dirs: ign_dirs.append('.temp_project')
+
+    handler = IgnoreHandler(ign_dirs,[], context='patcher')
+    vfs.mount(handler)
+    return vfs
+
+def simulate_patch_and_get_vfs(commands: list, root_path: str, experimental_flags=None, ignore_dirs: list = None, memory=None):
     """
     Applies a patch to a Virtual File System and returns the resulting VFS state.
     This is used for the test run feature.
     """
-    vfs = VirtualFileSystem(root_path, ignore_dirs=ignore_dirs, ignore_context='patcher')
+
+    if memory:
+        memory.sync_cache()
+
+    vfs = _create_vfs_for_simulation(root_path, ignore_dirs, memory)
     # The generator must be consumed for the patch to be applied.
-    list(run_patch(commands, vfs, experimental_flags))
+    list(run_patch(commands, vfs, experimental_flags, memory=memory))
     return vfs
 
-
-def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, ignore_dirs: list = None, lang=None):
+def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, ignore_dirs: list = None, lang=None, memory=None):
     """
     NEW: Performs a dynamic simulation to build a safe execution plan.
     It attempts to "rescue" commands that are valid in isolation but fail in batch.
@@ -26,7 +45,7 @@ def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, 
 
     if not commands:
         yield lang.get('simulation_no_commands')
-        yield ('finished', {'plan': [], 'skipped': []})
+        yield ('finished', {'plan': [], 'skipped':[]})
         return
 
     # Helper to create hashable keys from command tuples by converting inner lists to tuples
@@ -34,11 +53,11 @@ def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, 
     
     # --- STAGE 1: GATHER DATA (INDIVIDUAL & BATCH RUNS) ---
     # Optimization: create VFS from disk only once
-    initial_vfs = VirtualFileSystem(root_path, ignore_dirs=ignore_dirs)
+    initial_vfs = _create_vfs_for_simulation(root_path, ignore_dirs, memory)
     
     planned_commands = plan_execution_order(commands, root_path)
-    edit_commands = [cmd for cmd in planned_commands if "EDIT_BATCH" in str(_get_command_group_key(cmd))]
-    non_edit_commands = [cmd for cmd in planned_commands if "EDIT_BATCH" not in str(_get_command_group_key(cmd))]
+    edit_commands =[cmd for cmd in planned_commands if "EDIT_BATCH" in str(_get_command_group_key(cmd))]
+    non_edit_commands =[cmd for cmd in planned_commands if "EDIT_BATCH" not in str(_get_command_group_key(cmd))]
     
     yield lang.get('simulation_stage1_start')
     # Create a base state by applying non-EDIT commands to the clone
@@ -46,9 +65,9 @@ def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, 
     
     # Execute non-edit commands with logging
     stage1_passed = []
-    stage1_failed = []
+    stage1_failed =[]
     
-    for success, msg, cmd in run_patch(non_edit_commands, base_vfs, experimental_flags):
+    for success, msg, cmd in run_patch(non_edit_commands, base_vfs, experimental_flags, memory=memory):
         status_str = lang.get('simulation_success') if success else lang.get('simulation_fail')
         cmd_name = cmd[0] if cmd else "UNKNOWN"
     
@@ -70,7 +89,7 @@ def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, 
     pass1_results = {}
     for i, cmd in enumerate(edit_commands):
         yield lang.get('simulation_pass1_result').format(i + 1, len(edit_commands), cmd[0], "...")
-        success, msg, _ = next(run_patch([cmd], base_vfs.clone(), experimental_flags))
+        success, msg, _ = next(run_patch([cmd], base_vfs.clone(), experimental_flags, memory=memory))
         pass1_results[hashable_key(cmd)] = (success, msg, cmd)
         status_str = lang.get('simulation_success') if success else lang.get('simulation_fail')
         yield lang.get('simulation_pass1_result').format(i + 1, len(edit_commands), cmd[0], f"{status_str}. {msg}")
@@ -78,7 +97,7 @@ def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, 
     yield lang.get('simulation_stage3_start')
     # Pass 2: Batch check (uses a clone of the original VFS)
     pass2_vfs = initial_vfs.clone()
-    pass2_gen = run_patch(planned_commands, pass2_vfs, experimental_flags)
+    pass2_gen = run_patch(planned_commands, pass2_vfs, experimental_flags, memory=memory)
     pass2_results = {}
     pass2_edit_results_count = 0
     for success, msg, cmd in pass2_gen:
@@ -105,18 +124,18 @@ def plan_dynamic_patch(commands: list, root_path: str, experimental_flags=None, 
         if p1_success and p2_success: # GREEN
             yield f"[PLAN] Command #{i+1} is GREEN. Adding to plan."
             final_plan.append(command)
-            list(run_patch([command], analysis_vfs, experimental_flags))
+            list(run_patch([command], analysis_vfs, experimental_flags, memory=memory))
         elif p1_success and not p2_success: # YELLOW (CONFLICT) - RESCUE ATTEMPT
             yield f"[PLAN] Command #{i+1} is a CONFLICT. Attempting rescue..."
     
             temp_vfs = analysis_vfs.clone()
-            list(run_patch([command], temp_vfs, experimental_flags))
+            list(run_patch([command], temp_vfs, experimental_flags, memory=memory))
     
             # Re-simulate the ENTIRE remaining chain of commands
             remaining_commands = edit_commands[i+1:]
             is_safe = True
             if remaining_commands:
-                remaining_results = list(run_patch(remaining_commands, temp_vfs, experimental_flags))
+                remaining_results = list(run_patch(remaining_commands, temp_vfs, experimental_flags, memory=memory))
                 if any(not res[0] for res in remaining_results):
                     is_safe = False
                     failed_at_index = next((idx for idx, res in enumerate(remaining_results) if not res[0]), -1)

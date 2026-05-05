@@ -20,6 +20,9 @@
         <key name="pb_app_version_label">앱 버전:</key>
         <key name="pb_app_icon_label">앱 아이콘:</key>
         <key name="pb_select_icon_btn">아이콘 선택...</key>
+    
+    <key name="pb_project_settings_title">프로젝트 설정</key>
+    
     </section>
     <section name="Logs">
         <key name="pb_log_scanning">프로젝트 디렉토리 스캔 중...</key>

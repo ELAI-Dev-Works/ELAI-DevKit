@@ -48,6 +48,12 @@
         <key name="project_target_name">Projekt</key>
     </section>
     <section name="Logs">
+
+        <key name="test_run_html_info_log">[INFO] HTML-Datei im Standardbrowser geöffnet.</key>
+        <key name="test_run_html_final_log">[INFO] HTML-Test über externen Browser ausgeführt.</key>
+        <key name="test_run_critical_error_log">[FEHLER] Kritischer Fehler während des Testlaufs: {}</key>
+        <key name="test_run_prep_error_log">Fehler beim Vorbereiten der Testumgebung: {}</key>
+
         <key name="quick_settings_saved_log">[Einstellungen] Schnelleinstellungen gespeichert.</key>
         <key name="quick_settings_reset_log">[Einstellungen] Schnelleinstellungen wurden auf Standard zurückgesetzt (nicht gespeichert).</key>
         <key name="patch_loaded_log">Patch aus Datei geladen: {}</key>
@@ -123,6 +129,12 @@
         <key name="dev_patcher_standalone_title">Dev Patcher (Standalone)</key>
     </section>
     <section name="Dialogs">
+
+        <key name="test_run_html_dialog_title">HTML-Test</key>
+        <key name="test_run_html_dialog_msg">HTML-Datei in Ihrem Browser geöffnet. Schließen Sie diesen Dialog, wenn Sie fertig sind, um die Testumgebung zu bereinigen.</key>
+        <key name="test_run_aborted_title">Testlauf abgebrochen</key>
+        <key name="test_run_error_title">Testlauf-Fehler</key>
+
         <key name="patch_load_error_title">Fehler</key>
         <key name="patch_load_error_msg">Patch-Datei konnte nicht gelesen werden: {}</key>
         <key name="self_update_warning_title">Warnung!</key>
@@ -160,6 +172,10 @@
         <key name="ai_report_dialog_title">KI-Korrekturbericht</key>
         <key name="ai_report_dialog_info">Im Patch wurden problematische Befehle gefunden. Sie werden übersprungen, und der Patch kann sicher angewendet werden. Ein Korrekturbericht für die KI wurde erstellt. Kopieren Sie ihn zusammen mit dem neuen Projektkontext und senden Sie ihn an die KI, damit sie den korrekten Befehl schreiben kann.</key>
         <key name="ai_report_task">Beheben Sie nur das/die angegebene(n) Problem(e).</key>
+        
+        <key name="ai_report_msg_single">Ein Befehl ist fehlgeschlagen. Bitte überprüfen Sie den Bericht.</key>
+        <key name="ai_report_msg_multiple">Einige Befehle sind fehlgeschlagen. Bitte überprüfen Sie den Bericht und beheben Sie die Probleme.</key>
+        
         <key name="simulation_success_msg_new">Die Simulation ist abgeschlossen. Keine Fehler gefunden. Alle Befehle können sicher ausgeführt werden.</key>
     </section>
     <section name="Tooltips">

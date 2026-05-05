@@ -143,8 +143,16 @@ The simplest command, designed for debugging and outputting information to the l
 ### Arguments
 - `-print`: Required. Everything in the command body will be output to the log.
 
+- `-all`: Modifier for `-command_list`. Forces the display of all discovered commands, including those without explicit arguments.
+
 - `-search`: Searches for files and folders by keywords.
 - `-ignore`: Modifier for `-search`. Allows excluding folders/files from the search.
+
+- `-command <cmd1|cmd2>`: Modifier for `-command_list`. Filters the output to show only the specified commands.
+
+- `-doc`: Modifier for `-command_list`. Attempts to load and display documentation for the listed commands.
+
+- `-command_list`: Generates a registry of all available standard and custom commands.
 
 
 ### Variables
@@ -159,6 +167,9 @@ This message will appear in the log.
 Project path: @ROOT
 ---end---
 ```
+
+#### Show All (`-all`)
+Modifier for `-command_list`. Forces the display of all discovered commands, including those without explicit arguments.
 
 #### Searching for files (`-search`)
 Searches for files and folders containing specific keywords in their names.
@@ -177,6 +188,32 @@ Searches for files and folders containing specific keywords in their names.
 ```
 <-@ Find all Python and JavaScript files @->
 <@|TEST -search <.py|.js>
+---end---
+```
+
+#### Filter Commands (`-command`)
+Modifier for `-command_list`. Filters the output to show only the specified commands.
+
+**Syntax:** `-command <cmd1|cmd2|...>`
+
+```
+<@|TEST -command_list -command <edit|manage>
+---end---
+```
+
+#### Show Documentation (`-doc`)
+Modifier for `-command_list`. Attempts to load and display documentation for the listed commands.
+
+#### List Commands (`-command_list`)
+Generates a registry of all available standard and custom commands.
+
+**Sub-arguments:**
+- `-all`: Lists all commands without filtering.
+- `-command <cmd1|cmd2>`: Lists only specified commands.
+- `-doc`: Includes documentation snippets (if available).
+
+```
+<@|TEST -command_list -all
 ---end---
 ```
 

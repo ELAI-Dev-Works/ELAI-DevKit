@@ -2,6 +2,7 @@ import os
 import sys
 import importlib.util
 from .base import BaseArchitecture
+from systems.error_handler.logger import log_to_file
 
 class V1Architecture(BaseArchitecture):
     """
@@ -45,10 +46,14 @@ class V1Architecture(BaseArchitecture):
             gui_class_name = camel_name + "Widget"
             gui_class = getattr(meta["gui_module"], gui_class_name)
             meta["gui_class"] = gui_class
-            
+
             return True
-        except AttributeError as e:
-            print(f"[Arch-V1] Init error {name}: {e}")
+        except Exception as e:
+            import traceback
+            err_msg = f"[Arch-V1] Could not initialize '{name}': {e}"
+            print(err_msg)
+            log_to_file(f"{err_msg}\n{traceback.format_exc()}", is_exception=True)
+            meta['init_error'] = str(e)
             return False
 
     def _import_module(self, name, path):

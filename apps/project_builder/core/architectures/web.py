@@ -12,33 +12,32 @@ class WebBuilder(BaseBuilder):
             self.log("[Error] 'npx' is not installed or not in PATH. Please install Node.js.")
             return False
 
-        main_path = os.path.join(self.root_path, self.main_file)
-        if not os.path.exists(main_path):
+        if not self.fs.exists(self.main_file):
             self.log(f"[Error] Main file {self.main_file} not found.")
             return False
 
-        stage_dir = os.path.join(self.output_dir, "electron_stage")
-        if os.path.exists(stage_dir):
-            shutil.rmtree(stage_dir)
-        os.makedirs(stage_dir, exist_ok=True)
+        stage_dir = "electron_stage"
+        if self.out_fs.exists(stage_dir):
+            self.out_fs.delete(stage_dir)
+        self.out_fs.makedirs(stage_dir)
 
         self.log("[Web] Copying project files to staging directory...")
-        for item in os.listdir(self.root_path):
-            if item in['.git', '.venv', '__pycache__', 'node_modules', os.path.basename(self.output_dir)]:
+        for item in self.fs.listdir(""):
+            if item in ['.git', '.venv', '__pycache__', 'node_modules', os.path.basename(self.output_dir)]:
                 continue
-            s = os.path.join(self.root_path, item)
-            d = os.path.join(stage_dir, item)
-            if os.path.isdir(s):
-                shutil.copytree(s, d, dirs_exist_ok=True)
+            src = self.fs._to_abs(item)
+            dst = self.out_fs._to_abs(os.path.join(stage_dir, item))
+            if self.fs.is_dir(item):
+                shutil.copytree(src, dst, dirs_exist_ok=True)
             else:
-                shutil.copy2(s, d)
+                shutil.copy2(src, dst)
 
         app_name = self.options.get('app_name') or 'WebApp'
         app_version = self.options.get('app_version') or '1.0.0'
         app_icon = self.options.get('app_icon')
 
         pkg_path = os.path.join(stage_dir, "package.json")
-        if not os.path.exists(pkg_path):
+        if not self.out_fs.exists(pkg_path):
             pkg_data = {
                 "name": app_name.lower().replace(" ", "-").replace("(", "").replace(")", ""),
                 "version": app_version,
@@ -47,11 +46,10 @@ class WebBuilder(BaseBuilder):
                     "start": "electron ."
                 }
             }
-            with open(pkg_path, "w", encoding="utf-8") as f:
-                json.dump(pkg_data, f, indent=2)
+            self.out_fs.write(pkg_path, json.dumps(pkg_data, indent=2))
 
         main_js_path = os.path.join(stage_dir, "electron_main.js")
-        if not os.path.exists(main_js_path):
+        if not self.out_fs.exists(main_js_path):
             main_js_code = f"""const {{ app, BrowserWindow }} = require('electron');
 const path = require('path');
 
@@ -79,17 +77,18 @@ app.on('window-all-closed', function () {{
   if (process.platform !== 'darwin') app.quit();
 }});
 """
-            with open(main_js_path, "w", encoding="utf-8") as f:
-                f.write(main_js_code)
+            self.out_fs.write(main_js_path, main_js_code)
 
         target_os = self.options.get('target_os', 'windows')
         platform = "win32"
         if target_os == 'linux': platform = "linux"
         elif target_os == 'mac': platform = "darwin"
 
+        stage_dir_abs = self.out_fs._to_abs(stage_dir)
+
         self.log("[Web] Installing Electron...")
         npm_cmd = "npm.cmd" if os.name == "nt" else "npm"
-        subprocess.run([npm_cmd, "install", "electron", "electron-packager", "--save-dev"], cwd=stage_dir, capture_output=True)
+        subprocess.run([npm_cmd, "install", "electron", "electron-packager", "--save-dev"], cwd=stage_dir_abs, capture_output=True)
 
         self.log(f"[Web] Packaging for {platform}...")
         npx_cmd = "npx.cmd" if os.name == "nt" else "npx"
@@ -99,7 +98,7 @@ app.on('window-all-closed', function () {{
             cmd.append("--icon=" + app_icon)
 
         self.log(f"[Web] Executing: {' '.join(cmd)}")
-        process = subprocess.Popen(cmd, cwd=stage_dir, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace')
+        process = subprocess.Popen(cmd, cwd=stage_dir_abs, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace')
 
         for line in iter(process.stdout.readline, ''):
             self.log(line.strip())
@@ -108,7 +107,7 @@ app.on('window-all-closed', function () {{
         return_code = process.wait()
 
         try:
-            shutil.rmtree(stage_dir)
+            self.out_fs.delete(stage_dir)
         except:
             pass
 

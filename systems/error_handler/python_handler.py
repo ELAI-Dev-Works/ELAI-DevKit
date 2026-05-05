@@ -9,6 +9,15 @@ from .logger import log_to_file
 # Global flag to prevent recursive error handling loops
 _is_handling_error = False
 
+def determine_severity(module_name: str) -> str:
+    if "Core" in module_name or "System" in module_name:
+        return "Critical"
+    elif "App:" in module_name or "Extension:" in module_name:
+        return "Specific"
+    else:
+        # Fallback to Specific if we know it's a plugin, otherwise Critical
+        return "Specific" if module_name != "Unknown" else "Critical"
+
 def build_error_report(exc_type, exc_value, exc_tb):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -63,12 +72,19 @@ def build_error_report(exc_type, exc_value, exc_tb):
     except Exception:
         pass
 
+    severity = determine_severity(module_name)
     message = f"{exc_type.__name__}: {exc_value}" if exc_type else str(exc_value)
+
+    from .action_mapper import ActionMapper
+    action_map = ActionMapper.get_current_map()
+
     details = "".join(traceback.format_exception(exc_type, exc_value, exc_tb)).strip()
 
     report = (
         f"[DATE-TIME]\n"
         f"{now}\n"
+        f"[SEVERITY]\n"
+        f"{severity}\n"
         f"[VERSION]\n"
         f"{app_version}\n"
         f"[MODULE]\n"
@@ -77,10 +93,12 @@ def build_error_report(exc_type, exc_value, exc_tb):
         f"{file_path}\n"
         f"[MESSAGE]\n"
         f"{message}\n"
+        f"[ACTIONS MAP]\n"
+        f"{action_map}\n"
         f"[DETAILS]\n"
         f"{details}"
     )
-    return report
+    return report, severity
 
 def global_exception_hook(exc_type, exc_value, exc_tb):
     """
@@ -97,7 +115,7 @@ def global_exception_hook(exc_type, exc_value, exc_tb):
 
     try:
         # 1. Format the detailed report
-        report_str = build_error_report(exc_type, exc_value, exc_tb)
+        report_str, severity = build_error_report(exc_type, exc_value, exc_tb)
 
         # 2. Print to console (stderr)
         sys.stderr.write(report_str + "\n")
@@ -108,14 +126,19 @@ def global_exception_hook(exc_type, exc_value, exc_tb):
         # 4. Show GUI Dialog
         # Import here to ensure QApplication is initialized and avoid circular deps
         from systems.error_handler.gui.window import show_error_dialog
-        show_error_dialog(exc_type, exc_value, report_str)
+
+        ignored = show_error_dialog(exc_type, exc_value, report_str, severity)
+
+        if ignored:
+            _is_handling_error = False
+            return # Do not exit! Allow the application to continue running
 
     except Exception as e:
         print(f"CRITICAL: Error handler failed: {e}", file=sys.stderr)
         sys.__excepthook__(exc_type, exc_value, exc_tb)
-    finally:
-        _is_handling_error = False
-        sys.exit(1)
+
+    _is_handling_error = False
+    sys.exit(1)
 
 def setup_python_handling():
     sys.excepthook = global_exception_hook

@@ -1,7 +1,9 @@
 class BaseBuilder:
-    def __init__(self, root_path, output_dir, main_file, options, log_callback):
-        self.root_path = root_path
-        self.output_dir = output_dir
+    def __init__(self, fs, out_fs, main_file, options, log_callback):
+        self.fs = fs
+        self.out_fs = out_fs
+        self.root_path = fs.root
+        self.output_dir = out_fs.root
         self.main_file = main_file
         self.options = options
         self.log = log_callback

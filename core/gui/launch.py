@@ -266,10 +266,19 @@ class LaunchWindow(QMainWindow):
     
         # Build documentation on startup
         try:
-            builder = DocBuilder(self.app_root_path)
-            builder.build()
+            self.context.async_thread_manager.thread.run_in_background(
+                lambda: DocBuilder(self.app_root_path).build(),
+                use_qt=False
+            )
         except Exception as e:
-            print(f"Error building documentation: {e}")
+            print(f"Error starting documentation build: {e}")
+
+        # Enforce Setup on First Run
+        if not self.context.security_manager.is_setup:
+            from core.gui.first_run import FirstRunDialog
+            dlg = FirstRunDialog(self)
+            dlg.exec()
+
     
     def _get_app_root(self):
         import os
@@ -313,7 +322,7 @@ class LaunchWindow(QMainWindow):
 
         title = QLabel("ELAI-DevKit")
         title.setStyleSheet("font-size: 36pt; font-weight: bold;") # Removed hardcoded color
-        version_label = QLabel("v135 (core v47)")
+        version_label = QLabel("v140 (core v50)")
         version_label.setStyleSheet("font-size: 13pt; margin-bottom: 5px;") # Removed hardcoded color
         version_label.setAlignment(Qt.AlignmentFlag.AlignBottom)
     

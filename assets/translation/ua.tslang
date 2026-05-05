@@ -8,6 +8,15 @@
         <key name="ui_always_show_tooltips">Завжди показувати іконки підказок</key>
         <key name="ui_always_show_tooltips_tooltip">Якщо вимкнено, іконки підказок з'являтимуться лише при наведенні на елемент.</key>
         <key name="settings_extensions_settings_tab">Налаштування розширень</key>
+
+        <key name="settings_security_tab">Безпека</key>
+
+
+        <key name="settings_memory_tab">Пам'ять</key>
+        <key name="settings_memory_group_title">Пам'ять та кешування</key>
+        <key name="memory_persistent_cache">Постійний кеш проєкту (Швидка симуляція)</key>
+        <key name="memory_persistent_cache_tooltip">Зберігає індексацію файлів та парсинг AST на диск, значно прискорюючи симуляції патчера між сеансами. Використовує додаткове місце на диску.</key>
+
         <key name="settings_extensions_manager_tab">Менеджер розширень</key>
         <key name="theme_label">Тема:</key>
         <key name="color_scheme_label">Колірна схема:</key>
@@ -109,6 +118,23 @@
         <key name="add_workspace_project_title">Додати новий проект до робочого простору</key>
         <key name="add_workspace_project_prompt">Введіть назву нового проекту в папці робочої області:</key>
         <key name="delete_project_warning_title">Видалити проект</key>
+
+        <key name="first_run_title">Ласкаво просимо до ELAI-DevKit - Перше налаштування</key>
+        <key name="fr_step1_title">Крок 1: Зовнішній вигляд та мова</key>
+        <key name="fr_step1_desc">Виберіть бажану мову та візуальну тему.</key>
+        <key name="fr_step2_title">Крок 2: Налаштування безпеки</key>
+        <key name="fr_step2_desc">Встановіть майстер-пароль для захисту вашої локальної пісочниці та запобігання несанкціонованому виконанню коду.</key>
+        <key name="fr_btn_next">Далі &gt;</key>
+        <key name="fr_btn_back">&lt; Назад</key>
+        <key name="fr_btn_finish">Завершити налаштування</key>
+        <key name="fr_warning_incomplete">Ви повинні завершити налаштування, щоб використовувати ELAI-DevKit.</key>
+        <key name="fr_pwd_empty">Пароль не може бути порожнім.</key>
+        <key name="fr_pwd_mismatch">Паролі не збігаються.</key>
+        <key name="layer2_alert_title">Рівень 2: Сповіщення про безпеку</key>
+        <key name="manage_rules_btn">Керування списками Дозволено/Заборонено</key>
+        <key name="rules_dialog_info">Керування правилами безпеки (Двічі клацніть для видалення):</key>
+        <key name="rules_dialog_title">Список Дозволених / Заборонених правил</key>
+
         <key name="delete_project_warning_msg">Ви впевнені, що хочете назавжди видалити проект '{}'? Цю дію неможливо скасувати!</key>
     </section>
     <section name="Tooltips">

@@ -1,7 +1,7 @@
 {
     "name": "Dev Patcher",
     "author": "ELAI",
-    "version": "v68",
+    "version": "v70",
     "dependencies":[],
     "description": "A utility for creating patches that help create, manage and edit projects."
 }

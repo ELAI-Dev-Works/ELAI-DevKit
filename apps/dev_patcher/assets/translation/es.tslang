@@ -48,6 +48,12 @@
         <key name="project_target_name">proyecto</key>
     </section>
     <section name="Logs">
+
+        <key name="test_run_html_info_log">[INFO] Archivo HTML abierto en el navegador predeterminado.</key>
+        <key name="test_run_html_final_log">[INFO] Prueba HTML ejecutada a través del navegador externo.</key>
+        <key name="test_run_critical_error_log">[ERROR] Error crítico durante la ejecución de prueba: {}</key>
+        <key name="test_run_prep_error_log">Error al preparar el entorno de prueba: {}</key>
+
         <key name="quick_settings_saved_log">[Configuración] Ajustes rápidos guardados.</key>
         <key name="quick_settings_reset_log">[Configuración] La configuración rápida se ha restablecido a los valores predeterminados (no guardada).</key>
         <key name="patch_loaded_log">Parche cargado desde archivo: {}</key>
@@ -123,6 +129,12 @@
         <key name="dev_patcher_standalone_title">Dev Patcher (Independiente)</key>
     </section>
     <section name="Dialogs">
+
+        <key name="test_run_html_dialog_title">Prueba HTML</key>
+        <key name="test_run_html_dialog_msg">Archivo HTML abierto en su navegador. Cierre este diálogo cuando haya terminado para limpiar el entorno de prueba.</key>
+        <key name="test_run_aborted_title">Ejecución de prueba abortada</key>
+        <key name="test_run_error_title">Error de ejecución de prueba</key>
+
         <key name="patch_load_error_title">Error</key>
         <key name="patch_load_error_msg">Error al leer el archivo de parche: {}</key>
         <key name="self_update_warning_title">¡Advertencia!</key>
@@ -160,6 +172,10 @@
         <key name="ai_report_dialog_title">Informe de corrección de IA</key>
         <key name="ai_report_dialog_info">Se encontraron comandos problemáticos en el parche. Se omitirán y el parche se puede aplicar de forma segura. Se ha compilado un informe de corrección para la IA. Cópielo junto con el nuevo contexto del proyecto y envíelo a la IA para que pueda escribir el comando correcto.</key>
         <key name="ai_report_task">Corrija solo el/los problema(s) especificado(s).</key>
+        
+        <key name="ai_report_msg_single">Un comando falló. Por favor revise el informe.</key>
+        <key name="ai_report_msg_multiple">Algunos comandos fallaron. Por favor revise el informe y solucione los problemas.</key>
+        
         <key name="simulation_success_msg_new">La simulación está completa. No se encontraron errores. Todos los comandos se pueden ejecutar de forma segura.</key>
     </section>
     <section name="Tooltips">

@@ -16,6 +16,7 @@
         <key name="pb_app_version_label">App Version:</key>
         <key name="pb_app_icon_label">App Icon:</key>
         <key name="pb_select_icon_btn">Select Icon...</key>
+        <key name="pb_project_settings_title">Project Settings</key>
         <key name="project_builder_quick_settings_title">Builder Options</key>
         <key name="pb_qs_onefile">Pack into a single file (Onefile)</key>
         <key name="pb_qs_noconsole">Windowed Mode (Hide console)</key>

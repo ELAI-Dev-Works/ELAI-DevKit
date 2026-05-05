@@ -8,6 +8,15 @@
         <key name="ui_always_show_tooltips">Tooltip-Symbole immer anzeigen</key>
         <key name="ui_always_show_tooltips_tooltip">Wenn deaktiviert, werden Tooltip-Symbole nur beim Überfahren des Elements angezeigt.</key>
         <key name="settings_extensions_settings_tab">Erweiterungseinstellungen</key>
+
+        <key name="settings_security_tab">Sicherheit</key>
+
+
+        <key name="settings_memory_tab">Speicher</key>
+        <key name="settings_memory_group_title">Speicher &amp; Caching</key>
+        <key name="memory_persistent_cache">Persistenter Projekt-Cache (Schnelle Simulation)</key>
+        <key name="memory_persistent_cache_tooltip">Speichert die Dateiindizierung und das AST-Parsing auf der Festplatte, was die Patcher-Simulationen über Sitzungen hinweg drastisch beschleunigt. Verbraucht zusätzlichen Festplattenspeicher.</key>
+
         <key name="settings_extensions_manager_tab">Erweiterungs-Manager</key>
         <key name="theme_label">Design:</key>
         <key name="color_scheme_label">Farbschema:</key>
@@ -109,6 +118,23 @@
         <key name="add_workspace_project_title">Neues Workspace-Projekt hinzufügen</key>
         <key name="add_workspace_project_prompt">Namen für neues Projekt im Arbeitsbereich eingeben:</key>
         <key name="delete_project_warning_title">Projekt löschen</key>
+
+        <key name="first_run_title">Willkommen bei ELAI-DevKit - Ersteinrichtung</key>
+        <key name="fr_step1_title">Schritt 1: Aussehen &amp; Sprache</key>
+        <key name="fr_step1_desc">Wählen Sie Ihre bevorzugte Sprache und Ihr visuelles Thema.</key>
+        <key name="fr_step2_title">Schritt 2: Sicherheitseinrichtung</key>
+        <key name="fr_step2_desc">Richten Sie ein Master-Passwort ein, um Ihre lokale Sandbox zu sichern und unbefugte Ausführungen zu verhindern.</key>
+        <key name="fr_btn_next">Weiter &gt;</key>
+        <key name="fr_btn_back">&lt; Zurück</key>
+        <key name="fr_btn_finish">Einrichtung abschließen</key>
+        <key name="fr_warning_incomplete">Sie müssen die Einrichtung abschließen, um ELAI-DevKit nutzen zu können.</key>
+        <key name="fr_pwd_empty">Passwort darf nicht leer sein.</key>
+        <key name="fr_pwd_mismatch">Passwörter stimmen nicht überein.</key>
+        <key name="layer2_alert_title">Ebene 2: Sicherheitswarnung</key>
+        <key name="manage_rules_btn">Zulassen/Verweigern-Listen verwalten</key>
+        <key name="rules_dialog_info">Sicherheitsregeln verwalten (Doppelklick zum Löschen):</key>
+        <key name="rules_dialog_title">Liste der zulässigen / verweigerten Regeln</key>
+
         <key name="delete_project_warning_msg">Möchten Sie das Projekt '{}' wirklich dauerhaft löschen? Diese Aktion kann nicht rückgängig gemacht werden!</key>
     </section>
     <section name="Tooltips">

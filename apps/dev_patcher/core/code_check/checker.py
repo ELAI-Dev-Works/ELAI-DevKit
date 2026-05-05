@@ -2,7 +2,6 @@ import os
 import shutil
 import tempfile
 from typing import Generator
-from ..fs_handler import _LAZY_LOAD_MARKER
 from systems.os.platform import get_venv_python_path
 
 from .code.python import check_python
@@ -19,18 +18,20 @@ class CodeChecker:
         self.errors = []
 
     def _prepare_environment(self) -> None:
-        self.temp_dir = tempfile.mkdtemp(prefix="patcher_code_check_")
-        for file_path, content in self.vfs.files.items():
-            if content is not _LAZY_LOAD_MARKER:
+        import uuid
+        temp_project_dir = os.path.join(self.project_root, '.temp_project')
+        os.makedirs(temp_project_dir, exist_ok=True)
+        self.temp_dir = os.path.join(temp_project_dir, f"code_check_{uuid.uuid4().hex[:8]}")
+        os.makedirs(self.temp_dir, exist_ok=True)
+
+        for file_path in self.vfs.modified_paths:
+            if self.vfs.exists(file_path) and not self.vfs.is_dir(file_path):
+                content = self.vfs.read_bytes(file_path)
                 relative_path = os.path.relpath(file_path, self.vfs.root)
                 temp_file_path = os.path.join(self.temp_dir, relative_path)
                 os.makedirs(os.path.dirname(temp_file_path), exist_ok=True)
-                if isinstance(content, bytes):
-                    with open(temp_file_path, 'wb') as f:
-                        f.write(content)
-                else:
-                    with open(temp_file_path, 'w', encoding='utf-8') as f:
-                        f.write(content)
+                with open(temp_file_path, 'wb') as f:
+                    f.write(content)
 
     def _cleanup_environment(self) -> None:
         if self.temp_dir and os.path.exists(self.temp_dir):
@@ -49,10 +50,11 @@ class CodeChecker:
             has_node = shutil.which("node") is not None
             checked_files = 0
 
-            for file_path, content in self.vfs.files.items():
-                if content is _LAZY_LOAD_MARKER:
-                    continue # Skip unmodified files
+            for file_path in self.vfs.modified_paths:
+                if not self.vfs.exists(file_path) or self.vfs.is_dir(file_path):
+                    continue
 
+                content = self.vfs.read_bytes(file_path)
                 relative_path = os.path.relpath(file_path, self.vfs.root)
                 temp_file_path = os.path.join(self.temp_dir, relative_path)
                 ext = os.path.splitext(relative_path)[1].lower()

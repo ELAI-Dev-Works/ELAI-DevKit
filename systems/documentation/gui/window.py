@@ -267,55 +267,48 @@ class DocumentationWindow(QMainWindow):
 
     def _load_docs(self):
         project_path = None
-        # The context might have a reference to the main_window instance.
-        # This instance has the currently selected root_path.
         if self.context.main_window and self.context.main_window.root_path:
             project_path = self.context.main_window.root_path
         else:
-            # Fallback for when docs are opened from launcher:
-            # Check for custom_commands in the app's own directory.
             project_path = self.context.app_root_path
 
-        docs = self.doc_manager.scan_docs(project_path)
         self.tree.clear()
+        loading_item = QTreeWidgetItem([self.lang.get('docs_nav_title', 'Loading documentation...')])
+        self.tree.addTopLevelItem(loading_item)
+        self.tree.setDisabled(True)
 
-        # Custom Font for tree header
-        header_font = self.tree.font()
-        header_font.setBold(True)
-        self.tree.headerItem().setFont(0, header_font)
+        def _on_docs_scanned(docs):
+            self.tree.clear()
+            self.tree.setDisabled(False)
 
-        # Sort categories to ensure consistent tree order
-        for category in sorted(docs.keys()):
-            pages = docs[category]
-            
-            # Split category path: "Core Apps/Dev Patcher/Sub Category"
-            cat_parts = category.split('/')
-            
-            # Start from the invisible root
-            current_parent = self.tree.invisibleRootItem()
-            
-            # Iterate through path segments to build/find tree nodes
-            for part in cat_parts:
-                found_item = self._find_item(current_parent, part)
-                if not found_item:
-                    found_item = QTreeWidgetItem([part])
-                    # Add to tree (either as top level or child)
-                    if current_parent == self.tree.invisibleRootItem():
-                        self.tree.addTopLevelItem(found_item)
-                    else:
-                        current_parent.addChild(found_item)
-                    
-                    found_item.setExpanded(True)
-                
-                current_parent = found_item
+            header_font = self.tree.font()
+            header_font.setBold(True)
+            self.tree.headerItem().setFont(0, header_font)
 
-            # Add pages to the final category node
-            for title in sorted(pages.keys()):
-                path = pages[title]
-                page_item = QTreeWidgetItem([title])
-                page_item.setData(0, Qt.ItemDataRole.UserRole, path)
-                # Use a specific icon for files if needed, or default
-                current_parent.addChild(page_item)
+            for category in sorted(docs.keys()):
+                pages = docs[category]
+                cat_parts = category.split('/')
+                current_parent = self.tree.invisibleRootItem()
+
+                for part in cat_parts:
+                    found_item = self._find_item(current_parent, part)
+                    if not found_item:
+                        found_item = QTreeWidgetItem([part])
+                        if current_parent == self.tree.invisibleRootItem():
+                            self.tree.addTopLevelItem(found_item)
+                        else:
+                            current_parent.addChild(found_item)
+                        found_item.setExpanded(True)
+                    current_parent = found_item
+
+                for title in sorted(pages.keys()):
+                    path = pages[title]
+                    page_item = QTreeWidgetItem([title])
+                    page_item.setData(0, Qt.ItemDataRole.UserRole, path)
+                    current_parent.addChild(page_item)
+
+        tc = self.context.async_thread_manager.thread
+        self._doc_scan_worker = tc.run_in_background(self.doc_manager.scan_docs, callback=_on_docs_scanned, use_qt=True, project_path=project_path)
 
     def _find_item(self, parent, text):
         for i in range(parent.childCount()):

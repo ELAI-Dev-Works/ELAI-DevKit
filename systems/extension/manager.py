@@ -1,4 +1,5 @@
 import os
+from PySide6.QtWidgets import QMessageBox
 from .metadata import MetadataLoader
 from .dependency_manager import DependencyManager
 from .component_loader import ComponentLoader
@@ -100,6 +101,18 @@ class ExtensionManager:
                 if arch:
                     if not arch.initialize(meta, self.main_window):
                         meta['enabled'] = False
+
+        # After initialisation, show a summary of failures
+        errors = []
+        for name, meta in self.extensions.items():
+            if not meta.get('enabled') and meta.get('init_error'):
+                display = meta.get('display_name', name)
+                errors.append(f"• {display}: {meta['init_error']}")
+
+        if errors:
+            msg = "The following extensions could not be started:\n\n" + "\n".join(errors)
+            log_to_file("Extension init failures:\n" + "\n".join(errors))
+            QMessageBox.warning(self.main_window, "Extension Initialisation Warning", msg)
 
     def connect_ui_extensions(self, key_manager, context_menu_manager):
         """Connects shortcuts and context menus."""

@@ -9,32 +9,17 @@ from .workflow.execution import execute_patch_workflow
 
 class PatchWorkflowManager(QObject):
     def __init__(self, dev_patcher_widget):
-        super().__init__() # Initialize QObject for signal/slot support
+        super().__init__()
         self.main_window = dev_patcher_widget.main_window
         self.widget = dev_patcher_widget
         self.qs_widget = None
 
-        # Worker state management
-        self._sim_worker = None
-        self._sim_thread = None
-        self._exec_worker = None
-        self._exec_thread = None
-
-        # Event loop state variables
-        self._active_loop = None
-        self._sim_success = False
-        self._sim_result_data = {}
-        self._exec_failed_commands =[]
-
-        # Execution progress tracking
         self._exec_current_idx = 0
         self._exec_total = 0
 
-        # Cache for execution plan
         self.cached_patch_text = ""
         self.cached_plan = None
         self.cached_skipped = None
-
 
     def set_quick_settings_widget(self, qs_widget):
         self.qs_widget = qs_widget
@@ -53,50 +38,19 @@ class PatchWorkflowManager(QObject):
 
         return patch_content, mw
 
-    # --- Slots for Thread Safety ---
     @Slot(str)
     def _on_worker_progress(self, message):
         """Thread-safe slot to update log."""
         self.main_window.patcher_log_output.appendPlainText(message)
 
-    @Slot(str)
-    def _on_worker_error(self, message):
+    @Slot(Exception)
+    def _on_worker_error(self, error):
         """Thread-safe slot for critical errors."""
-        self.main_window.patcher_log_output.appendPlainText(f"\n[CRITICAL ERROR] {message}")
-        if self._active_loop:
-            self._active_loop.quit()
+        self.main_window.patcher_log_output.appendPlainText(f"\n[CRITICAL ERROR] {error}")
 
-    @Slot(bool, dict)
-    def _on_simulation_finished(self, success, result):
-        """Thread-safe slot when simulation ends."""
-        self._sim_success = success
-        self._sim_result_data = result
-        if self._active_loop:
-            self._active_loop.quit()
-
-    @Slot(list, float)
-    def _on_execution_finished(self, failed_commands, total_time):
-        """Thread-safe slot when real execution ends."""
-        self._exec_failed_commands = failed_commands
-
-        # Update UI state
-        if failed_commands:
-            self.widget.progress_indicator.set_error(self.main_window.lang.get('patch_partial_success_warning'))
-        else:
-            self.widget.progress_indicator.finish(self.main_window.lang.get('all_commands_success_log'))
-
-        self.main_window.patcher_log_output.appendPlainText(f"Total time: {total_time:.3f}s")
-        self.main_window.patcher_log_output.appendPlainText(self.main_window.lang.get('patch_run_end_log'))
-        self.widget.run_button.setEnabled(True)
-        if self._active_loop:
-            self._active_loop.quit()
-
-    @Slot(bool, str, tuple)
     def _on_command_result(self, success, message, command):
         """Thread-safe slot for individual command results during execution."""
         self._exec_current_idx += 1
-
-        # Update progress bar
         self.widget.progress_indicator.update_progress(self._exec_current_idx)
 
         cmd_name = command[0]
@@ -191,18 +145,18 @@ class PatchWorkflowManager(QObject):
 
         if cmd_name.upper() == "REFACTOR":
             from apps.dev_patcher.core.patch_checking import simulate_patch_and_get_vfs
-            from apps.dev_patcher.core.fs_handler import _LAZY_LOAD_MARKER
             ignore_dirs, _ = mw.get_combined_ignore_lists()
 
             try:
-                vfs = simulate_patch_and_get_vfs([command], target_path, experimental_flags, ignore_dirs)
+                vfs = simulate_patch_and_get_vfs([command], target_path, experimental_flags, ignore_dirs, memory=mw.context.memory)
             except Exception as e:
                 QMessageBox.warning(self.widget, "Error", f"Failed to simulate REFACTOR command: {e}")
                 return
 
             modified_files =[]
-            for f_path, f_content in vfs.files.items():
-                if f_content is not _LAZY_LOAD_MARKER:
+            for f_path in vfs.modified_paths:
+                if vfs.exists(f_path) and not vfs.is_dir(f_path):
+                    f_content = vfs.read_bytes(f_path)
                     rel_path = os.path.relpath(f_path, vfs.root).replace('\\', '/')
                     disk_path = os.path.join(target_path, rel_path)
 
@@ -213,9 +167,7 @@ class PatchWorkflowManager(QObject):
                                 original_content_bytes = f.read()
                         except: pass
 
-                    f_content_bytes = f_content if isinstance(f_content, bytes) else f_content.encode('utf-8', errors='ignore')
-
-                    if original_content_bytes is None or f_content_bytes != original_content_bytes:
+                    if original_content_bytes is None or f_content != original_content_bytes:
                         modified_files.append((f_path, f_content))
 
             if not modified_files:

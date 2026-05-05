@@ -1,53 +1,11 @@
 import os
-from PySide6.QtCore import QObject, Signal, QThread
+from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QMessageBox
 
 from .core.detector import ProjectDetector
 from .core.architectures.python import PythonBuilder
 from .core.architectures.nodejs import NodeJSBuilder
 from .core.architectures.web import WebBuilder
-
-class BuildWorker(QObject):
-    log_msg = Signal(str)
-    finished = Signal(bool)
-
-    def __init__(self, architecture, root_path, output_dir, main_file, options):
-        super().__init__()
-        self.architecture = architecture
-        self.root_path = root_path
-        self.output_dir = output_dir
-        self.main_file = main_file
-        self.options = options
-
-    def run(self):
-        try:
-            builder_class = None
-            if self.architecture == 'python':
-                builder_class = PythonBuilder
-            elif self.architecture == 'nodejs':
-                builder_class = NodeJSBuilder
-            elif self.architecture == 'web':
-                builder_class = WebBuilder
-
-            if not builder_class:
-                self.log_msg.emit(f"[Error] Unsupported architecture: {self.architecture}")
-                self.finished.emit(False)
-                return
-
-            # Ensure output dir exists
-            os.makedirs(self.output_dir, exist_ok=True)
-
-            builder = builder_class(self.root_path, self.output_dir, self.main_file, self.options, self._emit_log)
-            success = builder.build()
-            self.finished.emit(success)
-
-        except Exception as e:
-            import traceback
-            self.log_msg.emit(f"[Critical Error] {e}\n{traceback.format_exc()}")
-            self.finished.emit(False)
-
-    def _emit_log(self, msg):
-        self.log_msg.emit(msg)
 
 
 class ProjectBuilderApp(QObject):
@@ -63,8 +21,6 @@ class ProjectBuilderApp(QObject):
         if hasattr(self.context, 'main_window') and self.context.main_window:
              self.root_path = self.context.main_window.root_path
 
-        self.worker_thread = None
-        self.worker = None
 
     def set_widget(self, widget):
         self.widget = widget
@@ -78,7 +34,8 @@ class ProjectBuilderApp(QObject):
                 return
 
             self.widget.log_box.appendPlainText(self.lang.get('pb_log_scanning'))
-            detection = ProjectDetector.detect(self.root_path)
+            fs = self.context.fs.get_fs(self.root_path)
+            detection = ProjectDetector.detect(fs)
             self.current_arch = detection['architecture']
             
             self.widget.arch_label_val.setText(self.current_arch.upper())
@@ -124,23 +81,46 @@ class ProjectBuilderApp(QObject):
         options['app_version'] = self.widget.app_version_input.text().strip() or "1.0.0"
         options['app_icon'] = self.widget.app_icon_input.text().strip()
 
-        self.worker_thread = QThread()
-        self.worker = BuildWorker(self.current_arch, self.root_path, output_dir, main_file, options)
-        self.worker.moveToThread(self.worker_thread)
+        fs = self.context.fs.get_fs(self.root_path)
+        out_fs = self.context.fs.get_fs(output_dir)
+        current_arch = self.current_arch
 
-        self.worker.log_msg.connect(self.widget.log_box.appendPlainText)
-        self.worker.finished.connect(self._on_build_finished)
-        
-        self.worker_thread.started.connect(self.worker.run)
-        self.worker_thread.start()
+        bridge = self.context.async_thread_manager.bridge
+        if not hasattr(self, '_pb_log_subscribed'):
+            bridge.subscribe("pb_log", self.widget.log_box.appendPlainText)
+            self._pb_log_subscribed = True
+
+        def build_task():
+            def log_cb(msg):
+                bridge.emit_safe("pb_log", msg)
+            try:
+                builder_class = None
+                if current_arch == 'python':
+                    builder_class = PythonBuilder
+                elif current_arch == 'nodejs':
+                    builder_class = NodeJSBuilder
+                elif current_arch == 'web':
+                    builder_class = WebBuilder
+
+                if not builder_class:
+                    log_cb(f"[Error] Unsupported architecture: {current_arch}")
+                    return False
+
+                out_fs.makedirs("")
+                builder = builder_class(fs, out_fs, main_file, options, log_cb)
+                return builder.build()
+            except Exception as e:
+                import traceback
+                log_cb(f"[Critical Error] {e}\n{traceback.format_exc()}")
+                return False
+
+        tc = self.context.async_thread_manager.thread
+        tc.run_in_background(build_task, callback=self._on_build_finished, use_qt=True)
 
     def _on_build_finished(self, success):
         if success:
             self.widget.progress_indicator.finish(self.lang.get('pb_status_done'))
         else:
             self.widget.progress_indicator.set_error(self.lang.get('pb_status_error'))
-            
+
         self.widget.start_button.setEnabled(True)
-        if self.worker_thread:
-            self.worker_thread.quit()
-            self.worker_thread.wait()

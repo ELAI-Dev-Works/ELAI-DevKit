@@ -20,6 +20,9 @@
         <key name="pb_app_version_label">应用版本：</key>
         <key name="pb_app_icon_label">应用图标：</key>
         <key name="pb_select_icon_btn">选择图标...</key>
+    
+    <key name="pb_project_settings_title">项目设置</key>
+    
     </section>
     <section name="Logs">
         <key name="pb_log_scanning">正在扫描项目目录...</key>

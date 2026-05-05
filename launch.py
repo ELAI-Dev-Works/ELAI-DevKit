@@ -181,4 +181,14 @@ def run_app():
             break
 
 if __name__ == "__main__":
+    import sys
+    from systems.error_handler.action_mapper import ActionMapper
+    from systems.error_handler.debug import set_debug_mode, DEBUG_MODE
+
+    if '--debug' in sys.argv:
+        set_debug_mode(True)
+
+    if DEBUG_MODE:
+        ActionMapper.start(clear_log=True)
+
     run_app()

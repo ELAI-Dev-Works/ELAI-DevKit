@@ -34,7 +34,14 @@ class TestConsoleWindow(QDialog):
         QTimer.singleShot(600, self._send_cmd)
 
     def _send_cmd(self):
-        self.console.send_external_command(self.launch_cmd)
+        from systems.os.platform import is_windows
+        if is_windows():
+            combined_cmd = f'$env:NODE_OPTIONS="--require ./_elai_node_auditor.js"; $env:PYTHONPATH="."; {self.launch_cmd}'
+        else:
+            # Unix: If bwrap is used, env vars must be passed inside the bwrap command, 
+            # but for simplicity in PTY, we export them globally in the shell before launch.
+            combined_cmd = f'export NODE_OPTIONS="--require ./_elai_node_auditor.js"; export PYTHONPATH="."; {self.launch_cmd}'
+        self.console.send_external_command(combined_cmd)
 
     def _on_stop(self):
         self.final_log = self.console.display.toPlainText()

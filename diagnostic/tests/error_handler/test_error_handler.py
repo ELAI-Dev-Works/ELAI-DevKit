@@ -13,6 +13,15 @@ from systems.error_handler.initializer import safe_execute
 from systems.error_handler.config import get_crash_log_path
 
 class TestErrorHandler(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        from PySide6.QtCore import QCoreApplication
+        if not QCoreApplication.instance():
+            cls.app = QCoreApplication(sys.argv)
+        else:
+            cls.app = QCoreApplication.instance()
+
     """
     Unit tests for the ELAI-DevKit Error Handler.
     Evaluates Python, Native, Qt, and Threading error handling capabilities.
@@ -23,6 +32,7 @@ class TestErrorHandler(unittest.TestCase):
     @patch('sys.exit')
     def test_python_exception_hook(self, mock_exit, mock_dialog, mock_log):
         """Tests if unhandled Python exceptions trigger logging and GUI dialog."""
+        mock_dialog.return_value = False # Simulate not ignoring the error
         try:
             1 / 0
         except Exception:
@@ -71,6 +81,7 @@ class TestErrorHandler(unittest.TestCase):
         # Script that triggers a segfault
         code = (
             "import sys, ctypes, os\n"
+            "if sys.platform == 'win32': ctypes.windll.kernel32.SetErrorMode(0x0002)\n"
             "sys.path.append(os.path.abspath('.'))\n"
             "from systems.error_handler.native_handler import setup_native_handling\n"
             "setup_native_handling()\n"
@@ -85,45 +96,47 @@ class TestErrorHandler(unittest.TestCase):
         # The size should grow because faulthandler writes the traceback
         self.assertGreater(final_size, initial_size, "Crash log should grow after a native segfault.")
 
-    @patch('systems.error_handler.python_handler.log_to_file')
     @patch('systems.error_handler.gui.window.show_error_dialog')
-    @patch('sys.exit')
-    def test_thread_exception_handling(self, mock_exit, mock_dialog, mock_log):
+    @patch('systems.error_handler.logger.log_to_file')
+    def test_async_thread_python_unhandled(self, mock_log, mock_dialog):
         """
-        Diagnostic test: Proves that standard thread exceptions are caught by the global error handler.
+        Tests if unhandled exceptions in PythonWorker are caught and logged automatically.
         """
-        from systems.error_handler.python_handler import setup_python_handling
-        setup_python_handling()
+        from systems.async_thread.thread_control import ThreadControl
+        tc = ThreadControl()
+        def crashing_task():
+            raise ValueError("Test Python Worker Crash")
 
-        def crashing_thread():
-            raise RuntimeError("Thread Crash")
+        worker = tc.run_in_background(crashing_task, use_qt=False)
+        try:
+            worker.future.result(timeout=2)
+        except ValueError:
+            pass # The future also raises the exception locally
 
-        t = threading.Thread(target=crashing_thread)
-        t.start()
-        t.join()
+        self.assertTrue(mock_log.called)
+        self.assertIn("Test Python Worker Crash", str(mock_log.call_args[0][0]))
 
-        mock_log.assert_called()
-
-    @patch('systems.error_handler.python_handler.log_to_file')
-    @patch('systems.error_handler.gui.window.show_error_dialog')
-    @patch('sys.exit')
-    def test_qthread_exception_handling(self, mock_exit, mock_dialog, mock_log):
+    def test_async_thread_qt_unhandled(self):
         """
-        Diagnostic test: Proves that PySide6 QThread exceptions trigger the global error handler.
+        Tests if unhandled exceptions in QtWorker are caught and error signal is emitted.
         """
-        from systems.error_handler.python_handler import setup_python_handling
-        from PySide6.QtCore import QThread
-        setup_python_handling()
+        from systems.async_thread.thread_control import ThreadControl
+        from PySide6.QtCore import QEventLoop, QTimer
+        tc = ThreadControl()
+        def crashing_task():
+            raise ValueError("Test Qt Worker Crash")
 
-        class CrashingThread(QThread):
-            def run(self):
-                raise RuntimeError("QThread Crash")
+        worker = tc.run_in_background(crashing_task, use_qt=True)
+        errors = []
+        worker.signals.error.connect(errors.append)
 
-        t = CrashingThread()
-        t.start()
-        t.wait()
+        loop = QEventLoop()
+        worker.signals.finished.connect(loop.quit)
+        QTimer.singleShot(5000, loop.quit)
+        loop.exec()
 
-        mock_log.assert_called()
+        self.assertTrue(len(errors) > 0, "Error signal was not emitted")
+        self.assertIsInstance(errors[0], ValueError)
 
 if __name__ == '__main__':
     unittest.main()

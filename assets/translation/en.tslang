@@ -9,6 +9,15 @@
         <key name="ui_always_show_tooltips_tooltip">If disabled, tooltip icons will only appear when hovering over the element.</key>
         <key name="ui_font_size">Global Font Size:</key>
         <key name="settings_extensions_settings_tab">Extension Settings</key>
+
+        <key name="settings_security_tab">Security</key>
+
+
+        <key name="settings_memory_tab">Memory</key>
+        <key name="settings_memory_group_title">Memory &amp; Caching</key>
+        <key name="memory_persistent_cache">Persistent Project Cache (Fast simulation)</key>
+        <key name="memory_persistent_cache_tooltip">Saves file indexing and AST parsing to disk, drastically speeding up Patcher simulations across sessions. Uses extra disk space.</key>
+
         <key name="settings_extensions_manager_tab">Extensions Manager</key>
         <key name="theme_label">Theme:</key>
         <key name="color_scheme_label">Color Scheme:</key>
@@ -26,6 +35,7 @@
         <key name="ignore_tab_global">Global List</key>
         <key name="ignore_tab_project">Current Project List</key>
         <key name="ignore_tab_temp">Temporary List (Session)</key>
+
         <key name="ignore_use_gitignore">Use project .gitignore for backup and packer</key>
         <key name="settings_btn">Settings</key>
         <key name="restart_btn">Restart</key>
@@ -116,7 +126,26 @@
         <key name="rename_project_title">Rename Project</key>
         <key name="rename_project_prompt">Enter new name for project '{}':</key>
         <key name="add_workspace_project_title">Add new workspace project</key>
+<key name="layer2_alert_title">Layer 2: Security Alert</key>
+<key name="manage_rules_btn">Manage Allowed/Denied Lists</key>
+<key name="rules_dialog_info">Manage security rules (Double-click to delete):</key>
+<key name="rules_dialog_title">Allowed / Denied Rules List</key>
+        <key name="layer2_alert_title">Layer 2: Security Alert</key>
+
         <key name="add_workspace_project_prompt">Enter name for new project in workspace folder:</key>
+
+        <key name="first_run_title">Welcome to ELAI-DevKit - First Run Setup</key>
+        <key name="fr_step1_title">Step 1: Appearance &amp; Language</key>
+        <key name="fr_step1_desc">Choose your preferred language and visual theme.</key>
+        <key name="fr_step2_title">Step 2: Security Setup</key>
+        <key name="fr_step2_desc">Set up a master password to secure your local sandbox and prevent unauthorized execution.</key>
+        <key name="fr_btn_next">Next &gt;</key>
+        <key name="fr_btn_back">&lt; Back</key>
+        <key name="fr_btn_finish">Finish Setup</key>
+        <key name="fr_warning_incomplete">You must complete the setup to use ELAI-DevKit.</key>
+        <key name="fr_pwd_empty">Password cannot be empty.</key>
+        <key name="fr_pwd_mismatch">Passwords do not match.</key>
+
 
     </section>
     <section name="Tooltips">

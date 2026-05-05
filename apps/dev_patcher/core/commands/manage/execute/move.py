@@ -64,6 +64,6 @@ def tests(vfs) -> List[Tuple[str, bool, str]]:
     vfs.makedirs('@ROOT/src_dir/sub')
     vfs.makedirs('@ROOT/dst_dir')
     succ, msg = run(['-move', '-dir', '@ROOT/src_dir', 'to', '@ROOT/dst_dir'], '', vfs)
-    passed = succ and vfs.exists('@ROOT/dst_dir/sub') and not vfs.exists('@ROOT/src_dir')
+    passed = succ and vfs.exists('@ROOT/dst_dir/src_dir/sub') and not vfs.exists('@ROOT/src_dir')
     res.append(("Move Directory", passed, msg))
     return res

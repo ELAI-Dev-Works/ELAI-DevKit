@@ -14,5 +14,5 @@ IF NOT EXIST .venv\Scripts\python.exe (
     exit /b 1
 )
 
-.\.venv\Scripts\python.exe -m systems.diagnostic
+.\.venv\Scripts\python.exe -m systems.diagnostic --save-coverage
 pause

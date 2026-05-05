@@ -14,6 +14,9 @@ theme = "sleek"
 always_show_tooltips = false
 font_size = 10
 
+[core.memory]
+persistent_cache = false
+
 [core.extensions]
 dev_patcher_enabled = true
 project_text_packer_enabled = true

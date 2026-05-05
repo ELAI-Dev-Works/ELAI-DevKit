@@ -1,5 +1,6 @@
 import tomllib
 from PySide6.QtWidgets import (
+    QLineEdit,
     QPushButton, QVBoxLayout, QFrame, QHBoxLayout,
     QSpacerItem, QSizePolicy, QLabel, QComboBox, QFormLayout,
     QGroupBox, QTabWidget, QWidget, QCheckBox
@@ -34,9 +35,13 @@ class SettingsPanel(QFrame):
 
         main_settings_widget = self._create_main_settings_tab()
         ui_settings_widget = self._create_ui_settings_tab()
+        memory_settings_widget = self._create_memory_settings_tab()
+        security_settings_widget = self._create_security_settings_tab()
 
         self.tab_widget.addTab(main_settings_widget, "Main")
         self.tab_widget.addTab(ui_settings_widget, "UI")
+        self.tab_widget.addTab(memory_settings_widget, self.lang.get('settings_memory_tab', 'Memory'))
+        self.tab_widget.addTab(security_settings_widget, self.lang.get('settings_security_tab', 'Security'))
 
         button_layout = self._create_control_buttons()
         layout.addLayout(button_layout)
@@ -92,6 +97,60 @@ class SettingsPanel(QFrame):
         layout.addStretch()
         return widget
 
+    def _create_memory_settings_tab(self):
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+
+        self.memory_group = QGroupBox()
+        form_layout = QFormLayout(self.memory_group)
+
+        self.persistent_cache_checkbox = QCheckBox()
+        self.persistent_cache_checkbox.setStyleSheet("border: none; background: transparent;")
+        form_layout.addRow(self.persistent_cache_checkbox)
+
+        layout.addWidget(self.memory_group)
+        layout.addStretch()
+        return widget
+
+
+    def _open_rules_manager(self):
+        from systems.security.gui.rules_dialog import RuleManagerDialog
+        sm = self.main_window.context.security_manager
+        dialog = RuleManagerDialog(sm, self)
+        dialog.exec()
+
+    def _create_security_settings_tab(self):
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+
+        self.security_group = QGroupBox()
+        form_layout = QFormLayout(self.security_group)
+
+        self.current_password_input = QLineEdit()
+        self.current_password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.current_password_input.setPlaceholderText("Current master password")
+        self.new_password_input = QLineEdit()
+        self.new_password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.new_password_input.setPlaceholderText("New password")
+        self.confirm_password_input = QLineEdit()
+        self.confirm_password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.confirm_password_input.setPlaceholderText("Confirm new password")
+
+        form_layout.addRow("Current Password:", self.current_password_input)
+        form_layout.addRow("New Password:", self.new_password_input)
+        form_layout.addRow("Confirm New Password:", self.confirm_password_input)
+
+        self.manage_rules_btn = QPushButton(self.lang.get('manage_rules_btn', 'Manage Allowed/Denied Lists'))
+        self.manage_rules_btn.clicked.connect(self._open_rules_manager)
+        form_layout.addRow("", self.manage_rules_btn)
+
+
+        layout.addWidget(self.security_group)
+        layout.addStretch()
+        return widget
+
+
+
     def _create_control_buttons(self):
         button_layout = QHBoxLayout()
         self.reset_button = QPushButton()
@@ -122,10 +181,21 @@ class SettingsPanel(QFrame):
         lang = self.main_window.lang
         self.tab_widget.setTabText(0, lang.get('settings_main_tab'))
         self.tab_widget.setTabText(1, lang.get('settings_ui_tab'))
+        if hasattr(self, 'security_group'):
+            self.security_group.setTitle(lang.get('settings_security_tab', 'Security'))
+            # Update tab title
+            if self.tab_widget.count() >= 4:
+                self.tab_widget.setTabText(3, lang.get('settings_security_tab', 'Security'))
 
         self.ui_group.setTitle(lang.get('settings_ui_group_title'))
         self.always_show_tooltips_checkbox.setText(lang.get('ui_always_show_tooltips'))
         self.always_show_tooltips_checkbox.setToolTip(lang.get('ui_always_show_tooltips_tooltip'))
+
+        if hasattr(self, 'memory_group'):
+            self.memory_group.setTitle(lang.get('settings_memory_group_title', 'Memory & Caching'))
+            self.persistent_cache_checkbox.setText(lang.get('memory_persistent_cache', 'Persistent Project Cache (Fast simulation)'))
+            self.persistent_cache_checkbox.setToolTip(lang.get('memory_persistent_cache_tooltip', 'Saves file indexing and AST parsing to disk, drastically speeding up Patcher simulations across sessions. Uses extra disk space.'))
+
         if hasattr(self, 'font_size_label'):
             self.font_size_label.setText(lang.get('ui_font_size', 'Global Font Size:'))
 
@@ -142,6 +212,8 @@ class SettingsPanel(QFrame):
 
         self.save_button.setText(lang.get('save_btn')).addGUITooltip(lang.get('settings_save_tooltip'))
         self.close_button.setText(lang.get('close_btn')).addGUITooltip(lang.get('settings_close_tooltip'))
+        if hasattr(self, 'manage_rules_btn'):
+            self.manage_rules_btn.setText(lang.get('manage_rules_btn', 'Manage Allowed/Denied Lists'))
 
     def populate_languages(self, current_lang_code):
         self.lang_combo.blockSignals(True)
@@ -169,6 +241,22 @@ class SettingsPanel(QFrame):
             self.state_on_open['ui'] = {}
         self.state_on_open['ui']['always_show_tooltips'] = self.always_show_tooltips_checkbox.isChecked() if hasattr(self, 'always_show_tooltips_checkbox') else False
         self.state_on_open['ui']['font_size'] = self.font_size_spinbox.value() if hasattr(self, 'font_size_spinbox') else 10
+
+        if 'memory' not in self.state_on_open:
+            self.state_on_open['memory'] = {}
+
+        core_settings = self.main_window.settings_manager.get_setting(['core'], {})
+        self.state_on_open['memory']['persistent_cache'] = core_settings.get('memory', {}).get('persistent_cache', False)
+
+        if hasattr(self, 'persistent_cache_checkbox'):
+            self.persistent_cache_checkbox.setChecked(self.state_on_open['memory'].get('persistent_cache', False))
+
+        # Security – no persistent state to load, just clear the form
+        if hasattr(self, 'current_password_input'):
+            self.current_password_input.clear()
+            self.new_password_input.clear()
+            self.confirm_password_input.clear()
+        self.state_on_open['security_password_changed'] = False
 
         self.populate_languages(self.state_on_open.get('language', 'en'))
 
@@ -219,6 +307,43 @@ class SettingsPanel(QFrame):
             self.state_on_open['ui'] = {}
         self.state_on_open['ui']['always_show_tooltips'] = self.always_show_tooltips_checkbox.isChecked()
         self.state_on_open['ui']['font_size'] = self.font_size_spinbox.value()
+
+        if 'memory' not in self.state_on_open:
+            self.state_on_open['memory'] = {}
+        if hasattr(self, 'persistent_cache_checkbox'):
+            self.state_on_open['memory']['persistent_cache'] = self.persistent_cache_checkbox.isChecked()
+
+        # Security password change
+        if hasattr(self, 'current_password_input'):
+            cur = self.current_password_input.text()
+            new = self.new_password_input.text()
+            conf = self.confirm_password_input.text()
+            if cur or new or conf:  # Only act if something was filled
+                sm = self.main_window.context.security_manager
+                if not sm.verify(cur):
+                    from PySide6.QtWidgets import QMessageBox
+                    QMessageBox.warning(self, "Error", "Current password is incorrect.")
+                    return
+                if new != conf:
+                    from PySide6.QtWidgets import QMessageBox
+                    QMessageBox.warning(self, "Error", "New passwords do not match.")
+                    return
+                if not new:
+                    from PySide6.QtWidgets import QMessageBox
+                    QMessageBox.warning(self, "Error", "New password cannot be empty.")
+                    return
+                # Read existing encryption patterns
+                import json, os
+                config_path = sm.config_path
+                with open(config_path, 'r') as f:
+                    sec_data = json.load(f)
+                sm.setup(new, sec_data['p1'], sec_data['p2'])
+                self.state_on_open['security_password_changed'] = True
+                # Clear fields after successful change
+                self.current_password_input.clear()
+                self.new_password_input.clear()
+                self.confirm_password_input.clear()
+
         self.main_window.apply_main_settings(self.state_on_open)
 
     def save_settings(self, is_project=False):
@@ -236,6 +361,9 @@ class SettingsPanel(QFrame):
         for key in existing_core:
             if key not in core_settings:
                 core_settings[key] = existing_core[key]
+
+        # Security password change is already performed in apply_settings().
+        # No extra save is required because SecurityManager writes to its own file.
 
         sm.update_setting(['core'], core_settings, is_project)
         if is_project:
@@ -292,3 +420,13 @@ class SettingsPanel(QFrame):
         self.always_show_tooltips_checkbox.setChecked(ui_defaults.get('always_show_tooltips', False))
         if hasattr(self, 'font_size_spinbox'):
             self.font_size_spinbox.setValue(ui_defaults.get('font_size', 10))
+
+        memory_defaults = core_defaults.get('memory', {})
+        if hasattr(self, 'persistent_cache_checkbox'):
+            self.persistent_cache_checkbox.setChecked(memory_defaults.get('persistent_cache', False))
+
+        # Clear security fields on reset (does not change the actual password)
+        if hasattr(self, 'current_password_input'):
+            self.current_password_input.clear()
+            self.new_password_input.clear()
+            self.confirm_password_input.clear()

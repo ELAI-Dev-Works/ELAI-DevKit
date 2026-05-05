@@ -2,6 +2,7 @@ import os
 import sys
 import importlib.util
 from .base import BaseArchitecture
+from systems.error_handler.logger import log_to_file
 
 class V2Architecture(BaseArchitecture):
     """
@@ -42,19 +43,27 @@ class V2Architecture(BaseArchitecture):
         camel_name = "".join(part.capitalize() for part in name.split('_'))
         
         try:
+            # Create isolated context for the extension to prevent thread/memory starvation of the core app
+            from systems.extension.app_context import ExtensionContextProxy
+            iso_context = ExtensionContextProxy(context, name)
+
             # Init App with Context
             app_class_name = camel_name + "App"
             app_class = getattr(meta["app_module"], app_class_name)
-            meta["instance"] = app_class(context)
+            meta["instance"] = app_class(iso_context)
 
             # Init GUI Class
             gui_class_name = camel_name + "CoreWindow"
             gui_class = getattr(meta["gui_module"], gui_class_name)
             meta["gui_class"] = gui_class
-            
+
             return True
-        except AttributeError as e:
-            print(f"[Arch-V2] Init error {name}: {e}")
+        except Exception as e:
+            import traceback
+            err_msg = f"[Arch-V2] Could not initialize '{name}': {e}"
+            print(err_msg)
+            log_to_file(f"{err_msg}\n{traceback.format_exc()}", is_exception=True)
+            meta['init_error'] = str(e)
             return False
 
     def _import_module(self, name, path):

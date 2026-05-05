@@ -48,6 +48,12 @@
         <key name="project_target_name">проект</key>
     </section>
     <section name="Logs">
+
+        <key name="test_run_html_info_log">[ИНФО] HTML-файл открыт в браузере по умолчанию.</key>
+        <key name="test_run_html_final_log">[ИНФО] Тест HTML запущен через внешний браузер.</key>
+        <key name="test_run_critical_error_log">[ОШИБКА] Критическая ошибка во время тестового запуска: {}</key>
+        <key name="test_run_prep_error_log">Не удалось подготовить тестовую среду: {}</key>
+
         <key name="quick_settings_saved_log">[Настройки] Быстрые настройки сохранены.</key>
         <key name="quick_settings_reset_log">[Настройки] Быстрые настройки сброшены на значения по умолчанию (не сохранены).</key>
         <key name="patch_loaded_log">Патч загружен из файла: {}</key>
@@ -123,6 +129,12 @@
         <key name="dev_patcher_standalone_title">Dev Patcher (автономный)</key>
     </section>
     <section name="Dialogs">
+
+        <key name="test_run_html_dialog_title">Тест HTML</key>
+        <key name="test_run_html_dialog_msg">HTML-файл открыт в вашем браузере. Закройте это диалоговое окно, когда закончите, чтобы очистить тестовую среду.</key>
+        <key name="test_run_aborted_title">Тестовый запуск прерван</key>
+        <key name="test_run_error_title">Ошибка тестового запуска</key>
+
         <key name="patch_load_error_title">Ошибка</key>
         <key name="patch_load_error_msg">Не удалось прочитать файл патча: {}</key>
         <key name="self_update_warning_title">Внимание!</key>
@@ -160,6 +172,10 @@
         <key name="ai_report_dialog_title">Отчет об исправлении ИИ</key>
         <key name="ai_report_dialog_info">В патче обнаружены проблемные команды. Они будут пропущены, и патч можно безопасно применить. Составлен отчет об исправлении для ИИ. Скопируйте его вместе с новым контекстом проекта и отправьте ИИ, чтобы он мог написать правильную команду.</key>
         <key name="ai_report_task">Исправьте только указанную(-ые) проблему(-ы).</key>
+        
+        <key name="ai_report_msg_single">Команда завершилась с ошибкой. Пожалуйста, просмотрите отчет.</key>
+        <key name="ai_report_msg_multiple">Некоторые команды завершились с ошибкой. Пожалуйста, просмотрите отчет и устраните проблемы.</key>
+        
         <key name="simulation_success_msg_new">Симуляция завершена. Ошибок не обнаружено. Все команды могут быть безопасно выполнены.</key>
     </section>
     <section name="Tooltips">

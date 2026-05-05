@@ -173,16 +173,10 @@ class ProjectTextPackerInterface(QWidget):
         self.progress_indicator.finish(self.lang.get('packer_status_done'))
         self.log_box.appendPlainText(f"\n{self.lang.get('packer_status_done')}")
         self.start_button.setEnabled(True)
-        if self.app.worker_thread:
-            self.app.worker_thread.quit()
-            self.app.worker_thread.wait()
         QMessageBox.information(self, self.lang.get('packer_status_done'), f"{self.lang.get('packer_log_files_saved')}:\n{created_files_msg}")
-    
+
     def on_packing_error(self, error_msg):
         self.progress_indicator.set_error(self.lang.get('packer_status_error'))
         self.log_box.appendPlainText(f"\nERROR:\n{error_msg}")
         self.start_button.setEnabled(True)
-        if self.app.worker_thread:
-            self.app.worker_thread.quit()
-            self.app.worker_thread.wait()
         QMessageBox.critical(self, self.lang.get('patch_load_error_title'), error_msg)

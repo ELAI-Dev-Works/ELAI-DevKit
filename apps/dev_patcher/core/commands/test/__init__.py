@@ -18,7 +18,7 @@ class Command(BaseCommand):
         action_name = action_arg[1:]
 
         try:
-            action_module = self._load_action_module("test", action_name, __package__, fs_handler)
+            action_module = self._load_action_module("test", action_name, __package__, fs_handler.root)
             if action_module:
                 return action_module.run(args, content, fs_handler)
             else:
@@ -39,4 +39,3 @@ class Command(BaseCommand):
                 "type": "syntax"
             })
         return issues
-

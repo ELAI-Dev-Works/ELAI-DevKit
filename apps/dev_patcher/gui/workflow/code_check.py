@@ -1,7 +1,5 @@
 from PySide6.QtWidgets import QApplication
 from apps.dev_patcher.core.parser import parse_patch_content
-from apps.dev_patcher.core.patch_checking import simulate_patch_and_get_vfs
-from apps.dev_patcher.core.code_check.checker import CodeChecker
 from .error_report import show_error_report
 
 def run_code_check(manager):
@@ -32,20 +30,33 @@ def run_code_check(manager):
         return
 
     mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_running_log'))
-    QApplication.processEvents()
+    manager.widget.check_code_button.setEnabled(False)
 
-    vfs = simulate_patch_and_get_vfs(commands, target_path, experimental_flags, ignore_dirs)
-    checker = CodeChecker(vfs, target_path)
+    tc = mw.context.async_thread_manager.thread
 
-    for log_line in checker.run():
-        mw.patcher_log_output.appendPlainText(log_line)
-        QApplication.processEvents()
+    def _code_check_task():
+        from apps.dev_patcher.core.patch_checking import simulate_patch_and_get_vfs
+        from apps.dev_patcher.core.code_check.checker import CodeChecker
+        vfs = simulate_patch_and_get_vfs(commands, target_path, experimental_flags, ignore_dirs, memory=mw.context.memory)
+        checker = CodeChecker(vfs, target_path)
+        for log_line in checker.run():
+            yield log_line
+        return checker.errors
 
-    if checker.errors:
-        mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_errors_found_log'))
-        formatted_errors = [(("CodeCheck", [fp], ""), err) for fp, err in checker.errors]
-        show_error_report(manager, formatted_errors)
-    else:
-        mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_no_errors_log'))
+    def _on_code_check_done(errors):
+        manager.widget.check_code_button.setEnabled(True)
+        if errors:
+            mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_errors_found_log'))
+            formatted_errors =[(("CodeCheck", [fp], ""), err) for fp, err in errors]
+            show_error_report(manager, formatted_errors)
+        else:
+            mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_no_errors_log'))
+        mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_finished_log'))
 
-    mw.patcher_log_output.appendPlainText(mw.lang.get('code_check_finished_log'))
+    tc.run_in_background(
+        _code_check_task,
+        use_qt=True,
+        yield_callback=manager._on_worker_progress,
+        callback=_on_code_check_done,
+        error_callback=manager._on_worker_error
+    )

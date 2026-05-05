@@ -20,6 +20,9 @@
         <key name="pb_app_version_label">Версія додатка:</key>
         <key name="pb_app_icon_label">Значок додатка:</key>
         <key name="pb_select_icon_btn">Вибрати значок...</key>
+    
+    <key name="pb_project_settings_title">Налаштування Проєкту</key>
+    
     </section>
     <section name="Logs">
         <key name="pb_log_scanning">Сканування директорії проєкту...</key>

@@ -1,5 +1,6 @@
 import os
 import shutil
+from systems.async_thread.thread_control import ThreadControl
 
 class DocBuilder:
     """
@@ -59,10 +60,11 @@ class DocBuilder:
         for cmd in commands:
             cmd_content = cmd['content']
             cmd_path = cmd['path']
-            
+            cmd_name = os.path.basename(os.path.dirname(cmd_path))
+
             # --- Argument Processing ---
             # Scan for arguments related to this command
-            args = self._scan_arguments_for_command(cmd_path)
+            args = self._scan_arguments_for_command(cmd_path, command_name=cmd_name)
             args.sort(key=lambda x: self._get_number(x['meta']))
 
             # 1. Build {args_list} replacement string (Bullet points)
@@ -114,11 +116,15 @@ class DocBuilder:
         except Exception as e:
             print(f"[DocBuilder] Failed to write syntax page: {e}")
 
-    def _scan_arguments_for_command(self, cmd_path):
-        """Scans for .cdoc files in the command's directory and 'execute' subdirectory."""
+    def _scan_arguments_for_command(self, cmd_path, command_name=None):
+        """Scans for .cdoc files in the command's directory and 'execute' subdirectory,
+        and also collects custom arguments from extensions/custom_commands."""
+        if command_name is None:
+            command_name = os.path.basename(os.path.dirname(cmd_path))
+
         cmd_dir = os.path.dirname(cmd_path)
         # Just searching cmd_dir recursively is sufficient as it covers 'execute' and other subdirs.
-        
+
         args_data = []
         seen_paths = set()
 
@@ -126,7 +132,7 @@ class DocBuilder:
             for f in files:
                 if f.endswith('.cdoc') and f != os.path.basename(cmd_path):
                     full_path = os.path.join(root, f)
-                    
+
                     # Prevent duplicates if search logic changes or links exist
                     if full_path in seen_paths:
                         continue
@@ -136,7 +142,35 @@ class DocBuilder:
                     t = data['meta'].get('type', '')
                     if 'argument' in t or 'modifier' in t or 'sub-argument' in t:
                         args_data.append(data)
+
+        # Collect custom arguments from extensions/custom_commands
+        custom_args = self._find_custom_args_for_command(command_name)
+        for ca in custom_args:
+            if ca['path'] not in seen_paths:
+                seen_paths.add(ca['path'])
+                args_data.append(ca)
+
         return args_data
+
+    def _find_custom_args_for_command(self, command_name):
+        """Searches in all custom extensions for argument .cdoc files belonging to the given command."""
+        custom_args = []
+        if not os.path.exists(self.custom_dir):
+            return custom_args
+
+        for ext_name in os.listdir(self.custom_dir):
+            ext_cmd_dir = os.path.join(self.custom_dir, ext_name, 'commands', command_name)
+            if os.path.isdir(ext_cmd_dir):
+                for root, _, files in os.walk(ext_cmd_dir):
+                    for f in files:
+                        if f.endswith('.cdoc'):
+                            full_path = os.path.join(root, f)
+                            data = self._parse_doc_file(full_path)
+                            t = data['meta'].get('type', '')
+                            if 'argument' in t or 'modifier' in t or 'sub-argument' in t:
+                                custom_args.append(data)
+        return custom_args
+
 
     def _prepare_output_dir(self):
         cat_dir = os.path.join(self.doc_base_dir, "categories")
@@ -218,9 +252,20 @@ class DocBuilder:
                         t = a_data['meta'].get('type', '')
                         if 'argument' in t or 'modifier' in t:
                             args_meta.append(a_data)
-
         # Sort arguments
         args_meta.sort(key=lambda x: self._get_number(x['meta']))
+
+        cmd_name = os.path.basename(os.path.dirname(cmd_path))
+
+        # Explicitly merge custom arguments to ensure none are missed
+        custom_args = self._find_custom_args_for_command(cmd_name)
+        existing_paths = {a['path'] for a in args_meta}
+        for ca in custom_args:
+            if ca['path'] not in existing_paths:
+                args_meta.append(ca)
+                existing_paths.add(ca['path'])
+        args_meta.sort(key=lambda x: self._get_number(x['meta']))
+        # --- Argument Processing ---
 
         # Build replacement strings
         args_desc_list = []
@@ -245,22 +290,39 @@ class DocBuilder:
         return text
 
     def _scan_all_doc_files(self):
-        """Recursively finds all doc files in apps and extensions."""
+        """Recursively finds all doc files in apps and extensions using background threads."""
         files = []
-        roots = [
+        roots =[
             os.path.join(self.core_apps_dir, "dev_patcher", "core", "commands"),
             self.custom_dir
         ]
 
+        found_paths =[]
         for r in roots:
             if not os.path.exists(r): continue
             for root, _, filenames in os.walk(r):
                 for f in filenames:
                     if f.endswith('.cdoc') or f.endswith('.csdoc'):
-                        path = os.path.join(root, f)
-                        data = self._parse_doc_file(path)
-                        data['path'] = path
-                        files.append(data)
+                        found_paths.append(os.path.join(root, f))
+
+        if not found_paths:
+            return[]
+
+        tc = ThreadControl()
+        workers =[]
+        for path in found_paths:
+            worker = tc.run_in_background(self._parse_doc_file, use_qt=False, path=path)
+            workers.append((path, worker))
+
+        for path, worker in workers:
+            try:
+                data = worker.future.result()
+                data['path'] = path
+                files.append(data)
+            except Exception as e:
+                print(f"[DocBuilder] Worker error on {path}: {e}")
+
+        tc.shutdown()
         return files
 
     def _parse_doc_file(self, path):
@@ -325,7 +387,8 @@ class DocBuilder:
             
         return {
             'meta': meta,
-            'content': "\n".join(content_lines)
+            'content': "\n".join(content_lines),
+            'path': path
         }
 
     def _get_number(self, meta):

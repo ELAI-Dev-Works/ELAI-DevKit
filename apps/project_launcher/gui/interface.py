@@ -166,7 +166,6 @@ class ProjectLauncherInterface(QWidget):
             self.args_input.clear()
 
         self._update_input_state()
-        self.app.worker_thread.quit()
         self._update_ui_state()
 
     def _update_input_state(self):
@@ -180,7 +179,6 @@ class ProjectLauncherInterface(QWidget):
     def _on_scan_error(self, error_message):
         self.status_label_text.setText(self.lang.get('packer_status_error'))
         QMessageBox.critical(self, self.lang.get('patch_load_error_title'), error_message)
-        self.app.worker_thread.quit()
         self._update_ui_state()
 
     def _on_creation_suggestion(self):

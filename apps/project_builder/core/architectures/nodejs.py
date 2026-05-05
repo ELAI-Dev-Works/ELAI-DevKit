@@ -11,17 +11,14 @@ class NodeJSBuilder(BaseBuilder):
             self.log("[Error] 'npx' is not installed or not in PATH. Please install Node.js.")
             return False
 
-        main_path = os.path.join(self.root_path, self.main_file)
-        if not os.path.exists(main_path) and not os.path.exists(os.path.join(self.root_path, "package.json")):
+        if not self.fs.exists(self.main_file) and not self.fs.exists("package.json"):
             self.log(f"[Error] Entry point or package.json not found.")
             return False
 
-        pkg_path = os.path.join(self.root_path, "package.json")
-        if os.path.exists(pkg_path):
+        if self.fs.exists("package.json"):
             try:
                 import json
-                with open(pkg_path, 'r', encoding='utf-8') as f:
-                    pkg_data = json.load(f)
+                pkg_data = json.loads(self.fs.read("package.json"))
 
                 app_name = self.options.get('app_name')
                 if app_name:
@@ -31,8 +28,7 @@ class NodeJSBuilder(BaseBuilder):
                 if app_version:
                     pkg_data['version'] = app_version
 
-                with open(pkg_path, 'w', encoding='utf-8') as f:
-                    json.dump(pkg_data, f, indent=2)
+                self.fs.write("package.json", json.dumps(pkg_data, indent=2))
             except Exception as e:
                 self.log(f"[Warning] Failed to update package.json: {e}")
 

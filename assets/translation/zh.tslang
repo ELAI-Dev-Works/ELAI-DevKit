@@ -8,6 +8,15 @@
         <key name="ui_always_show_tooltips">始终显示提示图标</key>
         <key name="ui_always_show_tooltips_tooltip">如果禁用,提示图标仅在鼠标悬停在元素上时显示。</key>
         <key name="settings_extensions_settings_tab">扩展设置</key>
+
+        <key name="settings_security_tab">安全</key>
+
+
+        <key name="settings_memory_tab">内存</key>
+        <key name="settings_memory_group_title">内存与缓存</key>
+        <key name="memory_persistent_cache">持久项目缓存 (快速模拟)</key>
+        <key name="memory_persistent_cache_tooltip">将文件索引和AST解析保存到磁盘，从而显著加快不同会话间Patcher的模拟速度。需要占用额外的磁盘空间。</key>
+
         <key name="settings_extensions_manager_tab">扩展管理器</key>
         <key name="theme_label">主题:</key>
         <key name="color_scheme_label">配色方案:</key>
@@ -109,6 +118,23 @@
         <key name="add_workspace_project_title">添加新的工作区项目</key>
         <key name="add_workspace_project_prompt">输入工作区文件夹中新项目的名称：</key>
         <key name="delete_project_warning_title">删除项目</key>
+
+        <key name="first_run_title">欢迎使用 ELAI-DevKit - 首次运行设置</key>
+        <key name="fr_step1_title">步骤 1：外观与语言</key>
+        <key name="fr_step1_desc">选择您偏好的语言和视觉主题。</key>
+        <key name="fr_step2_title">步骤 2：安全设置</key>
+        <key name="fr_step2_desc">设置主密码以保护您的本地沙箱并防止未经授权的执行。</key>
+        <key name="fr_btn_next">下一步 &gt;</key>
+        <key name="fr_btn_back">&lt; 上一步</key>
+        <key name="fr_btn_finish">完成设置</key>
+        <key name="fr_warning_incomplete">您必须完成设置才能使用 ELAI-DevKit。</key>
+        <key name="fr_pwd_empty">密码不能为空。</key>
+        <key name="fr_pwd_mismatch">密码不匹配。</key>
+        <key name="layer2_alert_title">第 2 层：安全警报</key>
+        <key name="manage_rules_btn">管理允许/拒绝列表</key>
+        <key name="rules_dialog_info">管理安全规则（双击删除）：</key>
+        <key name="rules_dialog_title">允许/拒绝规则列表</key>
+
         <key name="delete_project_warning_msg">您确定要永久删除项目'{}'吗?此操作无法撤销!</key>
     </section>
     <section name="Tooltips">

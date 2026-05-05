@@ -48,6 +48,12 @@
         <key name="project_target_name">プロジェクト</key>
     </section>
     <section name="Logs">
+
+        <key name="test_run_html_info_log">[情報] HTMLファイルがデフォルトのブラウザで開かれました。</key>
+        <key name="test_run_html_final_log">[情報] 外部ブラウザ経由でHTMLテストが実行されました。</key>
+        <key name="test_run_critical_error_log">[エラー] テスト実行中に致命的なエラーが発生しました：{}</key>
+        <key name="test_run_prep_error_log">テスト環境の準備に失敗しました：{}</key>
+
         <key name="quick_settings_saved_log">[設定] クイック設定を保存しました。</key>
         <key name="quick_settings_reset_log">[設定] クイック設定がデフォルトにリセットされました(保存されていません)。</key>
         <key name="patch_loaded_log">ファイルからパッチを読み込みました: {}</key>
@@ -120,6 +126,12 @@
         <key name="test_run_env_required_error">プロジェクトはPROJECTコマンドで初期化されるか、環境（.venv、node_modules）が必要ですが、まだ初期化されていません。テスト実行を行う前に、パッチを適用して環境を初期化してください。</key>
     </section>
     <section name="Dialogs">
+
+        <key name="test_run_html_dialog_title">HTMLテスト</key>
+        <key name="test_run_html_dialog_msg">HTMLファイルがブラウザで開かれました。終了したらこのダイアログを閉じて、テスト環境をクリーンアップしてください。</key>
+        <key name="test_run_aborted_title">テスト実行が中止されました</key>
+        <key name="test_run_error_title">テスト実行エラー</key>
+
         <key name="patch_load_error_title">エラー</key>
         <key name="patch_load_error_msg">パッチファイルの読み込みに失敗しました：{}</key>
         <key name="self_update_warning_title">警告！</key>
@@ -157,6 +169,10 @@
         <key name="ai_report_dialog_title">AI修正レポート</key>
         <key name="ai_report_dialog_info">パッチに問題のあるコマンドが見つかりました。これらはスキップされ、パッチは安全に適用できます。AIの修正レポートが作成されました。新しいプロジェクトコンテキストと一緒にコピーしてAIに送信すると、正しいコマンドを書くことができます。</key>
         <key name="ai_report_task">指定された問題のみを修正してください。</key>
+        
+        <key name="ai_report_msg_single">コマンドが失敗しました。レポートを確認してください。</key>
+        <key name="ai_report_msg_multiple">一部のコマンドが失敗しました。レポートを確認し、問題を修正してください。</key>
+        
         <key name="simulation_success_msg_new">シミュレーションが完了しました。エラーは見つかりませんでした。すべてのコマンドを安全に実行できます。</key>
     </section>
     <section name="Tooltips">

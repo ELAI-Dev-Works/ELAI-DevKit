@@ -67,6 +67,7 @@ class CorrectorDialog(QDialog):
         layout.addWidget(desc_label)
 
         text_view = CodeEditor()
+        text_view.settings_panel.maximize_btn.hide()
         text_view.setMinimumHeight(150)
 
         if issue['original'] != issue['corrected']:

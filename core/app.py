@@ -15,6 +15,17 @@ def main():
     """
     Main function to run the GUI application or command-line handlers.
     """
+    import sys
+    from systems.error_handler.debug import set_debug_mode, DEBUG_MODE
+
+    if '--debug' in sys.argv:
+        set_debug_mode(True)
+        sys.argv.remove('--debug')
+
+    if DEBUG_MODE:
+        from systems.error_handler.action_mapper import ActionMapper
+        ActionMapper.start(clear_log=False)
+
 
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"

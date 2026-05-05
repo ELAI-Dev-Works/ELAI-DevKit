@@ -8,6 +8,15 @@
         <key name="ui_always_show_tooltips">Mostrar siempre iconos de información</key>
         <key name="ui_always_show_tooltips_tooltip">Si está desactivado, los iconos de información solo aparecerán al pasar el cursor sobre el elemento.</key>
         <key name="settings_extensions_settings_tab">Configuración de Extensiones</key>
+
+        <key name="settings_security_tab">Seguridad</key>
+
+
+        <key name="settings_memory_tab">Memoria</key>
+        <key name="settings_memory_group_title">Memoria y Caché</key>
+        <key name="memory_persistent_cache">Caché persistente del proyecto (Simulación rápida)</key>
+        <key name="memory_persistent_cache_tooltip">Guarda la indexación de archivos y el análisis AST en el disco, acelerando drásticamente las simulaciones del Patcher entre sesiones. Utiliza espacio extra en disco.</key>
+
         <key name="settings_extensions_manager_tab">Gestor de Extensiones</key>
         <key name="theme_label">Tema:</key>
         <key name="color_scheme_label">Esquema de Colores:</key>
@@ -109,6 +118,23 @@
         <key name="add_workspace_project_title">Agregar nuevo proyecto al espacio de trabajo</key>
         <key name="add_workspace_project_prompt">Ingrese el nombre del nuevo proyecto en la carpeta del espacio de trabajo:</key>
         <key name="delete_project_warning_title">Eliminar proyecto</key>
+
+        <key name="first_run_title">Bienvenido a ELAI-DevKit - Configuración Inicial</key>
+        <key name="fr_step1_title">Paso 1: Apariencia e Idioma</key>
+        <key name="fr_step1_desc">Elija su idioma preferido y tema visual.</key>
+        <key name="fr_step2_title">Paso 2: Configuración de Seguridad</key>
+        <key name="fr_step2_desc">Establezca una contraseña maestra para proteger su entorno de pruebas local y evitar la ejecución no autorizada.</key>
+        <key name="fr_btn_next">Siguiente &gt;</key>
+        <key name="fr_btn_back">&lt; Atrás</key>
+        <key name="fr_btn_finish">Finalizar configuración</key>
+        <key name="fr_warning_incomplete">Debe completar la configuración para usar ELAI-DevKit.</key>
+        <key name="fr_pwd_empty">La contraseña no puede estar vacía.</key>
+        <key name="fr_pwd_mismatch">Las contraseñas no coinciden.</key>
+        <key name="layer2_alert_title">Capa 2: Alerta de seguridad</key>
+        <key name="manage_rules_btn">Gestionar listas de Permitidos/Denegados</key>
+        <key name="rules_dialog_info">Gestionar reglas de seguridad (Doble clic para eliminar):</key>
+        <key name="rules_dialog_title">Lista de reglas Permitidas / Denegadas</key>
+
         <key name="delete_project_warning_msg">¿Está seguro de que desea eliminar permanentemente el proyecto '{}'? ¡Esta acción no se puede deshacer!</key>
     </section>
     <section name="Tooltips">

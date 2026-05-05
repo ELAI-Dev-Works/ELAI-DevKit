@@ -137,19 +137,6 @@ class PathDisplayWidget(QFrame):
         self.full_label.setStyleSheet(style)
 
 
-class WorkspaceProjectComboBox(QComboBox):
-    def paintEvent(self, event):
-        painter = QStylePainter(self)
-        opt = QStyleOptionComboBox()
-        self.initStyleOption(opt)
-
-        text = opt.currentText
-        max_len = 16
-        if len(text) > max_len:
-            opt.currentText = text[:max_len-3] + "..."
-
-        painter.drawComplexControl(QStyle.ComplexControl.CC_ComboBox, opt)
-        painter.drawControl(QStyle.ControlElement.CE_ComboBoxLabel, opt)
 
 class MainWindow(QMainWindow):
     def __init__(self, run_gui=True, context=None, on_home=None):
@@ -230,7 +217,20 @@ class MainWindow(QMainWindow):
         self.extension_manager.connect_ui_extensions(self.key_manager, self.context_menu_manager)
     
     def closeEvent(self, event):
-        """Ensures all detached tabs are closed when the main window closes."""
+        """Ensures all detached tabs are closed and cleans up caches when the main window closes."""
+        is_persistent = self.settings_manager.get_setting(['core', 'memory', 'persistent_cache'], False)
+        if hasattr(self.context, 'memory'):
+            if is_persistent:
+                self.context.memory.save_to_disk()
+            else:
+                self.context.memory.cleanup_temp_cache()
+
+        if self.root_path:
+            temp_proj = os.path.join(self.root_path, '.temp_project')
+            if os.path.exists(temp_proj):
+                import shutil
+                shutil.rmtree(temp_proj, ignore_errors=True)
+
         if hasattr(self, 'detached_tabs'):
             for data in list(self.detached_tabs.values()):
                 if not data['window'].isHidden():
@@ -327,7 +327,7 @@ class MainWindow(QMainWindow):
         ws_combo_vlayout.setSpacing(2)
         self.ws_project_list_label = QLabel(self.lang.get('project_list_label', 'Project List:'))
         self.ws_project_list_label.setStyleSheet("color: #888; font-size: 10px; font-weight: bold;")
-        self.workspace_project_combo = WorkspaceProjectComboBox()
+        self.workspace_project_combo = QComboBox()
         self.workspace_project_combo.currentTextChanged.connect(self.on_workspace_project_changed)
         ws_combo_vlayout.addWidget(self.ws_project_list_label)
         ws_combo_vlayout.addWidget(self.workspace_project_combo)
@@ -879,7 +879,28 @@ class MainWindow(QMainWindow):
             QApplication.exit(RESTART_CODE)
 
     def _apply_project_change(self):
+        if self.root_path:
+            temp_proj_dir = os.path.join(self.root_path, '.temp_project')
+
+        if hasattr(self.context, 'security_manager'):
+            self.context.security_manager.set_current_project(self.root_path)
+
+            if os.path.exists(temp_proj_dir):
+                import shutil
+                shutil.rmtree(temp_proj_dir, ignore_errors=True)
+
         self.settings_manager.set_project_path(self.root_path)
+
+        if hasattr(self.context, 'memory'):
+            self.context.memory.current_project_path = self.root_path
+            memory_settings = self.settings_manager.get_setting(['core', 'memory'], {})
+            is_persistent = memory_settings.get('persistent_cache', False)
+            if is_persistent:
+                self.context.memory.load_from_disk()
+            else:
+                self.context.memory.clear_all()
+                self.context.memory.cleanup_temp_cache()
+
         self.load_all_settings()
         self.extension_manager.reload_extensions()
 

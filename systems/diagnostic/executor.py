@@ -4,10 +4,10 @@ from typing import Tuple
 
 def execute_script(script_path: str, root_path: str) -> Tuple[bool, str, str]:
     """
-    Executes a standalone Python script in isolation.
+    Executes a standalone Python script in isolation with coverage tracking.
     """
     try:
-        result = subprocess.run([sys.executable, script_path],
+        result = subprocess.run([sys.executable, "-m", "coverage", "run", "-p", "--source=core,systems,apps,extensions,diagnostic", script_path],
             cwd=root_path,
             capture_output=True,
             text=True,
@@ -21,10 +21,10 @@ def execute_script(script_path: str, root_path: str) -> Tuple[bool, str, str]:
 
 def execute_test(test_path: str, root_path: str) -> Tuple[bool, str, str]:
     """
-    Executes a Python unit test file.
+    Executes a Python test file using pytest and tracks coverage.
     """
     try:
-        result = subprocess.run([sys.executable, "-m", "unittest", "-v", test_path],
+        result = subprocess.run([sys.executable, "-m", "coverage", "run", "-p", "--source=core,systems,apps,extensions,diagnostic", "-m", "pytest", "-v", test_path],
             cwd=root_path,
             capture_output=True,
             text=True,

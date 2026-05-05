@@ -1,17 +1,12 @@
 from PySide6.QtWidgets import QApplication, QMessageBox
-from PySide6.QtCore import QThread, QEventLoop
 from apps.dev_patcher.core.parser import parse_patch_content
-from apps.dev_patcher.core.patch_worker import PatchWorker
-from apps.dev_patcher.core.patch_checking import simulate_patch_and_get_vfs
-from apps.dev_patcher.core.code_check.checker import CodeChecker
 from .error_report import show_error_report
-from .corrector import run_corrector
 from .backup import create_backup
 
 RESTART_CODE = 100
 
 def execute_patch_workflow(manager):
-    """Runs the full patch workflow: correct, simulate, execute."""
+    """Runs the full patch workflow: simulate, backup, execute."""
     patch_content, mw = manager._common_setup()
     if not patch_content:
         return
@@ -29,7 +24,6 @@ def execute_patch_workflow(manager):
     experimental_flags = manager._get_experimental_flags()
     commands = parse_patch_content(patch_content, experimental_flags)
 
-    # Use combined ignore lists
     if is_self_update:
         g_dirs, g_files, _, _, _ = mw.settings_manager.get_ignore_lists()
         ignore_dirs, ignore_files = g_dirs, g_files
@@ -45,7 +39,7 @@ def execute_patch_workflow(manager):
         skipped_commands = manager.cached_skipped
     else:
         final_plan = commands
-        skipped_commands =[]
+        skipped_commands = []
 
     if skipped_commands:
         mw.patcher_log_output.appendPlainText(f"[INFO] Skipping {len(skipped_commands)} problematic commands based on Check Patch results.")
@@ -56,65 +50,66 @@ def execute_patch_workflow(manager):
             return
         manager.qs_widget._refresh_restore_list()
 
-    # Start Progress Bar
-    total_commands = len(final_plan)
-    manager.widget.progress_indicator.start(total_commands, mw.lang.get('patch_run_start_log'))
-
-    # Run Real Execution
-    _run_real_patch_thread(manager, final_plan, target_path, experimental_flags)
-
-    # After _run_real_patch_thread returns (it blocks via loop), check results
-    failed_commands = manager._exec_failed_commands
-
-    if failed_commands:
-        mw.patcher_log_output.appendPlainText("\n--- ERRORS DURING REAL EXECUTION ---")
-        show_error_report(manager, failed_commands)
-    elif not skipped_commands:
-        mw.patcher_log_output.appendPlainText(mw.lang.get('all_commands_success_log'))
-    else:
-        mw.patcher_log_output.appendPlainText("\n" + mw.lang.get('patch_partial_success_warning'))
-
-    if is_self_update and not failed_commands:
-        QMessageBox.information(mw, mw.lang.get('update_complete_title'), mw.lang.get('update_complete_msg'))
-        QApplication.exit(RESTART_CODE)
-
-def _run_real_patch_thread(manager, commands, target_path, experimental_flags):
-    mw = manager.main_window
-    mw.patcher_log_output.appendPlainText(mw.lang.get('patch_run_start_log'))
-
-    # Reset counters
+    manager._exec_total = len(final_plan)
     manager._exec_current_idx = 0
-    manager._exec_total = len(commands)
-    manager._exec_failed_commands =[]
-
-    # Init Execution Worker
-    manager._exec_worker = PatchWorker(commands, target_path, experimental_flags,
-                         ignore_dirs=[], ignore_files=[],
-                         mode='execute', lang=mw.lang)
-
-    manager._exec_thread = QThread()
-    manager._exec_worker.moveToThread(manager._exec_thread)
-
-    # Connections
-    manager._exec_worker.command_result.connect(manager._on_command_result)
-    manager._exec_worker.execution_finished.connect(manager._on_execution_finished)
-    manager._exec_worker.error.connect(manager._on_worker_error)
-
-    manager._exec_thread.started.connect(manager._exec_worker.run)
-    manager._exec_thread.finished.connect(manager._exec_worker.deleteLater)
-
+    manager.widget.progress_indicator.start(manager._exec_total, mw.lang.get('patch_run_start_log'))
     manager.widget.run_button.setEnabled(False)
 
-    manager._active_loop = QEventLoop()
-    manager._exec_thread.start()
-    manager._active_loop.exec()
+    tc = mw.context.async_thread_manager.thread
 
-    # Cleanup
-    manager._exec_thread.quit()
-    manager._exec_thread.wait()
+    def _exec_task():
+        import time
+        from systems.fs.real_fs import RealFileSystem
+        from apps.dev_patcher.core.patcher import run_patch
+        start_total = time.time()
+        real_fs = RealFileSystem(target_path)
+        real_fs.memory = mw.context.memory
+        log_gen = run_patch(final_plan, real_fs, experimental_flags, memory=mw.context.memory)
+        failed_commands =[]
+        for success, message, command in log_gen:
+            if command:
+                yield ("cmd_result", success, message, command)
+                if not success:
+                    failed_commands.append((command, message))
+            else:
+                yield ("log", success, message, command)
+        return failed_commands, time.time() - start_total
 
-    manager._exec_worker = None
-    if manager._exec_thread:
-        manager._exec_thread.deleteLater()
-    manager._exec_thread = None
-    manager._active_loop = None
+    def _on_yield(item):
+        type_, success, message, command = item
+        if type_ == "cmd_result":
+            manager._on_command_result(success, message, command)
+        else:
+            manager._on_worker_progress(str(message))
+
+    def _on_exec_done(res):
+        failed_commands, total_time = res
+
+        if failed_commands:
+            manager.widget.progress_indicator.set_error(mw.lang.get('patch_partial_success_warning'))
+        else:
+            manager.widget.progress_indicator.finish(mw.lang.get('all_commands_success_log'))
+
+        mw.patcher_log_output.appendPlainText(f"Total time: {total_time:.3f}s")
+        mw.patcher_log_output.appendPlainText(mw.lang.get('patch_run_end_log'))
+        manager.widget.run_button.setEnabled(True)
+
+        if failed_commands:
+            mw.patcher_log_output.appendPlainText("\n--- ERRORS DURING REAL EXECUTION ---")
+            show_error_report(manager, failed_commands)
+        elif not skipped_commands:
+            mw.patcher_log_output.appendPlainText(mw.lang.get('all_commands_success_log'))
+        else:
+            mw.patcher_log_output.appendPlainText("\n" + mw.lang.get('patch_partial_success_warning'))
+
+        if is_self_update and not failed_commands:
+            QMessageBox.information(mw, mw.lang.get('update_complete_title'), mw.lang.get('update_complete_msg'))
+            QApplication.exit(RESTART_CODE)
+
+    tc.run_in_background(
+        _exec_task,
+        use_qt=True,
+        yield_callback=_on_yield,
+        callback=_on_exec_done,
+        error_callback=manager._on_worker_error
+    )

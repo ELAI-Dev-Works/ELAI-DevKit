@@ -8,6 +8,15 @@
         <key name="ui_always_show_tooltips">ツールチップアイコンを常に表示</key>
         <key name="ui_always_show_tooltips_tooltip">無効にすると、ツールチップアイコンは要素にカーソルを合わせたときのみ表示されます。</key>
         <key name="settings_extensions_settings_tab">拡張機能設定</key>
+
+        <key name="settings_security_tab">セキュリティ</key>
+
+
+        <key name="settings_memory_tab">メモリ</key>
+        <key name="settings_memory_group_title">メモリとキャッシュ</key>
+        <key name="memory_persistent_cache">永続プロジェクトキャッシュ (高速シミュレーション)</key>
+        <key name="memory_persistent_cache_tooltip">ファイルインデックス作成とAST解析をディスクに保存し、セッション間のPatcherシミュレーションを劇的に高速化します。追加のディスクスペースを使用します。</key>
+
         <key name="settings_extensions_manager_tab">拡張機能マネージャー</key>
         <key name="theme_label">テーマ:</key>
         <key name="color_scheme_label">カラースキーム:</key>
@@ -109,6 +118,23 @@
         <key name="add_workspace_project_title">新しいワークスペースプロジェクトを追加</key>
         <key name="add_workspace_project_prompt">ワークスペースフォルダに新しいプロジェクトの名前を入力してください:</key>
         <key name="delete_project_warning_title">プロジェクトを削除</key>
+
+        <key name="first_run_title">ELAI-DevKitへようこそ - 初回セットアップ</key>
+        <key name="fr_step1_title">ステップ 1：外観と言語</key>
+        <key name="fr_step1_desc">お好みの言語と視覚テーマを選択してください。</key>
+        <key name="fr_step2_title">ステップ 2：セキュリティのセットアップ</key>
+        <key name="fr_step2_desc">ローカルサンドボックスを保護し、不正な実行を防ぐためのマスターパスワードを設定します。</key>
+        <key name="fr_btn_next">次へ &gt;</key>
+        <key name="fr_btn_back">&lt; 戻る</key>
+        <key name="fr_btn_finish">セットアップ完了</key>
+        <key name="fr_warning_incomplete">ELAI-DevKitを使用するには、セットアップを完了する必要があります。</key>
+        <key name="fr_pwd_empty">パスワードを空にすることはできません。</key>
+        <key name="fr_pwd_mismatch">パスワードが一致しません。</key>
+        <key name="layer2_alert_title">レイヤー 2: セキュリティアラート</key>
+        <key name="manage_rules_btn">許可/拒否リストの管理</key>
+        <key name="rules_dialog_info">セキュリティルールの管理 (ダブルクリックで削除):</key>
+        <key name="rules_dialog_title">許可 / 拒否ルールリスト</key>
+
         <key name="delete_project_warning_msg">プロジェクト'{}'を完全に削除してもよろしいですか?この操作は元に戻せません!</key>
     </section>
     <section name="Tooltips">

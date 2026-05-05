@@ -19,12 +19,19 @@ def safe_execute(func, *args, **kwargs):
     Wrapper to execute a function safely and log any exceptions
     without crashing the app (if possible).
     """
+    from .thread_tracer import ThreadTracer
+    mod_name = getattr(func, '__module__', 'unknown_module')
+    func_name = getattr(func, '__name__', 'unknown_function')
+    ThreadTracer.log_action(mod_name, func_name, "Safe execution started")
     try:
-        return func(*args, **kwargs)
+        res = func(*args, **kwargs)
+        ThreadTracer.log_action(mod_name, func_name, "Safe execution finished successfully")
+        return res
     except Exception as e:
+        ThreadTracer.log_action(mod_name, func_name, f"Safe execution failed with error: {e}")
         import sys
         from .python_handler import build_error_report
         exc_type, exc_value, exc_tb = sys.exc_info()
-        report_str = build_error_report(exc_type, exc_value, exc_tb)
-        print(f"Handled error in {func.__name__}:\n{report_str}")
-        log_to_file(f"Handled error in {func.__name__}:\n{report_str}", is_exception=True)
+        report_str, severity = build_error_report(exc_type, exc_value, exc_tb)
+        print(f"Handled error in {func.__name__} [{severity}]:\n{report_str}")
+        log_to_file(f"Handled error in {func.__name__} [{severity}]:\n{report_str}", is_exception=True)

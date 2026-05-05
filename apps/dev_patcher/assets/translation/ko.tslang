@@ -48,6 +48,12 @@
         <key name="project_target_name">프로젝트</key>
     </section>
     <section name="Logs">
+
+        <key name="test_run_html_info_log">[정보] 기본 브라우저에서 HTML 파일이 열렸습니다.</key>
+        <key name="test_run_html_final_log">[정보] 외부 브라우저를 통해 HTML 테스트가 실행되었습니다.</key>
+        <key name="test_run_critical_error_log">[오류] 테스트 실행 중 치명적인 오류 발생: {}</key>
+        <key name="test_run_prep_error_log">테스트 환경 준비 실패: {}</key>
+
         <key name="quick_settings_saved_log">[설정] 빠른 설정이 저장되었습니다.</key>
         <key name="quick_settings_reset_log">[설정] 빠른 설정이 기본값으로 재설정되었습니다 (저장되지 않음).</key>
         <key name="patch_loaded_log">파일에서 패치를 불러왔습니다: {}</key>
@@ -120,6 +126,12 @@
         <key name="test_run_env_required_error">프로젝트가 PROJECT 명령으로 초기화되거나 환경(.venv, node_modules)이 필요하지만 아직 초기화되지 않았습니다. 테스트 실행 전에 패치를 적용하여 환경을 먼저 초기화하십시오.</key>
     </section>
     <section name="Dialogs">
+
+        <key name="test_run_html_dialog_title">HTML 테스트</key>
+        <key name="test_run_html_dialog_msg">브라우저에서 HTML 파일이 열렸습니다. 테스트 환경을 정리하려면 완료 후 이 대화 상자를 닫으십시오.</key>
+        <key name="test_run_aborted_title">테스트 실행 중단됨</key>
+        <key name="test_run_error_title">테스트 실행 오류</key>
+
         <key name="patch_load_error_title">오류</key>
         <key name="patch_load_error_msg">패치 파일 읽기 실패: {}</key>
         <key name="self_update_warning_title">경고!</key>
@@ -157,6 +169,10 @@
         <key name="ai_report_dialog_title">AI 수정 보고서</key>
         <key name="ai_report_dialog_info">패치에서 문제가 있는 명령이 발견되었습니다. 해당 명령은 건너뛰며 패치를 안전하게 적용할 수 있습니다. AI를 위한 수정 보고서가 작성되었습니다. 새 프로젝트 컨텍스트와 함께 복사하여 AI에 전송하면 올바른 명령을 작성할 수 있습니다.</key>
         <key name="ai_report_task">지정된 문제만 수정하세요.</key>
+        
+        <key name="ai_report_msg_single">명령이 실패했습니다. 보고서를 확인하십시오.</key>
+        <key name="ai_report_msg_multiple">일부 명령이 실패했습니다. 보고서를 검토하고 문제를 수정하십시오.</key>
+        
         <key name="simulation_success_msg_new">시뮬레이션이 완료되었습니다. 오류가 발견되지 않았습니다. 모든 명령을 안전하게 실행할 수 있습니다.</key>
     </section>
     <section name="Tooltips">

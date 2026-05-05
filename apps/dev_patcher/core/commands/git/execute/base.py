@@ -7,9 +7,9 @@ def run(args: list, content: str, fs_handler) -> Tuple[bool, str]:
     """
     Executes Git commands.
     """
-    # PROTECTION: If we are in VirtualFileSystem, we do NOT have to execute real Git commands.
-    # Because they write on the disk and they can freeze.
-    if fs_handler.__class__.__name__ == 'VirtualFileSystem':
+    # PROTECTION: If we are in a virtual file system, we do NOT have to execute real Git commands.
+    from systems.fs.vfs_core import AdvancedVFS
+    if isinstance(fs_handler, AdvancedVFS):
         if not args:
              return False, "GIT command requires arguments."
         return True, f"[SIMULATION] Git command syntax OK. Execution of 'git {' '.join(args)}' skipped."

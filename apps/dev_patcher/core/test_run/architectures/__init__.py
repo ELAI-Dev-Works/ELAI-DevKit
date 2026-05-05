@@ -5,12 +5,12 @@ from .web import WebArchitecture
 
 def get_architecture(temp_dir, project_root, launch_file):
     ext = os.path.splitext(launch_file)[1].lower()
-    
+
     if ext == '.py':
         return PythonArchitecture(temp_dir, project_root, launch_file)
     elif ext in ['.js', '.ts']:
         return NodeJSArchitecture(temp_dir, project_root, launch_file)
-    elif ext in ['.html', '.htm']:
+    elif ext in['.html', '.htm']:
         return WebArchitecture(temp_dir, project_root, launch_file)
     else:
         # Generic fallback for bat, sh, cmd, exe

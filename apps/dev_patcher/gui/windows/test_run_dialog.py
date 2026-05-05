@@ -37,11 +37,14 @@ class TestFileSelectDialog(QDialog):
         valid_exts = ('.py', '.js', '.ts', '.bat', '.cmd', '.sh', '.html', '.exe')
         files =[]
         try:
-            for file_path in self.vfs.files.keys():
-                rel_path = posixpath.relpath(file_path, self.vfs.root)
-                if '/' not in rel_path:
-                    if rel_path.lower().endswith(valid_exts):
-                        files.append(rel_path)
+            for dirpath, dirnames, filenames in self.vfs.walk(self.vfs.root):
+                rel_dir = posixpath.relpath(dirpath, self.vfs.root)
+                if rel_dir == '.':
+                    for f in filenames:
+                        if f.lower().endswith(valid_exts):
+                            files.append(f)
+                else:
+                    dirnames.clear() # Stop scanning deeper
         except Exception:
             pass
 

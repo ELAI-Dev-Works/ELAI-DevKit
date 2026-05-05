@@ -6,6 +6,8 @@ pywinpty; sys_platform == 'win32'
 ptyprocess; sys_platform != 'win32'
 pyte
 requests
+pytest
+pytest-cov
 tree-sitter-language-pack
 
 # Extension: project_builder

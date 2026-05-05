@@ -20,6 +20,9 @@
         <key name="pb_app_version_label">Versión de la aplicación:</key>
         <key name="pb_app_icon_label">Icono de la aplicación:</key>
         <key name="pb_select_icon_btn">Seleccionar icono...</key>
+    
+    <key name="pb_project_settings_title">Configuración del Proyecto</key>
+    
     </section>
     <section name="Logs">
         <key name="pb_log_scanning">Escaneando directorio del proyecto...</key>

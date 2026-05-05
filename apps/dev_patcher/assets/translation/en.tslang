@@ -48,6 +48,12 @@
         <key name="stop_test_run_btn">Stop Test Run</key>
     </section>
     <section name="Logs">
+
+        <key name="test_run_html_info_log">[INFO] HTML file opened in default browser.</key>
+        <key name="test_run_html_final_log">[INFO] HTML Test run via external browser.</key>
+        <key name="test_run_critical_error_log">[ERROR] Critical error during test run: {}</key>
+        <key name="test_run_prep_error_log">Failed to prepare test environment: {}</key>
+
         <key name="app_target_name">application</key>
         <key name="simulation_no_commands">No commands to simulate.</key>
         <key name="simulation_stage1_start">--- STAGE 1: CREATING BASE STATE ---</key>
@@ -123,6 +129,12 @@
         <key name="dev_patcher_standalone_title">Dev Patcher (Standalone)</key>
     </section>
     <section name="Dialogs">
+
+        <key name="test_run_html_dialog_title">HTML Test</key>
+        <key name="test_run_html_dialog_msg">HTML file opened in your browser. Close this dialog when you are done to clean up the test environment.</key>
+        <key name="test_run_aborted_title">Test Run Aborted</key>
+        <key name="test_run_error_title">Test Run Error</key>
+
         <key name="restore_modal_title">Restore from Backup</key>
         <key name="restore_no_backups">No backups available.</key>
         <key name="restore_confirm_msg">Are you sure you want to restore the project from this backup/commit? Unsaved changes will be lost.</key>
@@ -137,6 +149,8 @@
         <key name="ai_report_dialog_title">AI Correction Report</key>
         <key name="ai_report_dialog_info">Problematic commands were found in the patch. They will be skipped, and the patch can be safely applied. A correction report for the AI has been compiled. Copy it along with the new project context and send it to the AI so it can write the correct command.</key>
         <key name="ai_report_task">Fix only the specified problem(s).</key>
+        <key name="ai_report_msg_single">A command failed. Please review the report.</key>
+        <key name="ai_report_msg_multiple">Some commands failed. Please review the report and fix the issues.</key>
         <key name="simulation_success_msg_new">The simulation is complete. No errors found. All commands can be safely executed.</key>
         <key name="copy_report_btn">Copy Report</key>
         <key name="close_btn_accept">Close</key>

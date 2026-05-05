@@ -68,15 +68,22 @@ class QuickSettingsPanel(QWidget):
 
                 content = widget_class(self.context)
     
-                button.toggled.connect(content.setVisible)
-    
+                content.setVisible(False)
+
+                def toggle_accordion(checked, b=button, c=content, t_key=qs_def['title_lang_key']):
+                    arrow = '▼' if checked else '►'
+                    title = self.lang.get(t_key, t_key)
+                    b.setText(f"{arrow} {title}")
+                    c.setVisible(checked)
+
+                button.toggled.connect(toggle_accordion)
+                # Set initial text and state
+                toggle_accordion(False)
+
                 self.layout.addWidget(button)
                 self.layout.addWidget(content)
-    
+
                 self.accordions[name] = (button, content)
-    
-                button.setChecked(False)
-                content.setVisible(False)
     
     def retranslate_ui(self):
         for name, (button, content) in self.accordions.items():

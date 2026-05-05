@@ -169,8 +169,8 @@ class SettingsManager:
         Returns: (global_dirs, global_files, use_gitignore, project_dirs, project_files)
         """
         defaults = {
-            'dirs':[".venv", "__pycache__", ".idea", "build", "dist", "node_modules"],
-            'files': ["*.pyc", "*.log*", ".env"],
+            'dirs':[".venv", "__pycache__", ".idea", "build", "dist", "node_modules", ".temp_project"],
+            'files':["*.pyc", "*.log*", ".env"],
             'use_gitignore': False
         }
 

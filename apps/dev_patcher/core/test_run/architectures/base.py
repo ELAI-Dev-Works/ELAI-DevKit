@@ -7,5 +7,9 @@ class BaseArchitecture:
         self.project_root = project_root
         self.launch_file = launch_file
 
-    def get_launch_command(self):
+    def get_launch_command(self, is_trusted=False):
         raise NotImplementedError("Subclasses must implement this method")
+
+    def _apply_sandbox(self, cmd_list, is_trusted=False):
+        from systems.fs.os_bridge.sandbox import OSSandbox
+        return OSSandbox.wrap_command(cmd_list, self.temp_dir, is_trusted)

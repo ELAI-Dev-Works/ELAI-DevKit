@@ -25,10 +25,12 @@ logs/
 *.log
 *.log*
 worker_trace.txt
+.coverage
 
 # Application Specific / Temporary
 _restore_temp/
-temp_project/
+.temp_project/
+.diagnostic/
 build/
 dist/
 downloads/

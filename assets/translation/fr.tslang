@@ -8,6 +8,15 @@
         <key name="ui_always_show_tooltips">Toujours afficher les icônes d'info-bulle</key>
         <key name="ui_always_show_tooltips_tooltip">Si désactivé, les icônes d'info-bulle n'apparaîtront que lors du survol de l'élément.</key>
         <key name="settings_extensions_settings_tab">Paramètres des extensions</key>
+
+        <key name="settings_security_tab">Sécurité</key>
+
+
+        <key name="settings_memory_tab">Mémoire</key>
+        <key name="settings_memory_group_title">Mémoire &amp; Mise en cache</key>
+        <key name="memory_persistent_cache">Cache de projet persistant (Simulation rapide)</key>
+        <key name="memory_persistent_cache_tooltip">Enregistre l'indexation des fichiers et l'analyse AST sur le disque, accélérant considérablement les simulations du Patcher entre les sessions. Utilise de l'espace disque supplémentaire.</key>
+
         <key name="settings_extensions_manager_tab">Gestionnaire d'extensions</key>
         <key name="theme_label">Thème :</key>
         <key name="color_scheme_label">Jeu de Couleurs :</key>
@@ -109,6 +118,23 @@
         <key name="add_workspace_project_title">Ajouter un nouveau projet à l'espace de travail</key>
         <key name="add_workspace_project_prompt">Entrez le nom du nouveau projet dans le dossier de l'espace de travail :</key>
         <key name="delete_project_warning_title">Supprimer le projet</key>
+
+        <key name="first_run_title">Bienvenue dans ELAI-DevKit - Première configuration</key>
+        <key name="fr_step1_title">Étape 1 : Apparence et langue</key>
+        <key name="fr_step1_desc">Choisissez votre langue préférée et votre thème visuel.</key>
+        <key name="fr_step2_title">Étape 2 : Configuration de sécurité</key>
+        <key name="fr_step2_desc">Configurez un mot de passe maître pour sécuriser votre bac à sable local et empêcher toute exécution non autorisée.</key>
+        <key name="fr_btn_next">Suivant &gt;</key>
+        <key name="fr_btn_back">&lt; Retour</key>
+        <key name="fr_btn_finish">Terminer la configuration</key>
+        <key name="fr_warning_incomplete">Vous devez terminer la configuration pour utiliser ELAI-DevKit.</key>
+        <key name="fr_pwd_empty">Le mot de passe ne peut pas être vide.</key>
+        <key name="fr_pwd_mismatch">Les mots de passe ne correspondent pas.</key>
+        <key name="layer2_alert_title">Couche 2 : Alerte de sécurité</key>
+        <key name="manage_rules_btn">Gérer les listes Autorisés/Refusés</key>
+        <key name="rules_dialog_info">Gérer les règles de sécurité (Double-clic pour supprimer) :</key>
+        <key name="rules_dialog_title">Liste des règles Autorisées / Refusées</key>
+
         <key name="delete_project_warning_msg">Êtes-vous sûr de vouloir supprimer définitivement le projet '{}' ? Cette action est irréversible !</key>
     </section>
     <section name="Tooltips">

@@ -8,6 +8,15 @@
         <key name="ui_always_show_tooltips">Всегда показывать значки подсказок</key>
         <key name="ui_always_show_tooltips_tooltip">Если отключено, значки подсказок будут появляться только при наведении на элемент.</key>
         <key name="settings_extensions_settings_tab">Настройки расширений</key>
+
+        <key name="settings_security_tab">Безопасность</key>
+
+
+        <key name="settings_memory_tab">Память</key>
+        <key name="settings_memory_group_title">Память и кэширование</key>
+        <key name="memory_persistent_cache">Постоянный кэш проекта (Быстрая симуляция)</key>
+        <key name="memory_persistent_cache_tooltip">Сохраняет индексацию файлов и парсинг AST на диск, значительно ускоряя симуляции патчера между сеансами. Использует дополнительное место на диске.</key>
+
         <key name="settings_extensions_manager_tab">Менеджер расширений</key>
         <key name="theme_label">Тема:</key>
         <key name="color_scheme_label">Цветовая схема:</key>
@@ -109,6 +118,23 @@
         <key name="add_workspace_project_title">Добавить новый проект в рабочую область</key>
         <key name="add_workspace_project_prompt">Введите имя нового проекта в папке рабочей области:</key>
         <key name="delete_project_warning_title">Удалить проект</key>
+
+        <key name="first_run_title">Добро пожаловать в ELAI-DevKit - Первоначальная настройка</key>
+        <key name="fr_step1_title">Шаг 1: Внешний вид и язык</key>
+        <key name="fr_step1_desc">Выберите предпочитаемый язык и визуальную тему.</key>
+        <key name="fr_step2_title">Шаг 2: Настройка безопасности</key>
+        <key name="fr_step2_desc">Установите мастер-пароль для защиты вашей локальной песочницы и предотвращения несанкционированного выполнения кода.</key>
+        <key name="fr_btn_next">Далее &gt;</key>
+        <key name="fr_btn_back">&lt; Назад</key>
+        <key name="fr_btn_finish">Завершить настройку</key>
+        <key name="fr_warning_incomplete">Вы должны завершить настройку, чтобы использовать ELAI-DevKit.</key>
+        <key name="fr_pwd_empty">Пароль не может быть пустым.</key>
+        <key name="fr_pwd_mismatch">Пароли не совпадают.</key>
+        <key name="layer2_alert_title">Уровень 2: Оповещение безопасности</key>
+        <key name="manage_rules_btn">Управление списками Разрешено/Запрещено</key>
+        <key name="rules_dialog_info">Управление правилами безопасности (Дважды щелкните для удаления):</key>
+        <key name="rules_dialog_title">Список Разрешенных / Запрещенных правил</key>
+
         <key name="delete_project_warning_msg">Вы уверены, что хотите навсегда удалить проект '{}'? Это действие нельзя отменить!</key>
     </section>
     <section name="Tooltips">

@@ -20,6 +20,9 @@
         <key name="pb_app_version_label">アプリバージョン:</key>
         <key name="pb_app_icon_label">アプリアイコン:</key>
         <key name="pb_select_icon_btn">アイコンを選択...</key>
+    
+    <key name="pb_project_settings_title">プロジェクト設定</key>
+    
     </section>
     <section name="Logs">
         <key name="pb_log_scanning">プロジェクトディレクトリをスキャン中...</key>

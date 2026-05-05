@@ -48,6 +48,12 @@
         <key name="project_target_name">项目</key>
     </section>
     <section name="Logs">
+
+        <key name="test_run_html_info_log">[信息] HTML 文件已在默认浏览器中打开。</key>
+        <key name="test_run_html_final_log">[信息] 通过外部浏览器运行 HTML 测试。</key>
+        <key name="test_run_critical_error_log">[错误] 测试运行期间发生严重错误：{}</key>
+        <key name="test_run_prep_error_log">无法准备测试环境：{}</key>
+
         <key name="quick_settings_saved_log">[设置] 快速设置已保存。</key>
         <key name="quick_settings_reset_log">[设置] 快速设置已重置为默认（未保存）。</key>
         <key name="patch_loaded_log">补丁已从文件加载：{}</key>
@@ -120,6 +126,12 @@
         <key name="test_run_env_required_error">项目使用 PROJECT 命令初始化或需要环境（.venv、node_modules），但尚未初始化。请在运行测试之前先应用补丁以初始化环境。</key>
     </section>
     <section name="Dialogs">
+
+        <key name="test_run_html_dialog_title">HTML 测试</key>
+        <key name="test_run_html_dialog_msg">HTML 文件已在您的浏览器中打开。完成后请关闭此对话框以清理测试环境。</key>
+        <key name="test_run_aborted_title">测试运行中止</key>
+        <key name="test_run_error_title">测试运行错误</key>
+
         <key name="patch_load_error_title">错误</key>
         <key name="patch_load_error_msg">无法读取补丁文件：{}</key>
         <key name="self_update_warning_title">警告！</key>
@@ -157,6 +169,10 @@
         <key name="ai_report_dialog_title">AI 修正报告</key>
         <key name="ai_report_dialog_info">在补丁中发现了有问题的命令。它们将被跳过,补丁可以安全应用。已为AI编译了更正报告。将其与新的项目上下文一起复制并发送给AI,以便它可以编写正确的命令。</key>
         <key name="ai_report_task">仅修复指定的问题。</key>
+        
+        <key name="ai_report_msg_single">命令失败。请查看报告。</key>
+        <key name="ai_report_msg_multiple">一些命令失败了。请查看报告并修复问题。</key>
+        
         <key name="simulation_success_msg_new">模拟已完成。未发现错误。所有命令均可安全执行。</key>
     </section>
     <section name="Tooltips">

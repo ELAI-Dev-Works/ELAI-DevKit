@@ -2,6 +2,7 @@ import os
 import importlib
 import time
 from itertools import groupby
+import hashlib
 from typing import List, Any, Dict, Tuple
 from .command_planner import plan_execution_order
 
@@ -37,7 +38,7 @@ def _get_command_group_key(command: Tuple):
             return f"EDIT_BATCH_{args[file_idx]}"
     return id(command)
 
-def _apply_edit_batch(batch: List[Tuple], fs_handler, experimental_flags):
+def _apply_edit_batch(batch: List[Tuple], fs_handler, experimental_flags, memory=None):
     """
     Sequentially processes a batch of EDIT commands for a single file.
     """
@@ -87,11 +88,17 @@ def _apply_edit_batch(batch: List[Tuple], fs_handler, experimental_flags):
     for i, cmd_tuple in enumerate(batch):
         start_time = time.time()
         _, args, content_block = cmd_tuple
-    
+
         # Normalize arguments so that args[0] is the action (expected by Tool)
         norm_args = _normalize_edit_args(args)
-    
-        plan = plan_func(norm_args, content_block, final_content)
+
+        if memory:
+            cache = memory.get_cache('patch_plans', max_items=5000, max_size_bytes=100 * 1024 * 1024)
+            content_hash = hashlib.md5(final_content.encode('utf-8', errors='ignore')).hexdigest()
+            cache_key = memory.generate_key("plan_edit", str(norm_args), content_block, content_hash, str(flags))
+            plan = cache.get_or_compute(cache_key, plan_func, norm_args, content_block, final_content)
+        else:
+            plan = plan_func(norm_args, content_block, final_content)
     
         elapsed = time.time() - start_time
         time_str = f" ({elapsed:.3f}s)"
@@ -113,7 +120,7 @@ def _apply_edit_batch(batch: List[Tuple], fs_handler, experimental_flags):
     # If everything was successful, write the final result to the file
     fs_handler.write(file_path, final_content)
 
-def run_patch(commands: list, fs_handler, experimental_flags=None):
+def run_patch(commands: list, fs_handler, experimental_flags=None, memory=None):
     """
     Executes a list of patch commands, batching consecutive EDITs on the same file.
     Commands are sorted by a planner before execution.
@@ -132,7 +139,7 @@ def run_patch(commands: list, fs_handler, experimental_flags=None):
 
         if "EDIT_BATCH" in str(group_key):
             # This is a batch of EDIT commands for one file
-            yield from _apply_edit_batch(command_group, fs_handler, experimental_flags)
+            yield from _apply_edit_batch(command_group, fs_handler, experimental_flags, memory)
         else:
             # Process single (non-EDIT) commands one by one
             for command_tuple in command_group:

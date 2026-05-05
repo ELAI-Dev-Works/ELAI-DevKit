@@ -25,26 +25,42 @@ class ProjectBuilderInterface(QWidget):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(10, 10, 10, 10)
 
-        controls_frame = QFrame()
-        controls_layout = QFormLayout(controls_frame)
+        # 1. Top Controls (Arch, Main File)
+        top_controls_frame = QFrame()
+        top_controls_layout = QFormLayout(top_controls_frame)
+        top_controls_layout.setContentsMargins(0, 0, 0, 0)
 
         self.arch_label = QLabel()
         self.arch_label_val = QLabel("UNKNOWN")
         self.arch_label_val.setStyleSheet("font-weight: bold; color: #29b8db;")
-        controls_layout.addRow(self.arch_label, self.arch_label_val)
+        top_controls_layout.addRow(self.arch_label, self.arch_label_val)
 
         self.main_file_label = QLabel()
         self.main_file_input = QComboBox()
-        controls_layout.addRow(self.main_file_label, self.main_file_input)
+        top_controls_layout.addRow(self.main_file_label, self.main_file_input)
+
+        layout.addWidget(top_controls_frame)
+
+        # 2. Project Settings Accordion
+        self.proj_settings_btn = QPushButton()
+        self.proj_settings_btn.setCheckable(True)
+        self.proj_settings_btn.setStyleSheet(
+            "QPushButton { text-align: left; padding: 5px; font-weight: bold; border: none; background: transparent; color: #29b8db; }\n"
+            "QPushButton:hover { background: rgba(128, 128, 128, 0.1); border-radius: 4px; }"
+        )
+
+        self.proj_settings_content = QWidget()
+        proj_settings_layout = QFormLayout(self.proj_settings_content)
+        proj_settings_layout.setContentsMargins(24, 0, 0, 0)
 
         self.app_name_label = QLabel()
         self.app_name_input = QLineEdit()
         self.app_name_input.setPlaceholderText("Auto (Folder Name)")
-        controls_layout.addRow(self.app_name_label, self.app_name_input)
+        proj_settings_layout.addRow(self.app_name_label, self.app_name_input)
 
         self.app_version_label = QLabel()
         self.app_version_input = QLineEdit("1.0.0")
-        controls_layout.addRow(self.app_version_label, self.app_version_input)
+        proj_settings_layout.addRow(self.app_version_label, self.app_version_input)
 
         self.app_icon_label = QLabel()
         self.app_icon_input = QLineEdit()
@@ -55,7 +71,28 @@ class ProjectBuilderInterface(QWidget):
         self.select_icon_button = QPushButton()
         self.select_icon_button.clicked.connect(self.select_app_icon)
         icon_layout.addWidget(self.select_icon_button)
-        controls_layout.addRow(self.app_icon_label, icon_layout)
+        proj_settings_layout.addRow(self.app_icon_label, icon_layout)
+
+        self.proj_settings_content.setVisible(False)
+
+        def toggle_proj_settings(checked):
+            self.proj_settings_content.setVisible(checked)
+            title = self.lang.get('pb_project_settings_title', 'Project Settings')
+            self.proj_settings_btn.setText(f"{'▼' if checked else '►'} {title}")
+
+        self.proj_settings_btn.toggled.connect(toggle_proj_settings)
+
+        layout.addWidget(self.proj_settings_btn)
+        layout.addWidget(self.proj_settings_content)
+
+        # 3. Builder Options (Quick Settings Panel)
+        self.quick_settings_panel = QuickSettingsPanel(self.context, extension_name_filter='project_builder')
+        layout.addWidget(self.quick_settings_panel)
+
+        # 4. Output Directory
+        out_controls_frame = QFrame()
+        out_controls_layout = QFormLayout(out_controls_frame)
+        out_controls_layout.setContentsMargins(0, 5, 0, 0)
 
         self.output_dir_label = QLabel()
         self.output_dir_input = QLineEdit()
@@ -65,10 +102,11 @@ class ProjectBuilderInterface(QWidget):
         self.select_output_button = QPushButton()
         self.select_output_button.clicked.connect(self.select_output_directory)
         output_dir_layout.addWidget(self.select_output_button)
-        controls_layout.addRow(self.output_dir_label, output_dir_layout)
+        out_controls_layout.addRow(self.output_dir_label, output_dir_layout)
 
-        layout.addWidget(controls_frame)
+        layout.addWidget(out_controls_frame)
 
+        # 5. Start Button
         start_layout = QHBoxLayout()
         start_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         self.start_button = QPushButton()
@@ -77,9 +115,7 @@ class ProjectBuilderInterface(QWidget):
         start_layout.addWidget(self.start_button)
         layout.addLayout(start_layout)
 
-        self.quick_settings_panel = QuickSettingsPanel(self.context, extension_name_filter='project_builder')
-        layout.addWidget(self.quick_settings_panel)
-
+        # 6. Progress Indicator & Log Box
         self.progress_indicator = TaskProgressIndicator()
         layout.addWidget(self.progress_indicator)
 
@@ -98,6 +134,10 @@ class ProjectBuilderInterface(QWidget):
         self.start_button.setText(self.lang.get('pb_build_btn'))
         self.progress_indicator.set_status(self.lang.get('pb_status_ready'))
         self.log_box.setPlaceholderText(self.lang.get('pb_log_placeholder'))
+
+        checked = self.proj_settings_btn.isChecked()
+        title = self.lang.get('pb_project_settings_title', 'Project Settings')
+        self.proj_settings_btn.setText(f"{'▼' if checked else '►'} {title}")
 
     def select_output_directory(self):
         path = QFileDialog.getExistingDirectory(self, self.lang.get('pb_output_dir_label'))

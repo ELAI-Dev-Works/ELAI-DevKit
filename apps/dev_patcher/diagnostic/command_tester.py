@@ -1,5 +1,6 @@
 import os
 import sys
+import concurrent.futures
 import importlib.util
 import traceback
 
@@ -8,7 +9,7 @@ def run_command_tests():
     if root_path not in sys.path:
         sys.path.insert(0, root_path)
 
-    from apps.dev_patcher.core.fs_handler import VirtualFileSystem
+    from systems.fs.vfs_core import AdvancedVFS
 
     search_dirs =[
         os.path.join(root_path, 'apps', 'dev_patcher', 'core', 'commands'),
@@ -33,16 +34,33 @@ def run_command_tests():
                         mod = importlib.import_module(mod_name)
 
                         if hasattr(mod, 'tests'):
-                            vfs = VirtualFileSystem(root_path)
-                            results = mod.tests(vfs)
-                            for name, success, msg in results:
-                                total_tests += 1
-                                if success:
-                                    passed_tests += 1
-                                    print(f"  [PASS] {file} -> {name}")
-                                else:
-                                    failed_tests.append(f"{file} -> {name}: {msg}")
-                                    print(f"  [FAIL] {file} -> {name}")
+                            import tempfile
+                            import shutil
+                            temp_test_dir = tempfile.mkdtemp(prefix="elai_cmd_test_root_")
+                            try:
+                                vfs = AdvancedVFS(temp_test_dir)
+                                vfs.mount()
+                                # Run tests with a timeout to avoid hangs
+                                with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                                    future = executor.submit(mod.tests, vfs)
+                                    try:
+                                        results = future.result(timeout=15)
+                                    except concurrent.futures.TimeoutError:
+                                        results = [("timeout", False, "Test execution timed out")]
+                                for name, success, msg in results:
+                                    total_tests += 1
+                                    if success:
+                                        passed_tests += 1
+                                        print(f"  [PASS] {file} -> {name}")
+                                    else:
+                                        failed_tests.append(f"{file} -> {name}: {msg}")
+                                        print(f"  [FAIL] {file} -> {name}")
+                            finally:
+                                try:
+                                    vfs.unmount()
+                                except:
+                                    pass
+                                shutil.rmtree(temp_test_dir, ignore_errors=True)
                     except Exception as e:
                         print(f"  [ERROR] Failed to load or run tests in {file}: {e}")
                         failed_tests.append(f"{file} -> Load Error: {e}")

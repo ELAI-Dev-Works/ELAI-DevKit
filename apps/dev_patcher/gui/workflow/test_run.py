@@ -31,7 +31,7 @@ def run_test_launch(manager):
     QApplication.processEvents()
 
     ignore_dirs, _ = mw.get_combined_ignore_lists()
-    vfs = simulate_patch_and_get_vfs(commands, mw.root_path, experimental_flags, ignore_dirs)
+    vfs = simulate_patch_and_get_vfs(commands, mw.root_path, experimental_flags, ignore_dirs, memory=mw.context.memory)
 
     needs_env = False
     env_indicators =[
@@ -58,7 +58,7 @@ def run_test_launch(manager):
         if not has_env:
             error_msg = mw.lang.get('test_run_env_required_error')
             mw.patcher_log_output.appendPlainText(f"[Error] {error_msg}")
-            QMessageBox.warning(mw, "Test Run Aborted", error_msg)
+            QMessageBox.warning(mw, mw.lang.get('test_run_aborted_title', "Test Run Aborted"), error_msg)
             return
     
     # 1. Open dialog for test file selection
@@ -71,38 +71,51 @@ def run_test_launch(manager):
     mw.patcher_log_output.appendPlainText(mw.lang.get('test_run_launching_log'))
     QApplication.processEvents()
     
-    # 2. Setup Runner and Architecture
-    runner = TestRunner(vfs, mw.root_path)
-    temp_dir = runner.prepare()
+    # 2. Setup Runner and Architecture asynchronously
+    runner = TestRunner(vfs, mw.root_path, mw.context)
 
-    try:
-        arch = get_architecture(temp_dir, mw.root_path, launch_file)
-        launch_cmd = arch.get_launch_command()
+    def _on_prepared(temp_dir):
+        try:
+            arch = get_architecture(temp_dir, mw.root_path, launch_file)
+            is_trusted = getattr(mw.context.security_manager, 'is_trusted_session', False)
+            launch_cmd = arch.get_launch_command(is_trusted=is_trusted)
 
-        if launch_cmd.startswith("HTML:"):
-            # HTML is directly executed in the OS default browser
-            html_file = launch_cmd[5:]
-            from systems.os.platform import open_file_externally
-            open_file_externally(html_file)
+            if launch_cmd.startswith("HTML:"):
+                html_file = launch_cmd[5:]
+                from systems.os.platform import open_file_externally
+                open_file_externally(html_file)
 
-            mw.patcher_log_output.appendPlainText("[INFO] HTML file opened in default browser.")
-            QMessageBox.information(mw, "HTML Test", "HTML file opened in your browser. Close this dialog when you are done to clean up the test environment.")
-            final_log = "[INFO] HTML Test run via external browser."
-        else:
-            # 3. Open Interactive Console Window
-            console_win = TestConsoleWindow(temp_dir, launch_cmd, mw, cwd=temp_dir)
-            console_win.exec()
-            final_log = console_win.final_log
+                mw.patcher_log_output.appendPlainText(mw.lang.get('test_run_html_info_log', "[INFO] HTML file opened in default browser."))
+                QMessageBox.information(mw, mw.lang.get('test_run_html_dialog_title', "HTML Test"), mw.lang.get('test_run_html_dialog_msg', "HTML file opened in your browser. Close this dialog when you are done to clean up the test environment."))
+                final_log = mw.lang.get('test_run_html_final_log', "[INFO] HTML Test run via external browser.")
+            else:
+                console_win = TestConsoleWindow(temp_dir, launch_cmd, mw, cwd=temp_dir)
+                console_win.exec()
+                final_log = console_win.final_log
 
-        # 4. Show the complete log in the Report Dialog
-        report_dialog = TestReportDialog(final_log, mw)
-        report_dialog.exec()
+            report_dialog = TestReportDialog(final_log, mw)
+            report_dialog.exec()
 
-    except Exception as e:
-        import traceback
-        mw.patcher_log_output.appendPlainText(f"\n[ERROR] Critical error during test run: {e}")
-        mw.patcher_log_output.appendPlainText(traceback.format_exc())
-    finally:
-        runner.cleanup()
+        except Exception as e:
+            import traceback
+            mw.patcher_log_output.appendPlainText("\n" + mw.lang.get('test_run_critical_error_log', "[ERROR] Critical error during test run: {}").format(e))
+            mw.patcher_log_output.appendPlainText(traceback.format_exc())
+        finally:
+            runner.cleanup()
+            mw.patcher_log_output.appendPlainText(mw.lang.get('test_run_finished_log'))
 
-    mw.patcher_log_output.appendPlainText(mw.lang.get('test_run_finished_log'))
+    def _on_prepare_error(error):
+        from systems.error_handler.logger import log_to_file
+        from PySide6.QtWidgets import QMessageBox
+        error_msg = mw.lang.get('test_run_prep_error_log', "Failed to prepare test environment: {}").format(error)
+        mw.patcher_log_output.appendPlainText(error_msg)
+        log_to_file(f"TestRun preparation error: {error}", is_exception=True)
+        QMessageBox.critical(mw, mw.lang.get('test_run_error_title', "Test Run Error"), error_msg)
+        try:
+            runner.cleanup()
+        except Exception:
+            pass
+        mw.patcher_log_output.appendPlainText(mw.lang.get('test_run_finished_log'))
+
+    tc = mw.context.async_thread_manager.thread
+    manager._test_run_worker = tc.run_in_background(runner.prepare, callback=_on_prepared, error_callback=_on_prepare_error, use_qt=True)

@@ -50,6 +50,7 @@ class DevPatcherInterface(QWidget):
 
         self.patch_input = CodeEditor()
         self.highlighter = DPCLHighlighter(self.patch_input.document())
+        self.patch_input.set_right_panel_enabled(True)
         self.patch_input.diff_requested.connect(self.patch_workflow_manager.show_diff_for_line)
         patcher_layout.addWidget(self.patch_input, stretch=2)
     

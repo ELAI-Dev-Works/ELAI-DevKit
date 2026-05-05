@@ -47,15 +47,15 @@ def generate_report(results: Dict[str, Any], output_path: str):
                     status = "PASS" if success else "FAIL"
                     f.write(f"    - {name} [{status}]\n")
 
-                    for line in err.splitlines():
-                        if " ... ok" in line:
-                            test_name = line.split(" ... ok")[0]
+                    for line in out.splitlines() + err.splitlines():
+                        if " PASSED " in line:
+                            test_name = line.split(" PASSED ")[0]
                             f.write(f"        -> {test_name.strip()} [PASS]\n")
-                        elif " ... FAIL" in line:
-                            test_name = line.split(" ... FAIL")[0]
+                        elif " FAILED " in line:
+                            test_name = line.split(" FAILED ")[0]
                             f.write(f"        -> {test_name.strip()} [FAIL]\n")
-                        elif " ... ERROR" in line:
-                            test_name = line.split(" ... ERROR")[0]
+                        elif " ERROR " in line:
+                            test_name = line.split(" ERROR ")[0]
                             f.write(f"        -> {test_name.strip()} [ERROR]\n")
 
                     if not success:

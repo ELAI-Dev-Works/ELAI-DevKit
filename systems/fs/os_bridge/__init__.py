@@ -1,0 +1,1 @@
+# Placeholder for future OS-level Native Isolation wrappers (Job Objects, bwrap)
