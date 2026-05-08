@@ -50,22 +50,16 @@ class ProjectLauncherApp(QObject):
                 if not fs.root or not fs.exists(""):
                     return launch_files, input_requirements, False
 
-                input_keywords =[
-                    b'input(', b'sys.stdin', b'read-host', b'cin >>',
-                    b'scanf', b'gets', b'readline', b'prompt(', b'set /p'
-                ]
-
                 for item in fs.listdir(""):
                     if not fs.exists(item) or fs.is_dir(item): continue
 
                     lower_item = item.lower()
                     needs_input = False
-                    if lower_item.endswith(('.py', '.js', '.ts', '.bat', '.ps1', '.cmd', '.c', '.cpp', '.h', '.sh')):
-                        try:
-                            content = fs.read_bytes(item)
-                            if any(keyword in content for keyword in input_keywords):
-                                needs_input = True
-                        except: pass
+
+                    # Always allow input for executable scripts to avoid user confusion
+                    # regarding arguments or standard input availability.
+                    if lower_item.endswith(('.py', '.js', '.ts', '.bat', '.ps1', '.cmd', '.c', '.cpp', '.h', '.sh', '.exe')):
+                        needs_input = True
 
                     input_requirements[item] = needs_input
 
@@ -156,59 +150,104 @@ class ProjectLauncherApp(QObject):
             except Exception as e:
                 QMessageBox.critical(self.widget, self.lang.get('patch_load_error_title'), f"Failed to open in VS Code: {e}")
 
+    def _ensure_args_support(self, full_path):
+        """Automatically appends %* or $@ to script files if they lack argument support."""
+        if not os.path.exists(full_path): return
+        try:
+            with open(full_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception:
+            return
+
+        modified = False
+        lines = content.splitlines()
+
+        if full_path.lower().endswith(('.bat', '.cmd')):
+            if '%*' not in content:
+                last_exec_idx = -1
+                for i, line in enumerate(lines):
+                    stripped = line.strip().lower()
+                    if ('python' in stripped or 'node' in stripped or 'uv run' in stripped or 'pytest' in stripped) \
+                       and not stripped.startswith(('echo', 'rem', 'set', 'if', 'goto', 'call')) \
+                       and ' venv ' not in stripped and ' pip ' not in stripped and ' npm ' not in stripped:
+                        last_exec_idx = i
+                if last_exec_idx != -1:
+                    lines[last_exec_idx] = lines[last_exec_idx] + " %*"
+                    modified = True
+
+        elif full_path.lower().endswith('.sh'):
+            if '"$@"' not in content and '$@' not in content:
+                last_exec_idx = -1
+                for i, line in enumerate(lines):
+                    stripped = line.strip().lower()
+                    if ('python' in stripped or 'node' in stripped or 'uv run' in stripped or 'pytest' in stripped) \
+                       and not stripped.startswith(('echo', '#', 'export', 'if', 'set')) \
+                       and ' venv ' not in stripped and ' pip ' not in stripped and ' npm ' not in stripped:
+                        last_exec_idx = i
+                if last_exec_idx != -1:
+                    lines[last_exec_idx] = lines[last_exec_idx] + ' "$@"'
+                    modified = True
+
+        if modified:
+            try:
+                with open(full_path, 'w', encoding='utf-8') as f:
+                    f.write('\n'.join(lines) + '\n')
+            except Exception:
+                pass
+
     def _build_command(self, launch_file, args_text):
         """Helper to construct the command line string."""
-        cmd_parts = []
+
         if launch_file.endswith('.py'):
             venv_py = get_venv_python_path(self.root_path)
             if os.path.exists(venv_py):
                 if is_windows():
-                    cmd_parts.append(f'& "{venv_py}"')
+                    base_cmd = f'& "{venv_py}" "{launch_file}"'
                 else:
-                    cmd_parts.append(f'"{venv_py}"')
+                    base_cmd = f'"{venv_py}" "{launch_file}"'
             else:
-                cmd_parts.append("python3" if not is_windows() else "python")
-            cmd_parts.append(f'"{launch_file}"')
-        
+                base_cmd = f'python "{launch_file}"' if is_windows() else f'python3 "{launch_file}"'
+
         elif launch_file.endswith(('.bat', '.cmd')):
             if is_windows():
-                cmd_parts.append(f'& ".\\{launch_file}"')
+                # Wraps the entire command in quotes for cmd.exe via PowerShell
+                if args_text:
+                    return f"cmd /c '\"\"{launch_file}\" {args_text}\"'"
+                else:
+                    return f"cmd /c '\"\"{launch_file}\"\"'"
             else:
-                cmd_parts.append(f'cmd /c "{launch_file}"')
-        
+                base_cmd = f'sh "{launch_file}"'
+
         elif launch_file.endswith('.sh'):
-            cmd_parts.append(f'bash "{launch_file}"')
-        
+            base_cmd = f'bash "{launch_file}"'
+
         elif launch_file.endswith(('.ps1', '.exe')):
             if is_windows():
-                cmd_parts.append(f'& ".\\{launch_file}"')
+                base_cmd = f'& ".\\{launch_file}"'
             else:
-                cmd_parts.append(f'"./{launch_file}"')
-        
+                base_cmd = f'"./{launch_file}"'
+
         elif launch_file.endswith('.html'):
             if is_windows():
-                cmd_parts.append(f'Start-Process "{launch_file}"')
+                base_cmd = f'Start-Process "{launch_file}"'
             else:
-                cmd_parts.append(f'echo "Please open {launch_file} manually"')
-        
+                base_cmd = f'echo "Please open {launch_file} manually"'
+
         elif launch_file.endswith('.js'):
-            cmd_parts.append("node")
-            cmd_parts.append(f'"{launch_file}"')
-        
+            base_cmd = f'node "{launch_file}"'
+
         elif launch_file.endswith('.ts'):
-            cmd_parts.append("ts-node")
-            cmd_parts.append(f'"{launch_file}"')
-        
+            base_cmd = f'ts-node "{launch_file}"'
+
         else:
             if is_windows():
-                cmd_parts.append(f'& ".\\{launch_file}"')
+                base_cmd = f'& ".\\{launch_file}"'
             else:
-                cmd_parts.append(f'"./{launch_file}"')
-    
+                base_cmd = f'"./{launch_file}"'
+
         if args_text:
-            cmd_parts.append(args_text)
-    
-        return " ".join(cmd_parts)
+            return f"{base_cmd} {args_text}"
+        return base_cmd
     
     def start_project(self):
         if not self.root_path or self.widget.launch_file_combo.count() == 0:
@@ -225,6 +264,10 @@ class ProjectLauncherApp(QObject):
         if launch_file.endswith('.html'):
             open_file_externally(full_path)
             return
+
+        if args_text:
+            self._ensure_args_support(full_path)
+
     
         final_command = self._build_command(launch_file, args_text)
     
@@ -251,31 +294,34 @@ class ProjectLauncherApp(QObject):
             return
         
         full_launch_path = os.path.join(self.root_path, launch_file)
-        cmd_to_run = []
-        
+
+        if args_text:
+            self._ensure_args_support(full_launch_path)
+
+        # Construct the base command
         if launch_file.endswith('.py'):
             venv_py = get_venv_python_path(self.root_path)
             py_exe = venv_py if os.path.exists(venv_py) else ("python" if is_windows() else "python3")
-            cmd_to_run = [py_exe, full_launch_path]
-            if args_text: cmd_to_run.append(args_text)
+            base_cmd = f'"{py_exe}" "{full_launch_path}"'
         elif launch_file.endswith('.js'):
-            cmd_to_run = ["node", full_launch_path]
-            if args_text: cmd_to_run.append(args_text)
+            base_cmd = f'node "{full_launch_path}"'
         elif launch_file.endswith('.sh'):
-             cmd_to_run = ["bash", full_launch_path]
-             if args_text: cmd_to_run.append(args_text)
+            base_cmd = f'bash "{full_launch_path}"'
         else:
-            cmd_to_run = [full_launch_path]
-            if args_text: cmd_to_run.append(args_text)
-        
+            base_cmd = f'"{full_launch_path}"'
+
+        # Append arguments properly
+        if args_text:
+            safe_cmd = f'{base_cmd} {args_text}'
+        else:
+            safe_cmd = base_cmd
+
         try:
             if is_windows():
                 # Windows specific
                 creation_flags = subprocess.CREATE_NEW_CONSOLE
-                # Construct string for cmd /k
-                cmd_str = ' '.join(f'"{c}"' for c in cmd_to_run)
-                command_line = f'cmd /k "{cmd_str}"'
-        
+                command_line = f'cmd /k "{safe_cmd}"'
+
                 self.external_process = subprocess.Popen(
                     command_line,
                     cwd=self.root_path,
@@ -284,29 +330,32 @@ class ProjectLauncherApp(QObject):
                 )
             else:
                 # Linux/Mac
-                # Properly quote command for shell execution
-                safe_cmd = ' '.join(shlex.quote(arg) for arg in cmd_to_run)
-        
                 if sys.platform == 'darwin':
                     self._launch_macos(safe_cmd)
                 else:
-                    # Linux - Try common terminal emulators
-                    # Prioritize 'x-terminal-emulator' as it respects user system preferences
+                    # Linux - use a temporary script to avoid quoting issues
+                    import tempfile
+                    script_content = f"#!/bin/bash\ncd {shlex.quote(self.root_path)}\n{safe_cmd}\nread -p 'Press Enter to close...' "
+                    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.sh', dir=self.root_path, encoding='utf-8') as f:
+                        f.write(script_content)
+                        os.chmod(f.name, 0o755)
+                        temp_file_name = f.name
+
                     terminals = [
-                        ['x-terminal-emulator', '-e', f'bash -c "{safe_cmd}; read -p \'Press Enter to close...\'"'],
-                        ['gnome-terminal', '--', 'bash', '-c', f'{safe_cmd}; read -p "Press Enter to close..."'],
-                        ['konsole', '-e', 'bash', '-c', f'{safe_cmd}; read -p "Press Enter to close..."'],
-                        ['xfce4-terminal', '-e', f'bash -c "{safe_cmd}; read -p \'Press Enter to close...\'"'],
-                        ['xterm', '-e', f'{safe_cmd}; read -p "Press Enter to close..."']
+                        ['x-terminal-emulator', '-e', temp_file_name],
+                        ['gnome-terminal', '--', temp_file_name],
+                        ['konsole', '-e', temp_file_name],
+                        ['xfce4-terminal', '-e', temp_file_name],
+                        ['xterm', '-e', temp_file_name]
                     ]
-                
+
                     launched = False
                     for term_cmd in terminals:
                         if shutil.which(term_cmd[0]):
                             subprocess.Popen(term_cmd, cwd=self.root_path)
                             launched = True
                             break
-        
+
                     if not launched:
                             raise FileNotFoundError("No supported terminal emulator found (tried gnome-terminal, konsole, xfce4-terminal, xterm).")
         

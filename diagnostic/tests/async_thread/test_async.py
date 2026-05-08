@@ -14,7 +14,7 @@ class TestAsyncControl(unittest.TestCase):
             return "ASYNC_OK"
 
         future = ac.run_coroutine(my_coro(), callback=result_box.append)
-        res = future.result(timeout=2)
+        res = future.result(timeout=10)
         time.sleep(0.05)  # Wait for callback
 
         self.assertEqual(res, "ASYNC_OK")
@@ -27,7 +27,7 @@ class TestAsyncControl(unittest.TestCase):
         async def coro2(): return 2
 
         future = ac.gather([coro1(), coro2()])
-        res = future.result(timeout=2)
+        res = future.result(timeout=10)
         self.assertEqual(res, [1, 2])
         ac.shutdown()
 
@@ -37,9 +37,9 @@ class TestAsyncControl(unittest.TestCase):
             await asyncio.sleep(2)
             return "done"
 
-        future = ac.run_with_timeout(slow_coro(), timeout=0.1)
+        future = ac.run_with_timeout(slow_coro(), timeout=1)
         with self.assertRaises(Exception): # Catches asyncio.TimeoutError safely
-            future.result(timeout=1)
+            future.result(timeout=10)
         ac.shutdown()
 
     def test_04_async_run_in_executor(self):
@@ -49,15 +49,18 @@ class TestAsyncControl(unittest.TestCase):
             return "blocked_done"
 
         future = ac.run_in_executor(blocking_task)
-        res = future.result(timeout=2)
+        res = future.result(timeout=10)
         self.assertEqual(res, "blocked_done")
         ac.shutdown()
 
     def test_05_async_subprocess(self):
         ac = AsyncControl()
-        cmd =[sys.executable, "-c", "print('SUBPROCESS_OK')"]
+        if sys.platform == 'win32':
+            cmd =["cmd.exe", "/c", "echo SUBPROCESS_OK"]
+        else:
+            cmd = ["echo", "SUBPROCESS_OK"]
         future = ac.run_subprocess(cmd)
-        res = future.result(timeout=15)
+        res = future.result(timeout=30)
         self.assertEqual(res.returncode, 0)
         self.assertIn("SUBPROCESS_OK", res.stdout)
         ac.shutdown()

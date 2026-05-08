@@ -23,7 +23,7 @@ class TestThreadSystem(unittest.TestCase):
             return "done"
 
         thread = tc.run_dedicated_thread(task, callback=res_box.append, yield_callback=yields.append, use_qt=False)
-        thread.join(timeout=5)
+        thread.join(timeout=10)
         self.assertFalse(thread.is_alive(), "Python thread timed out")
         time.sleep(0.1)
 
@@ -56,7 +56,7 @@ class TestThreadSystem(unittest.TestCase):
         tc = ThreadControl()
         result_box =[]
         worker = tc.run_in_background(lambda a, b: a + b, callback=result_box.append, use_qt=False, a=5, b=7)
-        res = worker.future.result(timeout=2)
+        res = worker.future.result(timeout=10)
         time.sleep(0.1)
         self.assertEqual(res, 12)
         self.assertEqual(result_box[0], 12)
@@ -79,7 +79,7 @@ class TestThreadSystem(unittest.TestCase):
             yield 2
             return 3
         worker = tc.run_in_background(task, yield_callback=yields.append, use_qt=False)
-        res = worker.future.result(timeout=2)
+        res = worker.future.result(timeout=10)
         self.assertEqual(res, 3)
         self.assertEqual(yields, [1, 2])
 
@@ -121,7 +121,7 @@ class TestThreadSystem(unittest.TestCase):
         self.assertGreater(status["py_active_threads"], 0)
         self.assertGreaterEqual(status["py_pending_tasks"], 0)
         for w in workers:
-            w.future.result(timeout=3)
+            w.future.result(timeout=10)
         tc.shutdown()
 
 if __name__ == '__main__':

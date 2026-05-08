@@ -112,7 +112,7 @@
         <key name="ignore_settings_dirs_info">除外するディレクトリ（1行に1つ）。バックアップとパッカーに影響します。</key>
         <key name="ignore_settings_files_info">除外するファイル名（1行に1つ）。バックアップとパッカーに影響します。</key>
         <key name="ignore_settings_tags_label">指示:</key>
-        <key name="ignore_settings_tags_info">[!backup]、[!packer]、[!git]などのタグを使用して、特定のモジュールに対してファイルを選択的に除外できます。タグがない場合、ファイルはすべてのモジュールで除外されます。タグは組み合わせることができます - 複数のタグが指定されている場合、ファイルは指定されたすべてのコンテキストで除外されます。例：「node_modules」- すべての場所で除外；「dist [!packer]」- パッカーのみで除外；「build [!git] [!packer]」- gitとパッカーで除外しますが、バックアップには含まれます。</key>
+        <key name="ignore_settings_tags_info">[!backup]、[!packer]、[!git]などのタグを使用して、特定のモジュールに対してファイルを選択的に除外できます。タグがない場合、ファイルはすべてのモジュールで除外されます。タグは組み合わせることができます - 複数のタグが指定されている場合、ファイルは指定されたすべてのコンテキストで除外されます。例：「node_modules」- すべての場所で除外；「dist [!packer]」- パッカーのみで除外；「build [!git] [!packer]」- gitとパッカーで除外しますが、バックアップには含まれます。'#'で始まる行はコメントとして扱われます。</key>
         <key name="rename_project_title">プロジェクト名を変更</key>
         <key name="rename_project_prompt">プロジェクト'{}'の新しい名前を入力してください:</key>
         <key name="add_workspace_project_title">新しいワークスペースプロジェクトを追加</key>
@@ -132,6 +132,8 @@
         <key name="fr_pwd_mismatch">パスワードが一致しません。</key>
         <key name="layer2_alert_title">レイヤー 2: セキュリティアラート</key>
         <key name="manage_rules_btn">許可/拒否リストの管理</key>
+        <key name="change_password_btn">パスワードを変更する</key>
+        <key name="change_password_title">マスターパスワードの変更</key>
         <key name="rules_dialog_info">セキュリティルールの管理 (ダブルクリックで削除):</key>
         <key name="rules_dialog_title">許可 / 拒否ルールリスト</key>
 

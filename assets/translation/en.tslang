@@ -119,7 +119,7 @@
         <key name="ignore_settings_dirs_info">Directories to ignore (one per line). Affects backup and packer.</key>
         <key name="ignore_settings_files_info">Filenames to ignore (one per line). Affects backup and packer.</key>
         <key name="ignore_settings_tags_label">Instruction:</key>
-        <key name="ignore_settings_tags_info">You can use tags like [!backup], [!packer], [!git] to selectively ignore files for specific modules. Without tags, the file is ignored by all modules. Tags can be combined - if multiple tags are specified, the file will be ignored for all specified contexts. Examples: 'node_modules' - ignore everywhere; 'dist [!packer]' - ignore only for packer; 'build [!git] [!packer]' - ignore for git and packer, but include in backup.</key>
+        <key name="ignore_settings_tags_info">You can use tags like [!backup], [!packer], [!git] to selectively ignore files for specific modules. Without tags, the file is ignored by all modules. Tags can be combined - if multiple tags are specified, the file will be ignored for all specified contexts. Examples: 'node_modules' - ignore everywhere; 'dist [!packer]' - ignore only for packer; 'build [!git] [!packer]' - ignore for git and packer, but include in backup. Lines starting with '#' are treated as comments.</key>
 
         <key name="delete_project_warning_title">Delete Project</key>
         <key name="delete_project_warning_msg">Are you sure you want to permanently delete the project '{}'? This action cannot be undone!</key>
@@ -128,6 +128,8 @@
         <key name="add_workspace_project_title">Add new workspace project</key>
 <key name="layer2_alert_title">Layer 2: Security Alert</key>
 <key name="manage_rules_btn">Manage Allowed/Denied Lists</key>
+<key name="change_password_btn">Change Password</key>
+<key name="change_password_title">Change Master Password</key>
 <key name="rules_dialog_info">Manage security rules (Double-click to delete):</key>
 <key name="rules_dialog_title">Allowed / Denied Rules List</key>
         <key name="layer2_alert_title">Layer 2: Security Alert</key>

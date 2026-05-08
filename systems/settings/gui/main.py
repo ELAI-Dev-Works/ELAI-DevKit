@@ -119,6 +119,12 @@ class SettingsPanel(QFrame):
         dialog = RuleManagerDialog(sm, self)
         dialog.exec()
 
+    def _open_change_password_dialog(self):
+        from systems.security.gui.dialogs import ChangePasswordDialog
+        sm = self.main_window.context.security_manager
+        dialog = ChangePasswordDialog(sm, self)
+        dialog.exec()
+
     def _create_security_settings_tab(self):
         widget = QWidget()
         layout = QVBoxLayout(widget)
@@ -126,24 +132,13 @@ class SettingsPanel(QFrame):
         self.security_group = QGroupBox()
         form_layout = QFormLayout(self.security_group)
 
-        self.current_password_input = QLineEdit()
-        self.current_password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.current_password_input.setPlaceholderText("Current master password")
-        self.new_password_input = QLineEdit()
-        self.new_password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.new_password_input.setPlaceholderText("New password")
-        self.confirm_password_input = QLineEdit()
-        self.confirm_password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.confirm_password_input.setPlaceholderText("Confirm new password")
-
-        form_layout.addRow("Current Password:", self.current_password_input)
-        form_layout.addRow("New Password:", self.new_password_input)
-        form_layout.addRow("Confirm New Password:", self.confirm_password_input)
+        self.change_password_btn = QPushButton(self.lang.get('change_password_btn', 'Change Password'))
+        self.change_password_btn.clicked.connect(self._open_change_password_dialog)
+        form_layout.addRow("", self.change_password_btn)
 
         self.manage_rules_btn = QPushButton(self.lang.get('manage_rules_btn', 'Manage Allowed/Denied Lists'))
         self.manage_rules_btn.clicked.connect(self._open_rules_manager)
         form_layout.addRow("", self.manage_rules_btn)
-
 
         layout.addWidget(self.security_group)
         layout.addStretch()
@@ -214,6 +209,8 @@ class SettingsPanel(QFrame):
         self.close_button.setText(lang.get('close_btn')).addGUITooltip(lang.get('settings_close_tooltip'))
         if hasattr(self, 'manage_rules_btn'):
             self.manage_rules_btn.setText(lang.get('manage_rules_btn', 'Manage Allowed/Denied Lists'))
+        if hasattr(self, 'change_password_btn'):
+            self.change_password_btn.setText(lang.get('change_password_btn', 'Change Password'))
 
     def populate_languages(self, current_lang_code):
         self.lang_combo.blockSignals(True)
@@ -251,11 +248,7 @@ class SettingsPanel(QFrame):
         if hasattr(self, 'persistent_cache_checkbox'):
             self.persistent_cache_checkbox.setChecked(self.state_on_open['memory'].get('persistent_cache', False))
 
-        # Security – no persistent state to load, just clear the form
-        if hasattr(self, 'current_password_input'):
-            self.current_password_input.clear()
-            self.new_password_input.clear()
-            self.confirm_password_input.clear()
+        # Security – no persistent state to load
         self.state_on_open['security_password_changed'] = False
 
         self.populate_languages(self.state_on_open.get('language', 'en'))
@@ -312,37 +305,6 @@ class SettingsPanel(QFrame):
             self.state_on_open['memory'] = {}
         if hasattr(self, 'persistent_cache_checkbox'):
             self.state_on_open['memory']['persistent_cache'] = self.persistent_cache_checkbox.isChecked()
-
-        # Security password change
-        if hasattr(self, 'current_password_input'):
-            cur = self.current_password_input.text()
-            new = self.new_password_input.text()
-            conf = self.confirm_password_input.text()
-            if cur or new or conf:  # Only act if something was filled
-                sm = self.main_window.context.security_manager
-                if not sm.verify(cur):
-                    from PySide6.QtWidgets import QMessageBox
-                    QMessageBox.warning(self, "Error", "Current password is incorrect.")
-                    return
-                if new != conf:
-                    from PySide6.QtWidgets import QMessageBox
-                    QMessageBox.warning(self, "Error", "New passwords do not match.")
-                    return
-                if not new:
-                    from PySide6.QtWidgets import QMessageBox
-                    QMessageBox.warning(self, "Error", "New password cannot be empty.")
-                    return
-                # Read existing encryption patterns
-                import json, os
-                config_path = sm.config_path
-                with open(config_path, 'r') as f:
-                    sec_data = json.load(f)
-                sm.setup(new, sec_data['p1'], sec_data['p2'])
-                self.state_on_open['security_password_changed'] = True
-                # Clear fields after successful change
-                self.current_password_input.clear()
-                self.new_password_input.clear()
-                self.confirm_password_input.clear()
 
         self.main_window.apply_main_settings(self.state_on_open)
 
@@ -425,8 +387,4 @@ class SettingsPanel(QFrame):
         if hasattr(self, 'persistent_cache_checkbox'):
             self.persistent_cache_checkbox.setChecked(memory_defaults.get('persistent_cache', False))
 
-        # Clear security fields on reset (does not change the actual password)
-        if hasattr(self, 'current_password_input'):
-            self.current_password_input.clear()
-            self.new_password_input.clear()
-            self.confirm_password_input.clear()
+        # Clear security fields on reset (not applicable anymore)

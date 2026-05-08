@@ -17,7 +17,7 @@ class IgnoreHandler:
         active = set()
         for p in patterns:
             p = p.strip()
-            if not p: continue
+            if not p or p.startswith('#'): continue
             tags = re.findall(r'\[!([a-zA-Z0-9_]+)\]', p)
             clean_p = re.sub(r'\s*\[![a-zA-Z0-9_]+\]', '', p).strip()
 

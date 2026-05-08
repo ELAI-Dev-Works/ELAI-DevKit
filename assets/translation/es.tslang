@@ -112,7 +112,7 @@
         <key name="ignore_settings_dirs_info">Directorios a ignorar (uno por línea). Afecta a backup y packer.</key>
         <key name="ignore_settings_files_info">Nombres de archivos a ignorar (uno por línea). Afecta a backup y packer.</key>
         <key name="ignore_settings_tags_label">Instrucción:</key>
-        <key name="ignore_settings_tags_info">Puedes usar etiquetas como [!backup], [!packer], [!git] para ignorar archivos selectivamente para módulos específicos. Sin etiquetas, el archivo se ignora en todos los módulos. Las etiquetas se pueden combinar - si se especifican varias etiquetas, el archivo se ignorará para todos los contextos especificados. Ejemplos: 'node_modules' - ignorar en todas partes; 'dist [!packer]' - ignorar solo para packer; 'build [!git] [!packer]' - ignorar para git y packer, pero incluir en backup.</key>
+        <key name="ignore_settings_tags_info">Puedes usar etiquetas como [!backup], [!packer], [!git] para ignorar archivos selectivamente para módulos específicos. Sin etiquetas, el archivo se ignora en todos los módulos. Las etiquetas se pueden combinar - si se especifican varias etiquetas, el archivo se ignorará para todos los contextos especificados. Ejemplos: 'node_modules' - ignorar en todas partes; 'dist [!packer]' - ignorar solo para packer; 'build [!git] [!packer]' - ignorar para git y packer, pero incluir en backup. Las líneas que comienzan con '#' se tratan como comentarios.</key>
         <key name="rename_project_title">Renombrar proyecto</key>
         <key name="rename_project_prompt">Ingrese el nuevo nombre para el proyecto '{}':</key>
         <key name="add_workspace_project_title">Agregar nuevo proyecto al espacio de trabajo</key>
@@ -132,6 +132,8 @@
         <key name="fr_pwd_mismatch">Las contraseñas no coinciden.</key>
         <key name="layer2_alert_title">Capa 2: Alerta de seguridad</key>
         <key name="manage_rules_btn">Gestionar listas de Permitidos/Denegados</key>
+        <key name="change_password_btn">Cambiar contraseña</key>
+        <key name="change_password_title">Cambiar contraseña maestra</key>
         <key name="rules_dialog_info">Gestionar reglas de seguridad (Doble clic para eliminar):</key>
         <key name="rules_dialog_title">Lista de reglas Permitidas / Denegadas</key>
 

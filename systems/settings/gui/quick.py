@@ -42,7 +42,10 @@ class IgnoreSettingsWindow(QDialog):
         layout.addWidget(self.gitignore_checkbox)
 
         # --- Buttons ---
-        self.button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel)
+        self.button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel | QDialogButtonBox.StandardButton.Apply)
+        apply_btn = self.button_box.button(QDialogButtonBox.StandardButton.Apply)
+        apply_btn.setText(self.lang.get('apply_btn', 'Apply'))
+        apply_btn.clicked.connect(self._apply_only)
         self.button_box.accepted.connect(self._save_and_accept)
         self.button_box.rejected.connect(self.reject)
         layout.addWidget(self.button_box)
@@ -95,34 +98,40 @@ class IgnoreSettingsWindow(QDialog):
         self.temp_dirs_edit.setPlainText('\n'.join(t_dirs))
         self.temp_files_edit.setPlainText('\n'.join(t_files))
 
-    def _save_and_accept(self):
-        # 1. Save Global
+    def _apply_only(self):
+        # 1. Apply Global to Memory
         g_dirs =[l.strip() for l in self.global_dirs_edit.toPlainText().splitlines() if l.strip()]
         g_files =[l.strip() for l in self.global_files_edit.toPlainText().splitlines() if l.strip()]
 
-        settings_to_save = {
+        settings_to_apply = {
             'dirs': g_dirs,
             'files': g_files,
             'use_gitignore': self.gitignore_checkbox.isChecked()
         }
-        self.settings_manager.update_setting(['core', 'ignore'], settings_to_save)
-        self.settings_manager.save_settings_file()
+        self.settings_manager.update_setting(['core', 'ignore'], settings_to_apply)
 
-        # 2. Save Project
+        # 2. Apply Project to Memory
         if self.main_window.root_path:
             p_dirs =[l.strip() for l in self.project_dirs_edit.toPlainText().splitlines() if l.strip()]
             p_files =[l.strip() for l in self.project_files_edit.toPlainText().splitlines() if l.strip()]
             p_settings = {'dirs': p_dirs, 'files': p_files}
             self.settings_manager.update_setting(['core', 'project_ignore'], p_settings, is_project=True)
-            self.settings_manager.save_project_settings()
 
-        # 3. Save Temporary (to MainWindow memory)
+        # 3. Apply Temporary (to MainWindow memory)
         t_dirs = [l.strip() for l in self.temp_dirs_edit.toPlainText().splitlines() if l.strip()]
         t_files = [l.strip() for l in self.temp_files_edit.toPlainText().splitlines() if l.strip()]
 
         self.main_window.temp_ignore_dirs = t_dirs
         self.main_window.temp_ignore_files = t_files
 
+        if hasattr(self.main_window, 'patcher_log_output'):
+            self.main_window.patcher_log_output.appendPlainText(self.lang.get('quick_settings_applied_log', '[Settings] Quick settings applied.'))
+
+    def _save_and_accept(self):
+        self._apply_only()
+        self.settings_manager.save_settings_file()
+        if self.main_window.root_path:
+            self.settings_manager.save_project_settings()
         self.accept()
 
 def get_quick_settings():

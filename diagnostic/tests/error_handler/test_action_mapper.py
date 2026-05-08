@@ -21,9 +21,14 @@ class TestActionMapper(unittest.TestCase):
 
     @patch('systems.error_handler.action_mapper.open')
     @patch('systems.error_handler.action_mapper.getattr')
-    def test_start_flush_and_stop(self, mock_open, mock_getattr):
+    def test_start_flush_and_stop(self, mock_getattr, mock_open):
         """Ensure start, flush, and get_current_map work and gracefully handle no log file."""
         ActionMapper._instance = None
+
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        mock_file.read.return_value = "[ACTIONS MAP] - Session Start\n"
+
         # Temporarily enable DEBUG_MODE so that profiling actually runs
         old_debug = DEBUG_MODE
         set_debug_mode(True)

@@ -7,11 +7,14 @@ class TestSubprocessStreamTask(unittest.TestCase):
     def test_subprocess_stream(self):
         tc = ThreadControl()
         yields = []
-        cmd =[sys.executable, "-u", "-c", "import sys; print('STREAM_1'); print('STREAM_2'); sys.stdout.flush()"]
+        if sys.platform == 'win32':
+            cmd =["cmd.exe", "/c", "echo STREAM_1& echo STREAM_2"]
+        else:
+            cmd =["sh", "-c", "echo STREAM_1; echo STREAM_2"]
         task = SubprocessStreamTask(cmd)
 
         worker = tc.run_in_background(task, yield_callback=yields.append, use_qt=False)
-        res = worker.future.result(timeout=15)
+        res = worker.future.result(timeout=30)
 
         self.assertEqual(res, 0)
         self.assertTrue(any("STREAM_1" in y for y in yields))

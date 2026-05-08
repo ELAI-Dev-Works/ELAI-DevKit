@@ -83,5 +83,12 @@ dist/
         self.assertIsInstance(dirs, list)
         self.assertIsInstance(files, list)
 
+    def test_09_comments(self):
+        """Comments starting with # should be ignored"""
+        handler = IgnoreHandler(['# this is a comment', 'build'], ['# file comment', '*.log'], context='backup')
+        self.assertTrue(handler.is_ignored('build', is_dir=True))
+        self.assertTrue(handler.is_ignored('error.log', is_dir=False))
+        self.assertFalse(handler.is_ignored('# this is a comment', is_dir=True))
+
 if __name__ == '__main__':
     unittest.main()

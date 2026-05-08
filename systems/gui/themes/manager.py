@@ -62,9 +62,10 @@ class ThemeManager:
 
         if style_module and color_module:
             stylesheet = style_module.get_stylesheet(color_module.palette)
-            app.setStyleSheet(stylesheet)
+            if app:
+                app.setStyleSheet(stylesheet)
 
-        if hasattr(app, '_tooltip_enhancer'):
+        if app and hasattr(app, '_tooltip_enhancer'):
             app._tooltip_enhancer.update_theme_colors(self.current_palette)
 
 

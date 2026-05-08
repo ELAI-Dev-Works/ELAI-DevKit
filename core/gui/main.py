@@ -448,6 +448,7 @@ class MainWindow(QMainWindow):
                     idx = self.workspace_project_combo.findText(name.strip())
                     if idx >= 0:
                         self.workspace_project_combo.setCurrentIndex(idx)
+                        self.on_workspace_project_changed(name.strip())
                 except Exception as e:
                     QMessageBox.warning(self, self.lang.get('patch_load_error_title', 'Error'), f"Could not create project folder: {e}")
             else:
@@ -464,9 +465,11 @@ class MainWindow(QMainWindow):
             idx = self.workspace_project_combo.findText(os.path.basename(self.root_path))
             if idx >= 0:
                 self.workspace_project_combo.setCurrentIndex(idx)
+                self.on_workspace_project_changed(self.workspace_project_combo.currentText())
             else:
                 self.root_path = None
                 self.theme_manager.update_path_label_style()
+                self._apply_project_change()
 
 
     

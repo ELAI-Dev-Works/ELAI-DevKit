@@ -459,6 +459,8 @@ class AutoTranslatorApp(QMainWindow):
         self.root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
         self.en_data =[]
         self.translation_cache = {}
+        self.missing_keys = set()
+        self._load_missing_keys()
 
         self._init_ui()
         self._scan_project()
@@ -513,6 +515,11 @@ class AutoTranslatorApp(QMainWindow):
         self.select_all_keys_btn = QPushButton("Un/Select All")
         self.select_all_keys_btn.clicked.connect(self._select_all_keys)
         keys_header_layout.addWidget(self.select_all_keys_btn)
+
+        self.select_missing_keys_btn = QPushButton("Select Missing")
+        self.select_missing_keys_btn.clicked.connect(self._select_missing_keys)
+        keys_header_layout.addWidget(self.select_missing_keys_btn)
+
         keys_layout.addLayout(keys_header_layout)
         
         self.keys_list = QListWidget()
@@ -679,7 +686,42 @@ class AutoTranslatorApp(QMainWindow):
                     k_item.setFlags(k_item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
                     k_item.setCheckState(Qt.CheckState.Checked)
                     k_item.setData(Qt.ItemDataRole.UserRole, k)
+                    if k['key'] in self.missing_keys:
+                        k_item.setForeground(QColor("#f14c4c"))
                     self.keys_list.addItem(k_item)
+
+
+    def _load_missing_keys(self):
+        self.missing_keys = set()
+        status_file = os.path.join(self.root_path, 'logs', 'translation_status.txt')
+        if not os.path.exists(status_file):
+            return
+
+        try:
+            with open(status_file, 'r', encoding='utf-8') as f:
+                in_missing = False
+                for line in f:
+                    stripped = line.strip()
+                    if stripped.startswith("--- Missing Keys for"):
+                        in_missing = True
+                        continue
+                    elif stripped.startswith("--- "):
+                        in_missing = False
+
+                    if in_missing and stripped.startswith("- "):
+                        key = stripped[2:].strip()
+                        self.missing_keys.add(key)
+        except Exception as e:
+            print(f"Failed to load missing keys: {e}")
+
+    def _select_missing_keys(self):
+        for i in range(self.keys_list.count()):
+            item = self.keys_list.item(i)
+            data = item.data(Qt.ItemDataRole.UserRole)
+            if data['key'] in self.missing_keys:
+                item.setCheckState(Qt.CheckState.Checked)
+            else:
+                item.setCheckState(Qt.CheckState.Unchecked)
 
     def _select_all_keys(self):
         if self.keys_list.count() == 0: return
