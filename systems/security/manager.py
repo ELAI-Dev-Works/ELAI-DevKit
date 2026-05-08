@@ -8,7 +8,7 @@ from .crypto import CryptoPatterns
 from .ipc_server import SecurityIPCServer
 
 class SecurityActionDialog(QDialog):
-    def __init__(self, action, details, parent=None):
+    def __init__(self, action, details, project_name="Global", parent=None):
         super().__init__(parent)
         lang = parent.lang if hasattr(parent, 'lang') else None
         title = lang.get('layer2_alert_title') if lang else "Layer 2: Security Alert"
@@ -17,9 +17,9 @@ class SecurityActionDialog(QDialog):
         self.save_rule = False
         self.rule_scope = "Global"
         self.password = ""
-        self._init_ui(action, details)
+        self._init_ui(action, details, project_name)
 
-    def _init_ui(self, action, details):
+    def _init_ui(self, action, details, project_name):
         layout = QVBoxLayout(self)
         layout.addWidget(QLabel(f"<b>An application in the sandbox requested an action.</b><br><br><b>Action:</b> {action}<br><b>Details:</b> {details}"))
 
@@ -27,7 +27,10 @@ class SecurityActionDialog(QDialog):
         layout.addWidget(self.remember_cb)
 
         self.scope_combo = QComboBox()
-        self.scope_combo.addItems(["Global", "Current Project"])
+        if project_name != "Global":
+            self.scope_combo.addItems(["Global", f"Project: {project_name}"])
+        else:
+            self.scope_combo.addItems(["Global"])
         self.scope_combo.setEnabled(False)
         layout.addWidget(self.scope_combo)
 
@@ -184,10 +187,7 @@ class SecurityManager(QObject):
                 return
 
             active_window = QApplication.activeWindow()
-            dialog = SecurityActionDialog(action, details, parent=active_window)
-
-            if active_window:
-                dialog.setParent(active_window, Qt.WindowType.Dialog)
+            dialog = SecurityActionDialog(action, details, self.current_project_name, parent=active_window)
 
             timer = QTimer()
             timer.setSingleShot(True)

@@ -2,7 +2,7 @@ from .base import BaseArchitecture
 import os
 
 class WebArchitecture(BaseArchitecture):
-    def get_launch_command(self):
+    def get_launch_command(self, is_trusted=False):
         target_launch_file = os.path.join(self.temp_dir, self.launch_file)
 
         auditor_js = os.path.join(self.temp_dir, "_elai_web_auditor.js")

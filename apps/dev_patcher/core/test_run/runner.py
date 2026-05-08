@@ -43,9 +43,14 @@ class TestRunner:
         def link_or_copy(src, dst, is_dir):
             if is_dir:
                 if is_windows():
-                    subprocess.run(['cmd', '/c', 'mklink', '/J', f'"{dst}"', f'"{src}"'], capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
+                    res = subprocess.run(['cmd', '/c', 'mklink', '/J', dst, src], capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
+                    if res.returncode != 0:
+                        shutil.copytree(src, dst, dirs_exist_ok=True)
                 else:
-                    os.symlink(src, dst, target_is_directory=True)
+                    try:
+                        os.symlink(src, dst, target_is_directory=True)
+                    except OSError:
+                        shutil.copytree(src, dst, dirs_exist_ok=True)
             else:
                 try:
                     os.link(src, dst)

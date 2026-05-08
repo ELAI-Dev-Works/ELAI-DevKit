@@ -882,12 +882,11 @@ class MainWindow(QMainWindow):
             QApplication.exit(RESTART_CODE)
 
     def _apply_project_change(self):
-        if self.root_path:
-            temp_proj_dir = os.path.join(self.root_path, '.temp_project')
-
         if hasattr(self.context, 'security_manager'):
             self.context.security_manager.set_current_project(self.root_path)
 
+        if self.root_path:
+            temp_proj_dir = os.path.join(self.root_path, '.temp_project')
             if os.path.exists(temp_proj_dir):
                 import shutil
                 shutil.rmtree(temp_proj_dir, ignore_errors=True)

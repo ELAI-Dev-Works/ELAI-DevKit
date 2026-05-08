@@ -16,7 +16,7 @@ def get_architecture(temp_dir, project_root, launch_file):
         # Generic fallback for bat, sh, cmd, exe
         from .base import BaseArchitecture
         class GenericArchitecture(BaseArchitecture):
-            def get_launch_command(self):
+            def get_launch_command(self, is_trusted=False):
                 from systems.os.platform import is_windows
                 if is_windows():
                     return f"& \".\\{self.launch_file}\""
