@@ -39,7 +39,9 @@ def test_collect_files():
         fs = RealFileSystem(proj_dir)
         handler = IgnoreHandler([], [], context='packer')
 
-        collected = app.collect_files(fs, handler)
+        supported_exts = app.get_supported_extensions()
+        from apps.project_text_packer.core.scanner import FileScanner
+        collected = FileScanner.collect_files(fs, handler, supported_exts)
         rel_paths = set(rel for _, rel in collected)
 
         if "main.py" not in rel_paths:
@@ -47,7 +49,8 @@ def test_collect_files():
         if "readme.md" not in rel_paths:
             return False, "readme.md not collected"
 
-        tree = app._build_tree_recursive(fs, "", handler)
+        from apps.project_text_packer.core.tree_builder import TreeBuilder
+        tree = TreeBuilder.build(fs, "", handler)
         if not tree:
             return False, "Tree builder returned empty"
         return True, "Packer collection and tree OK"

@@ -1,1 +1,1 @@
-ELAI-DevKit v140 (ELAI-DevKit(Core) v50 + Dev Patcher v70 + Project Text Packer v8 + Project Launcher v10 + Project Builder v2)
+ELAI-DevKit v142 (ELAI-DevKit(Core) v50 + Dev Patcher v70 + Project Text Packer v9 + Project Launcher v11 + Project Builder v2)

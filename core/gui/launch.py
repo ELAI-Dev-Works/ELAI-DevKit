@@ -322,7 +322,7 @@ class LaunchWindow(QMainWindow):
 
         title = QLabel("ELAI-DevKit")
         title.setStyleSheet("font-size: 36pt; font-weight: bold;") # Removed hardcoded color
-        version_label = QLabel("v140 (core v50)")
+        version_label = QLabel("v142 (core v50)")
         version_label.setStyleSheet("font-size: 13pt; margin-bottom: 5px;") # Removed hardcoded color
         version_label.setAlignment(Qt.AlignmentFlag.AlignBottom)
     
