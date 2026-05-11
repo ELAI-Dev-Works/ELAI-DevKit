@@ -10,7 +10,7 @@
 [![Python Version](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](README.md)
-[![Version](https://img.shields.io/badge/Version-140-orange.svg)](version.txt)
+[![Version](https://img.shields.io/badge/Version-142-orange.svg)](version.txt)
 
 ![Launch](info/screens/Launch.png)
 
